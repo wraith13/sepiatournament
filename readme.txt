@@ -51,6 +51,9 @@ https://github.com/wraith13/solomon (github上のコピー)
 ■.\source
 　→ ソースディレクトリです。
 
+■.\source\db
+　→ DB 関連のディレクトリです。
+
 ■.\source\solomon
 　→ solomon 関連のディレクトリです。
 
