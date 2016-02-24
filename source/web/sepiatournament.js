@@ -48,7 +48,7 @@ angular.module('angularUUID2', []).factory('uuid2', [
 //    document.getElementById("picker").appendChild(pickerButton);
 //};
 
-var app = angular.module("splatournament", ['ui.router', "ui.bootstrap", "angularUUID2"]);
+var app = angular.module("sepiatournament", ['ui.router', "ui.bootstrap", "angularUUID2"]);
 
 app.config(["$locationProvider", function ($locationProvider) {
     $locationProvider.html5Mode({
@@ -111,7 +111,7 @@ app.directive('jsonText', function() {
     };
 });
 
-app.controller("splatornament", function ($rootScope, $window, $scope, $http, $location, $filter, uuid2) {
+app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, $location, $filter, uuid2) {
 
     //  http://stackoverflow.com/questions/20789373/shuffle-array-in-ng-repeat-angular
     $scope.shuffleArray = function (array) {
@@ -157,7 +157,7 @@ app.controller("splatornament", function ($rootScope, $window, $scope, $http, $l
 
     $scope.app = {
         type: "app",
-        name: "splatournament",
+        name: "sepiatournament",
         description: "このツールは Wii U 用ゲームソフト、『スプラトゥーン』で草の根的に行われる各種トーナメント形式での大会向けのトーナメント管理ツールです。",
         version: "X.XX.XXX"
     };

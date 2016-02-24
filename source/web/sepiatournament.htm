@@ -1,10 +1,10 @@
 ﻿<!doctype html>
-<html ng-app="splatournament">
+<html ng-app="sepiatournament">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title ng-bind="title">splatournament</title>
+    <title ng-bind="title">sepiatournament</title>
 	
 	<link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
 	<link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
@@ -43,10 +43,10 @@
     <!-- d3.js -->
     <script src="http://mbostock.github.com/d3/d3.v2.js"></script>
 
-    <link href="splatournament.css" rel="stylesheet" />
+    <link href="sepiatournament.css" rel="stylesheet" />
 
 </head>
-<body id="body" ng-controller="splatornament">
+<body id="body" ng-controller="sepiatournament">
     <div class="body">
         <header class="navbar navbar-inverse navbar-static-top">
             <div class="container">
@@ -388,7 +388,7 @@
                         <div ng-show="0 == model.matches.length && !viewmode">
                             <uib-alert type="info">トーナメントの抽選を行い試合を組み合わせ、試合表とトーナメントツリーを作成します。</uib-alert>
                             <uib-alert type="warning">
-                                現在の splatournament のバージョンではトーナメントツリー作成後に entry の追加/削除を行うと抽選のやり直しになります。
+                                現在の sepiatournament のバージョンではトーナメントツリー作成後に entry の追加/削除を行うと抽選のやり直しになります。
                             </uib-alert>
                             <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="makeMatch()">抽選の実行</button>
                         </div>
@@ -464,12 +464,12 @@
 
     <footer class="footer">
         <div class="container">
-            <span>splatournament ver {{app.version}}</li></span><span class="separator">|</span>
+            <span>sepiatournament ver {{app.version}}</li></span><span class="separator">|</span>
             <span>&copy; 2016 <a href="https://twitter.com/wraith13">@wraith13</a></span><span class="separator">|</span>
-            <span><a href="https://github.com/wraith13/splatournament">github</a></span>
+            <span><a href="https://github.com/wraith13/sepiatournament">github</a></span>
         </div>
     </footer>
 
-    <script type="text/javascript" src="splatournament.js"></script>
+    <script type="text/javascript" src="sepiatournament.js"></script>
 </body>
 </html>
