@@ -225,7 +225,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     //};
 
     $scope.tabIcon = {
-        "app": "globe",
+        "app": "sepiatournament",
         "event": "tower",
         "entry":"flag",
         "member":"user",

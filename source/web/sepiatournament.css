@@ -127,6 +127,32 @@ body {
     border-radius: 10rem;
 }
 
+/* icon */
+.glyphicon-sepiatournament {
+	background-origin: border-box, padding-box;
+	background-image: url(./images/sepiatournament.hollow.png);
+	background-position:bottom;
+}
+.navbar .glyphicon-sepiatournament {
+	background-color: #88DDDD;
+	background-size: 32px 32px;
+	width: 32px;
+	height: 28px;
+	margin-top: -16px;
+	margin-bottom: -8px;
+}
+a:hover > .glyphicon-sepiatournament {
+	background-color:#FFFFFF;
+}
+.jumbotron .glyphicon-sepiatournament {
+	background-color: #DDFFFF;
+	background-size: 128px 128px;
+	width: 128px;
+	height: 112px;
+	margin-top: -24px;
+	margin-bottom: -24px;
+}
+
 /* chart */
 #chart {
     text-align: center;
