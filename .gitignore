@@ -3,6 +3,7 @@ snapshot
 testsnap
 reference
 source/web/private
+private
 .vs
 
 # Windows image file caches
