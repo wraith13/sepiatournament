@@ -3,8 +3,8 @@
     "type": "event",
     "id": "8bdd6820-3491-4d20-83ad-1d4825864597",
     "name": "ステージ原住民対抗マッチ",
-    "description": "これは splatournament のサンプルデータです。",
-    "url": "https://github.com/wraith13/splatournament"
+    "description": "これは sepiatournament のサンプルデータです。",
+    "url": "https://github.com/wraith13/sepiatournament"
   },
   "entries": [
     {
