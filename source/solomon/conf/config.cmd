@@ -12,7 +12,7 @@
 @SET SOLOMON_MAIN_CMD=%~dp0..\..\..\..\solomon\cmd\main.cmd
 
 @REM プロジェクト名(コンソールウィンドウのタイトルに表示されます)
-@SET SOLOMON_TARGET_PROJECT=SPLATOURNAMENT PROJECT
+@SET SOLOMON_TARGET_PROJECT=SEPIATOURNAMENT PROJECT
 
 @REM スナップショットを撮る対象のディレクトリ
 @SET SOLOMON_TARGET_DIR=%~dp0..\..
