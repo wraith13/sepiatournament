@@ -1030,6 +1030,16 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.updateFilterTag(type);
     };
 
+    $scope.addLink = function (model, link) {
+        model.links = model.links || [];
+        model.links.push(link || { type: "link" });
+    };
+    $scope.removeLink = function (model, link) {
+        var index = model.links.indexOf(link);
+        model.links.splice(index, 1);
+
+    };
+
     $scope.regulateModel();
 
     $scope.checkResults = [];

@@ -122,20 +122,24 @@
         </script>
 
         <script type="text/ng-template" id="popup.link.edit.html">
-            <h4>title(optional)</h4>
-            <input type="text" class="form-control" ng-model="model.title" placeholder="タイトル" />
-            <h4>url</h4>
-            <input type="text" class="form-control" ng-model="model.url" placeholder="URL" />
+            <div class="input-group" style="min-width:400px;">
+                <span class="input-group-addon" id="link-title-label">title(optional)</span>
+                <input type="text" class="form-control" ng-model="link.title" placeholder="タイトル" aria-describedby="link-title-label" />
+            </div>
+            <div class="input-group" style="min-width:400px;">
+                <span class="input-group-addon" id="link-title-label">url</span>
+                <input type="text" class="form-control" ng-model="link.url" placeholder="URL" aria-describedby="link-url-label" />
+            </div>
         </script>
 
         <script type="text/ng-template" id="link.edit.html">
-            <p class="input-group">
-                title:{{model.title}} | url:{{model.url}}
+            <p class="input-group link-edit">
+                <a ng-href="{{link.url}}" target="_blank"><span class="form-control">{{link.title || link.url || "右の編集ボタンをクリックすると編集できます。"}}</span></a>
                 <span class="input-group-btn">
                     <button uib-popover-template="'popup.link.edit.html'" type="button" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i></button>
                 </span>
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="removeLink(model)"><i class="glyphicon glyphicon-remove"></i></button>
+                    <button type="button" class="btn btn-default" ng-click="removeLink(model, link)"><i class="glyphicon glyphicon-remove"></i></button>
                 </span>
             </p>
         </script>
@@ -150,8 +154,8 @@
             <div  ng-show="model.type=='event' || model.type=='match'" ng-include="'time.edit.html'" ></div>
             <div ng-include="'tag.edit.html'" ng-show="tags[model.type]"></div>
             <h4>link</h4>
-            <div ng-include="'link.edit.html'" ng-repeat="model in (model.links || [])"></div>
-            <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="(model.links=(model.links || [])).push({type:link})">リンクの追加</button>
+            <div ng-include="'link.edit.html'" ng-repeat="link in (model.links || [])"></div>
+            <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="addLink(model)">リンクの追加</button>
         </script>
 
         <script type="text/ng-template" id="tag.edit.html">
@@ -307,6 +311,7 @@
 
                 <div ng-show="active_tab=='event'">
                     <div ng-include="'edit.html'" ng-repeat="model in [model.event]"></div>
+                    <h4>next</h4>
                     <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('entry')">参加チームを登録する</button>
                 </div>
 
@@ -328,6 +333,7 @@
                                 ng-click="selectEntry(model)">
                             </li>
                         </ul>
+                        <h4>next</h4>
                         <button ng-show="viewmode" type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('match')">試合一覧を見る</button>
                         <button ng-show="!viewmode&&2<=(mode.entries||[]).length" type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('match')">試合一覧を作成する</button>
                     </div>

@@ -35,6 +35,12 @@ body {
     min-width:60px;
 }
 
+/* popup */
+.link-edit .popover {
+    max-width:800px;
+    left:0px;
+}
+
 /* custom design */
 .navbar,
 .big-header,
