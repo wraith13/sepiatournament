@@ -157,7 +157,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 
     $scope.app = {
         type: "app",
-        name: "sepiatournament",
+        name: "セピアトーナメント",
         description: "このツールは Wii U 用ゲームソフト、『スプラトゥーン』で草の根的に行われる各種トーナメント形式での大会向けのトーナメント管理ツールです。",
         version: "X.XX.XXX"
     };
