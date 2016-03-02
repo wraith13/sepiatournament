@@ -41,6 +41,28 @@ body {
     left:0px;
 }
 
+/* side list */
+@media screen and (max-width: 991px) {
+    .hide-on-narrow {
+        display:none;
+    }
+}
+@media screen and (min-width: 992px) {
+    .hide-on-narrow {
+        min-height:60vh;
+        max-height:90vh;
+        overflow-y:auto;
+    }
+    .hide-on-narrow + div {
+        min-height:60vh;
+        max-height:90vh;
+        overflow-y:auto;
+    }
+    .show-on-narrow {
+        display:none;
+    }
+}
+
 /* custom design */
 .navbar,
 .big-header,
