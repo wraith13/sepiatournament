@@ -102,6 +102,9 @@ body {
     color:#CCFFEE;
     word-break: break-all;
 }
+.jumbotron .glyphicon {
+    margin-right:0.3em;
+}
 .btn-primary {
     color: #DDFFFF;
     background-color: #008888;

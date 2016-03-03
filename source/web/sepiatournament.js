@@ -232,10 +232,11 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "match":"flash",
         "import": "cloud-upload",
         "export":"cloud-download",
-        "tree": "tree-conifer"
+        "tree": "tree-conifer",
+        "login": "log-in"
     };
-    $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree"];
-    $scope.tabs = $scope.mastertabs;
+    $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login"];
+    $scope.tabs = ["event", "entry", "member", "match", "import", "export", "tree"];
     $scope.selectTab = function (tab) {
         $scope.selected = {};
         $scope.isCollapsed = false;

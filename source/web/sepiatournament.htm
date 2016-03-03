@@ -267,11 +267,20 @@
                 </div>
             </div>
         </div>
-        <div ng-hide="is_loading||active_tab">
+        <div ng-show="!(is_loading||active_tab)">
             <div class="big-header">
                 <div class="container">
                     <div class="jumbotron">
                         <div ng-include="'jumbotron.html'" ng-repeat="model in [viewmode?model.event:app]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="active_tab=='login'">
+            <div class="big-header">
+                <div class="container">
+                    <div class="jumbotron">
+                        <div ng-include="'jumbotron.html'" ng-repeat="model in [{ type:'login', name:'ログイン' }]"></div>
                     </div>
                 </div>
             </div>
@@ -478,6 +487,10 @@
                     <div ng-hide="0 < model.matches.length">
                         <uib-alert type="info">match で抽選を行ってトーナメント表を作成してください。</uib-alert>
                     </div>
+                </div>
+                
+                <div ng-show="active_tab=='login'">
+                    <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="login('twitter')">twitter でログイン</button>
                 </div>
             </div>
         </div>
