@@ -17,7 +17,7 @@ if ($db->connect_error)
 else
 {
 	$db->set_charset($dbconfig["dbcharset"]);
-	$query_result = $db->query("select target, at, category, operator, message from log");
+	$query_result = $db->query("select target, at, category, operator, message from log order by at desc");
 	if ($query_result)
 	{
 		while($row = $query_result->fetch_assoc())
