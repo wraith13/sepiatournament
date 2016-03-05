@@ -63,6 +63,27 @@ body {
     }
 }
 
+/* table */
+table.list {
+	border-collapse: collapse;
+	width: 100%;
+}
+table.list th {
+    color:#DDFFFF;
+    background-color:#008888;
+}
+table.list th,
+table.list td {
+	border: solid 1px #AAEEEE;
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+table.list tr:nth-child(2n-1) {
+    background-color:#99DDDD;
+}
+
 /* custom design */
 .navbar,
 .big-header,

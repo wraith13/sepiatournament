@@ -492,6 +492,13 @@
                 <div ng-show="active_tab=='login'">
                     <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="login('twitter')">twitter でログイン</button>
                 </div>
+                
+                <div ng-show="active_tab=='log'">
+                    <table ng-if="model.logs" class="list">
+                        <tr><th>target</th><th>at</th><th>category</th><th>operator</th><th>message</th></tr>
+                        <tr ng-repeat="log in model.logs"><td>{{log.target}}</td><td>{{log.at}}</td><td>{{log.category}}</td><td>{{log.operator}}</td><td>{{log.message}}</td></tr>
+                    </table>
+                </div>
             </div>
         </div>
         <div ng-show="active_tab=='tree'">

@@ -233,10 +233,11 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "import": "cloud-upload",
         "export":"cloud-download",
         "tree": "tree-conifer",
-        "login": "log-in"
+        "login": "log-in",
+        "log": "list"
     };
-    $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login"];
-    $scope.tabs = ["event", "entry", "member", "match", "import", "export", "tree"];
+    $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "log"];
+    $scope.tabs = ["event", "entry", "member", "match", "import", "export", "tree", "log"];
     $scope.selectTab = function (tab) {
         $scope.selected = {};
         $scope.isCollapsed = false;
@@ -251,9 +252,17 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         if ("tree" == $scope.active_tab) {
             $scope.update_tree();
         }
+        if ("log" == $scope.active_tab) {
+            $scope.update_log();
+        }
     };
     setTimeout(function () {
-        $scope.selectTab($location.hash());
+		var hash = $location.hash();
+		console.log("hash: " +hash);
+		if (hash) {
+			console.log("goto: " +hash);
+			$scope.selectTab($location.hash());
+		}
     }, 0);
 
     //  cache
@@ -954,6 +963,18 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             update_tournament_tree(match_to_tree($scope.model.matches[$scope.model.matches.length - 1], false, false, false, true), $scope.showObject);
         }
     };
+	
+	$scope.update_log = function () {
+        $http({
+            method: 'GET',
+            url: "/api/log.php"
+        }).success(function (data, status, headers, config) {
+            $scope.model = $scope.model || {};
+            $scope.model.logs = data;
+        }).error(function (data, status, headers, config) {
+            $scope.addAlert({ type: 'danger', msg: 'サーバーからログを取得できませんでした。'});
+        });
+    };	
 
     $scope.clearText = function (object, name) {
         object[name] = "";
