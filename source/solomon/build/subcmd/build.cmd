@@ -33,7 +33,7 @@
 @COPY /Y ".\VERSION.cmd" "%RESULT_DIR%" >NUL
 
 @REM abraham\twitteroauth ÇÉRÉsÅ[
-@CALL "%SOLOMON_MIRROR_DIR_CMD%" "..\..\..\abraham\twitteroauth" "%RESULT_DIR%\web\api\abraham\twitteroauth"
+@CALL "%SOLOMON_MIRROR_DIR_CMD%" "..\..\..\abraham\twitteroauth\src" "%RESULT_DIR%\web\api\abraham\twitteroauth"
 
 @CALL "%SOLOMON_COMPILE_SUCCESS_CMD%"
 @CALL "%SOLOMON_TEST_SUCCESS_CMD%"
