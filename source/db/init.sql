@@ -19,7 +19,7 @@ create table log
 (
 	target varchar(64) not null,
 	at timestamp not null,
-	category tinyint not null,
+	category varchar(16) not null,
 	operator varchar(64),
 	message varchar(1024) not null,
 	primary key(target, at)
