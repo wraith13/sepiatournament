@@ -171,6 +171,16 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     }).error(function (data, status, headers, config) {
     });
 
+    $http({
+        method: 'GET',
+        url: "/api/user.php"
+    }).success(function (data, status, headers, config) {
+		if (data && 0 < data.length) {
+	        $scope.logonUser = data[0];
+		}
+    }).error(function (data, status, headers, config) {
+    });
+
     $scope.regulateModel = function () {
         $scope.repository = {};
         $scope.selected = {};
@@ -234,10 +244,12 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "export":"cloud-download",
         "tree": "tree-conifer",
         "login": "log-in",
+        "logout": "log-out",
         "log": "list"
     };
-    $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "log"];
-    $scope.tabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "log"];
+    $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log"];
+    $scope.tabs = ["event", "entry", "member", "match", "import", "export", "tree", "log"];
+    $scope.userTabs = ["profile","event","entry"];
     $scope.selectTab = function (tab) {
         $scope.selected = {};
         $scope.isCollapsed = false;
@@ -967,6 +979,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 	$scope.login = function(sns) {
 		window.location.href = "/api/oauth.php?sns=" +sns;
 		//$location.path("/api/oauth.php?sns=" +sns);
+	};
+	$scope.logout = function() {
+		window.location.href = "/api/logout.php";
 	};
 	$scope.update_log = function () {
         $http({
