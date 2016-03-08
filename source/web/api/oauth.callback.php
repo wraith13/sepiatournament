@@ -162,7 +162,7 @@ else
 				}
 			}
 			
-			session_regenerate_id();
+			session_regenerate_id(true);
 			$_SESSION['user_id'] = $user_id;
 			
 			header( 'location: /' );
