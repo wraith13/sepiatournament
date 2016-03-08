@@ -245,6 +245,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "tree": "tree-conifer",
         "login": "log-in",
         "logout": "log-out",
+        "profile": "pencil",
         "log": "list"
     };
     $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log"];
