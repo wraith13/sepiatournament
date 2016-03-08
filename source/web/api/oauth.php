@@ -41,7 +41,7 @@ else
 			$twitter_config["twitter.consumer.secret"]
 		);
 		
-		$callbackurl = preg_replace("oauth\.php", "oauth.\callback\.php", $_SERVER["PHP_SELF"]);
+		$callbackurl = preg_replace("oauth\.php", "oauth\.callback\.php", $_SERVER["PHP_SELF"]);
 		//$callbackurl = "http:/sepiatournament.net/api/oauth.callback.php?sns=$sns";
 		$request_token = $twitter->oauth
 		(
