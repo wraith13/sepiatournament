@@ -87,7 +87,7 @@
                                     <a href="#{{tab}}" ng-click="selectTab(tab)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[tab]"></span>{{tab}}</a>
                                 </li>
                                 <li role="separator" class="divider"></li>
-		                        <li><a href="#logout" ng-click="selectTab('logout')"><span class="glyphicon glyphicon-log-out"></span>logout</a></li>
+		                        <li><a href="#logout" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span>logout</a></li>
                             </ul>
                         </li>
                     </ul>                    
@@ -300,15 +300,6 @@
                 </div>
             </div>
         </div>
-        <div ng-show="active_tab=='logout'">
-            <div class="big-header">
-                <div class="container">
-                    <div class="jumbotron">
-                        <div ng-include="'jumbotron.html'" ng-repeat="model in [{ type:'logout', name:'ログアウト' }]"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="container theme-showcase" role="main">
 
@@ -515,10 +506,6 @@
                 
                 <div ng-show="active_tab=='login'">
                     <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="login('twitter')">twitter でログイン</button>
-                </div>
-                
-                <div ng-show="active_tab=='logout'">
-                    <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="logout()">ログアウト</button>
                 </div>
                 
                 <div ng-show="active_tab=='log'">
