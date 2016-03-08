@@ -21,7 +21,7 @@ else
 	session_start();
 	$user_id = $_SESSION['user_id'];
 	
-	$query_result = $db->query("select json from object where uuid='$user_id';");
+	$query_result = $db->query("select json from object where id='$user_id';");
 	if ($query_result)
 	{
 		while($row = $query_result->fetch_assoc())

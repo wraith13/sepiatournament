@@ -3,7 +3,7 @@ use sepiatournament_live;
 
 create table object
 (
-	uuid varchar(64) not null primary key,
+	id varchar(64) not null primary key,
 	parent varchar(64),
 	owner varchar(64) not null,
 	type varchar(32) not null,

@@ -132,7 +132,7 @@ else
 				}
 				$user_json = $db->real_escape_string(json_encode($user));
 				$user_search = $db->real_escape_string($user["name"] . " " . $user["description"] . " " . $twitter_user->screen_name);
-				$query_result = $db->query("insert into object(uuid, owner, type, json, search) values('$user_id', '$user_id', 'user', '$user_json','$user_search');");
+				$query_result = $db->query("insert into object(id, owner, type, json, search) values('$user_id', '$user_id', 'user', '$user_json','$user_search');");
 				if (!$query_result)
 				{
 					$result[] = array
