@@ -237,7 +237,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "log": "list"
     };
     $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "log"];
-    $scope.tabs = ["event", "entry", "member", "match", "import", "export", "tree", "log"];
+    $scope.tabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "log"];
     $scope.selectTab = function (tab) {
         $scope.selected = {};
         $scope.isCollapsed = false;
@@ -963,7 +963,11 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             update_tournament_tree(match_to_tree($scope.model.matches[$scope.model.matches.length - 1], false, false, false, true), $scope.showObject);
         }
     };
-	
+
+	$scope.login = function(sns) {
+		window.location.href = "/api/oauth.php?sns=" +sns;
+		//$location.path("/api/oauth.php?sns=" +sns);
+	};
 	$scope.update_log = function () {
         $http({
             method: 'GET',
