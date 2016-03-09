@@ -1,16 +1,16 @@
 <?php
 
-require_once('abraham/twitteroauth/Token.php');
-require_once('abraham/twitteroauth/TwitterOAuthException.php');
-require_once('abraham/twitteroauth/Util.php');
-require_once('abraham/twitteroauth/Request.php');
-require_once('abraham/twitteroauth/Consumer.php');
-require_once('abraham/twitteroauth/SignatureMethod.php');
-require_once('abraham/twitteroauth/HmacSha1.php');
-require_once('abraham/twitteroauth/Response.php');
-require_once('abraham/twitteroauth/Config.php');
-require_once('abraham/twitteroauth/Util/JsonDecoder.php');
-require_once('abraham/twitteroauth/TwitterOAuth.php');
+require_once __DIR__ . '/abraham/twitteroauth/Token.php';
+require_once __DIR__ . '/abraham/twitteroauth/TwitterOAuthException.php';
+require_once __DIR__ . '/abraham/twitteroauth/Util.php';
+require_once __DIR__ . '/abraham/twitteroauth/Request.php';
+require_once __DIR__ . '/abraham/twitteroauth/Consumer.php';
+require_once __DIR__ . '/abraham/twitteroauth/SignatureMethod.php';
+require_once __DIR__ . '/abraham/twitteroauth/HmacSha1.php';
+require_once __DIR__ . '/abraham/twitteroauth/Response.php';
+require_once __DIR__ . '/abraham/twitteroauth/Config.php';
+require_once __DIR__ . '/abraham/twitteroauth/Util/JsonDecoder.php';
+require_once __DIR__ . '/abraham/twitteroauth/TwitterOAuth.php';
 
 /**
  * Use to autoload needed classes without Composer.

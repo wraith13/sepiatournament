@@ -1,20 +1,9 @@
 <?php
-
-ini_set( 'display_errors', 1); 
+require_once __DIR__ . '/common/db.php';
 
 $result = array();
-$config = parse_ini_file("../private/config.ini");
-$dbconfig = parse_ini_file($config["dbconfig"]);
-$db = new mysqli($dbconfig["dbserver"], $dbconfig["dbuser"], $dbconfig["dbpassword"], $dbconfig["dbname"]);
-if ($db->connect_error)
-{
-		$result[] = array
-		(
-			errno => $db->connect_errno,
-			error => $db->connect_error,
-		);
-}
-else
+
+if (0 == count($error))
 {
 	$db->set_charset($dbconfig["dbcharset"]);
 	
@@ -32,12 +21,15 @@ else
 	}
 	else
 	{
-		$result[] = array
+		$result = array
 		(
 			error => $db->error,
 		);
 	}
-	$db->close();
+}
+else
+{
+	$result = $error;
 }
 print(json_encode($result));
 
