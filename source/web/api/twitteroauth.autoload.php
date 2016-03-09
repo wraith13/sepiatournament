@@ -1,17 +1,5 @@
 <?php
 
-require_once __DIR__ . '/abraham/twitteroauth/Token.php';
-require_once __DIR__ . '/abraham/twitteroauth/TwitterOAuthException.php';
-require_once __DIR__ . '/abraham/twitteroauth/Util.php';
-require_once __DIR__ . '/abraham/twitteroauth/Request.php';
-require_once __DIR__ . '/abraham/twitteroauth/Consumer.php';
-require_once __DIR__ . '/abraham/twitteroauth/SignatureMethod.php';
-require_once __DIR__ . '/abraham/twitteroauth/HmacSha1.php';
-require_once __DIR__ . '/abraham/twitteroauth/Response.php';
-require_once __DIR__ . '/abraham/twitteroauth/Config.php';
-require_once __DIR__ . '/abraham/twitteroauth/Util/JsonDecoder.php';
-require_once __DIR__ . '/abraham/twitteroauth/TwitterOAuth.php';
-
 /**
  * Use to autoload needed classes without Composer.
  *
@@ -24,7 +12,7 @@ spl_autoload_register(function ($class) {
     $prefix = 'Abraham\\TwitterOAuth\\';
 
     // base directory for the namespace prefix
-    $base_dir = __DIR__ . '/abraham\/twitteroauth/';
+    $base_dir = __DIR__ . '/abraham/twitteroauth/';
 
     // does the class use the namespace prefix?
     $len = strlen($prefix);
