@@ -51,6 +51,7 @@ else
 			$request_token['oauth_token_secret']
 		);
 		
+		$target = "unknown";
 		try
 		{
 			//	通常であれば投稿や情報取得の為にこの access_token を保存するところだが、このシステムではユーザー情報を取得した後は利用しない為、保存しない。
@@ -84,7 +85,7 @@ else
 			
 			if ($user_id)
 			{
-				
+				$target = $user_id;
 				$auth_id = $db->real_escape_string($twitter_user->id_str);
 				$auth_json = $db->real_escape_string(json_encode($twitter_user));
 				$query_result = $db->query("update auth set json = '$auth_json' where type='twitter' and id='$auth_id';");
@@ -140,6 +141,7 @@ else
 						error => $db->error,
 					);
 				}
+				$target = $user_id;
 				
 				$auth_id = $db->real_escape_string($twitter_user->id_str);
 				$auth_json = $db->real_escape_string(json_encode($twitter_user));
@@ -169,8 +171,8 @@ else
 		}
 		catch(Exception $e)
 		{
-			$error_message = $db->real_escape_string($e->getMessage());
-			$query_result = $db->query("insert into log(target, at, category, operator, message) values('system',UTC_TIMESTAMP(),'error','admin','$error_message');");
+			$error_message = $db->real_escape_string($e->getMessage() . " @ " . $e->getTraceAsString());
+			$query_result = $db->query("insert into log(target, at, category, operator, message) values('$target',UTC_TIMESTAMP(),'error','$target','$error_message');");
 			if (!$query_result)
 			{
 				$result[] = array
