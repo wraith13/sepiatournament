@@ -248,8 +248,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "profile": "pencil",
         "log": "list"
     };
-    $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log"];
-    $scope.tabs = ["event", "entry", "member", "match", "import", "export", "tree", "log"];
+    $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log", "profile"];
+    $scope.tabs = ["event", "entry", "member", "match", "tree", "log"];
     $scope.userTabs = ["profile","event","entry"];
     $scope.selectTab = function (tab) {
         $scope.selected = {};
