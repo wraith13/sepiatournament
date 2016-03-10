@@ -1,36 +1,46 @@
 <?php
 require_once __DIR__ . '/common/db.php';
 
-$result = array();
+session_start();
+$user_id = $_SESSION['user_id'];
 
-if (0 == count($error))
+function decode($json_list)
 {
-	$db->set_charset($dbconfig["dbcharset"]);
-	
-	session_start();
-	$user_id = $_SESSION['user_id'];
-	
-	$query_result = $db->query("select json from object where id='$user_id';");
-	if ($query_result)
+	if ($json_list)
 	{
-		while($row = $query_result->fetch_assoc())
+		$result = [];
+		foreach($json_list as $i)
 		{
-			$result[] = json_decode($row["json"]);
+			$result[] = json_decode($i);
 		}
-		$query_result->free();
+		return $result;
 	}
 	else
 	{
-		$result = array
-		(
-			error => $db->error,
-		);
+		return null;
 	}
 }
-else
-{
-	$result = $error;
-}
-print(json_encode($result));
+
+print
+(
+	json_encode
+	(
+		0 == count($error) ?
+		(
+			decode
+			(
+				select_table_for_signle_column
+				(
+					$db,
+					"object where id='$user_id'",
+					"json"
+				)
+			) ?:
+			array(error => $db->error)
+		):
+		$error
+	)
+);
+
 
 ?>
