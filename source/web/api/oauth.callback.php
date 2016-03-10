@@ -52,16 +52,39 @@ try
 	
 	$auth_target = db_select_table_for_signle_column($db, "auth where type='twitter' and id='$auth_id';", "target");
 	
-	if ($auth_target && 0 < count($auth_target))
+	if (0 < count($auth_target))
 	{
 		$target = $user_id = $auth_target[0];
+		
+		//	update auth
 		$auth_id = $db->real_escape_string($twitter_user->id_str);
 		$auth_json = $db->real_escape_string(json_encode($twitter_user));
 		db_query($db, "update auth set json = '$auth_json' where type='twitter' and id='$auth_id';");
+		
+		//	update object(user)
+		$user = json_decode
+		(
+			db_select_table_for_signle_column
+			(
+				$db,
+				"object where id='$user_id'",
+				"json"
+			)
+			[0],
+			true
+		);
+		$user["twitter"] = $twitter_user->screen_name;
+		$user["image"] = $twitter_user->profile_image_url_https;
+		$user_json = $db->real_escape_string(json_encode($user));
+		$user_search = $db->real_escape_string($user["name"] . " " . $user["description"] . " " . $user["twitter"]);
+		$query_result = db_query($db, "update object set json='$user_json', search='$user_search' where id='$user_id';");
+		
+		//	log
 		db_log_insert($db, $user_id, "update", $user_id, "login");
 	}
 	else
 	{
+		//	insert object(user)
 		$user_id = UUID::v4();
 		$user = array
 		(
@@ -69,13 +92,9 @@ try
 			id => $user_id,
 			name => $twitter_user->name,
 			description => $twitter_user->description,
+			twitter => $twitter_user->screen_name,
+			image => $twitter_user->profile_image_url_https,
 			links => [],
-		);
-		$user["links"][] = array
-		(
-			type => "link",
-			title => "@" . $twitter_user->screen_name,
-			url => "https://twitter.com/" . $twitter_user->screen_name,
 		);
 		if ($twitter_user->url && 0 < strlen($twitter_user->url))
 		{
@@ -86,13 +105,16 @@ try
 			);
 		}
 		$user_json = $db->real_escape_string(json_encode($user));
-		$user_search = $db->real_escape_string($user["name"] . " " . $user["description"] . " " . $twitter_user->screen_name);
+		$user_search = $db->real_escape_string($user["name"] . " " . $user["description"] . " " . $user["twitter"]);
 		$query_result = db_query($db, "insert into object(id, owner, type, json, search) values('$user_id', '$user_id', 'user', '$user_json','$user_search');");
 		$target = $user_id;
 		
+		//	insert auth
 		$auth_id = $db->real_escape_string($twitter_user->id_str);
 		$auth_json = $db->real_escape_string(json_encode($twitter_user));
 		db_query($db, "insert into auth(type, id, target, json) values('twitter','$auth_id','$user_id','$auth_json');");
+		
+		//	log
 		db_log_insert($db, $user_id, "insert", $user_id, "login");
 	}
 	

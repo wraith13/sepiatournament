@@ -81,7 +81,7 @@
                         <li ng-hide="logonUser"><a href="#login" ng-click="selectTab('login')"><span class="glyphicon glyphicon-log-in"></span>login</a></li>
                         
                         <li ng-show="logonUser" class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" ng-click="isCollapsed2 = !isCollapsed2">{{logonUser.name}}<span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" ng-click="isCollapsed2 = !isCollapsed2"><img class="user-icon" src="{{logonUser.image}}" alt="{{logonUser.name}}" /><span class="caret"></span></a>
                             <ul class="dropdown-menu" uib-collapse="!isCollapsed2">
                                 <li ng-class="active_tab == tab ? 'active': ''" ng-repeat="tab in userTabs">
                                     <a href="#{{tab}}" ng-click="selectTab(tab)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[tab]"></span>{{tab}}</a>
