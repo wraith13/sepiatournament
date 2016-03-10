@@ -51,6 +51,10 @@ body {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
 }
+.login.icon {
+	width: 32px;
+	height: 32px;
+}
 
 /* side list */
 @media screen and (max-width: 991px) {
