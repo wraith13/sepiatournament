@@ -6,39 +6,27 @@ $user_id = $_SESSION['user_id'];
 
 function decode($json_list)
 {
-	if ($json_list)
+	$result = [];
+	foreach($json_list as $i)
 	{
-		$result = [];
-		foreach($json_list as $i)
-		{
-			$result[] = json_decode($i);
-		}
-		return $result;
+		$result[] = json_decode($i);
 	}
-	else
-	{
-		return null;
-	}
+	return $result;
 }
 
 print
 (
 	json_encode
 	(
-		0 == count($error) ?
+		decode
 		(
-			decode
+			db_select_table_for_signle_column
 			(
-				select_table_for_signle_column
-				(
-					$db,
-					"object where id='$user_id'",
-					"json"
-				)
-			) ?:
-			array(error => $db->error)
-		):
-		$error
+				$db,
+				"object where id='$user_id'",
+				"json"
+			)
+		)
 	)
 );
 

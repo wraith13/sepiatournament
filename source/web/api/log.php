@@ -6,17 +6,12 @@ print
 (
 	json_encode
 	(
-		0 == count($error) ?
+		db_select_table
 		(
-			select_table
-			(
-				$db,
-				"log order by at desc",
-				array("target", "at", "category", "operator", "message")
-			) ?:
-			array(error => $db->error)
-		):
-		$error
+			$db,
+			"log order by at desc",
+			array("target", "at", "category", "operator", "message")
+		)
 	)
 );
 
