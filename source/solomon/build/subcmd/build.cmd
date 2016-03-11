@@ -35,5 +35,9 @@
 @REM abraham\twitteroauth をコピー
 @CALL "%SOLOMON_MIRROR_DIR_CMD%" "..\..\..\abraham\twitteroauth\src" "%RESULT_DIR%\web\api\abraham\twitteroauth"
 
+@REM mbostock\d3 をコピー
+@CALL "%SOLOMON_LIBCMD_DIR%\mkdir.ex.cmd" "%RESULT_DIR%\web\js\mbostock\d3"
+@COPY /Y "..\..\..\mbostock\d3\d3.min.js" "%RESULT_DIR%\web\js\mbostock\d3" >NUL
+
 @CALL "%SOLOMON_COMPILE_SUCCESS_CMD%"
 @CALL "%SOLOMON_TEST_SUCCESS_CMD%"
