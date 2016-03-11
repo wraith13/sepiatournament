@@ -268,6 +268,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         if ("log" == $scope.active_tab) {
             $scope.update_log();
         }
+        if ("profile" == $scope.active_tab) {
+			$scope.requireLogin();
+        }
     };
     setTimeout(function () {
 		var hash = $location.hash();
@@ -977,7 +980,17 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         }
     };
 
+	$scope.requireLogin = function() {
+		if ($scope.logonUser) {
+			return true;
+		} else {
+			$scope.requireLoginRequestPath = $location.path();
+			$scope.selectTab("login");
+			return false;
+		}
+	};
 	$scope.login = function(sns) {
+		// todo: $scope.requireLoginRequestPath を cookie に保存し、ログイン成功時にその画面へ戻る
 		window.location.href = "/api/oauth.php?sns=" +sns;
 		//$location.path("/api/oauth.php?sns=" +sns);
 	};

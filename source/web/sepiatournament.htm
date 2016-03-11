@@ -78,7 +78,7 @@
                     </ul>
                     
                     <ul class="nav navbar-nav navbar-right">
-                        <li ng-hide="logonUser"><a href="#login" ng-click="selectTab('login')"><span class="glyphicon glyphicon-log-in"></span>login</a></li>
+                        <li ng-hide="logonUser"><a href="#login" ng-click="requireLogin()"><span class="glyphicon glyphicon-log-in"></span>login</a></li>
                         
                         <li ng-show="logonUser" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" ng-click="isCollapsed2 = !isCollapsed2"><img class="user-icon" src="{{logonUser.image}}" alt="{{logonUser.name}}" /><span class="caret"></span></a>
@@ -516,6 +516,14 @@
                     <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="login('twitter')"><img class="login icon" src="/images/twitter/logo_white.png">twitter でログイン</button>
                 </div>
                 
+                <div ng-show="active_tab=='profile'">
+                	<h3>profile</h3>
+                    <div class="row">
+                        <div ng-include="'jumbotron.html'" ng-repeat="model in [logonUser]"></div>
+                        <div ng-include="'edit.html'" ng-repeat="model in [logonUser]"></div>
+                    </div>
+                </div>
+
                 <div ng-show="active_tab=='log'">
                     <table ng-if="model.logs" class="list">
                         <tr><th>target</th><th>at</th><th>category</th><th>operator</th><th>message</th></tr>
