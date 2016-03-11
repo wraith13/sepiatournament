@@ -16,12 +16,16 @@ $twitter = new TwitterOAuth
 	$twitter_config["twitter.consumer.secret"]
 );
 
-$callbackurl = preg_replace("oauth\.php", "oauth\.callback\.php", $_SERVER["PHP_SELF"]);
-//$callbackurl = "http:/sepiatournament.net/api/oauth.callback.php?sns=$sns";
+//$callbackurl = preg_replace("oauth\.php", "oauth\.callback\.php", $_SERVER["PHP_SELF"]);
+//$callbackurl = "https:/sepiatournament.net/api/oauth.callback.php?sns=$sns";
 $request_token = $twitter->oauth
 (
 	'oauth/request_token',
-	array('oauth_callback' => $callbackurl)
+	array(
+	//'oauth_callback' => $callbackurl
+	// twitter上のアプリの設定で指定してるのでこちらでは不要。
+	// 加えてセキュリティ向上の為にコールバック先を固定にしているので指定するとエラーになる。
+	)
 );
 $url = $twitter->url
 (
