@@ -1,5 +1,5 @@
 ﻿// hand include from http://ngmodules.org/modules/Angular.uuid
-//'use strict' d3 周りのコードが上手く機能しなくなる問題が解決されたらコメントをハズすこと。
+'use strict'
 angular.module('angularUUID2', []).factory('uuid2', [
     function () {
         function s4() {
@@ -858,7 +858,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
                 // Transition nodes to their new position.
                 var nodeUpdate = node.transition()
                     .duration(duration)
-                    .attr("transform", function (d) { p = calcLeft(d); return "translate(" + p.y + "," + p.x + ")"; });
+                    .attr("transform", function (d) { var p = calcLeft(d); return "translate(" + p.y + "," + p.x + ")"; });
 
                 nodeUpdate.select("circle")
                     .attr("r", 4.5)
