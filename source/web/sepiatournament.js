@@ -1098,6 +1098,28 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     $scope.regulateModel();
 
     $scope.checkResults = [];
+	
+	$scope.save = function(model) {
+		$scope.isUpdating = true;
+		$http({
+			method: 'PUT',
+			url: "/api/update.php",
+			data: { json:model }
+		}).success(function (data, status, headers, config) {
+			switch(data) {
+			case "success":
+	            $scope.addAlert({ type: 'success', msg: '保存しました。(' +data +')'});
+				break;
+			default:
+	            $scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data +')'});
+				break;
+			}
+			$scope.isUpdating = false;
+		}).error(function (data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
+			$scope.isUpdating = false;
+		});
+	};
 
     $scope.$watchCollection('checkModel', function () {
         $scope.checkResults = [];
