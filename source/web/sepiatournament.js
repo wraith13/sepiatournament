@@ -182,6 +182,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     });
 
     $scope.regulateModel = function () {
+        $scope.temp = {};
         $scope.repository = {};
         $scope.selected = {};
         $scope.cache = {};
@@ -248,9 +249,10 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "profile": "pencil",
         "log": "list"
     };
-    $scope.mastertabs = ["event", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log", "profile"];
+    $scope.mastertabs = ["event", "event.new", "event.list", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log", "profile"];
     $scope.tabs = ["event", "entry", "member", "match", "tree", "log"];
     $scope.userTabs = ["profile","event","entry"];
+    $scope.requireLoginTabs = ["event.new", "profile"];
     $scope.selectTab = function (tab) {
         $scope.selected = {};
         $scope.isCollapsed = false;
@@ -268,9 +270,12 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         if ("log" == $scope.active_tab) {
             $scope.update_log();
         }
-        if ("profile" == $scope.active_tab) {
-			$scope.requireLogin();
+        if (0 <= $scope.requireLoginTabs.indexOf(tab)) {
+			$scope.requireLogin(tab);
         }
+		if ("event.new" == $scope.active_tab) {
+			$scope.temp.event = { type:'event' };
+		}
     };
     setTimeout(function () {
 		var hash = $location.hash();

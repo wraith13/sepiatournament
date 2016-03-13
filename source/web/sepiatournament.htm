@@ -170,8 +170,8 @@
             <h4>link</h4>
             <div ng-include="'link.edit.html'" ng-repeat="link in (model.links || [])"></div>
             <button type="button" class='btn btn-default btn-lg btn-block' ng-click="addLink(model)"><span class="glyphicon glyphicon-plus"></span>リンクの追加</button>
-            <button ng-hide="isUpdating" type="button" class="btn btn-primary btn-lg btn-block" ng-click="save(model)"><span class="glyphicon glyphicon-cloud-upload"></span>保存</button>
-            <button ng-show="isUpdating" type="button" class="btn btn-primary btn-lg btn-block" ng-click="save(model)" disabled><span class="glyphicon glyphicon-cloud-upload"></span>保存</button>
+            <button ng-hide="isUpdating" type="button" class="btn btn-primary btn-lg btn-block" ng-click="save(model)"><span class="glyphicon glyphicon-cloud-upload"></span>{{ model.id ? "保存": "作成"}}</button>
+            <button ng-show="isUpdating" type="button" class="btn btn-primary btn-lg btn-block" ng-click="save(model)" disabled><span class="glyphicon glyphicon-cloud-upload"></span>{{ model.id ? "保存": "作成"}}</button>
         </script>
 
         <script type="text/ng-template" id="tag.edit.html">
@@ -330,8 +330,8 @@
 
                 <div ng-hide="active_tab">
                     <div ng-hide="viewmode">
-                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event')">イベントを開催する</button>
-                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event')">イベントに参加する</button>
+                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.new')">イベントを開催する</button>
+                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.list')">イベントに参加する</button>
                     </div>
                     <div ng-show="viewmode">
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('entry')">参加チーム一覧を見る</button>
@@ -346,6 +346,11 @@
                     <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('entry')">参加チームを登録する</button>
                 </div>
 
+                <div ng-show="active_tab=='event.new'">
+                    <uib-alert type="info">開催するイベントの各種情報を入力して保存ボタンをクリックしてください。このフォールで入力情報は後から編集可能なのでまずは名前だけ入力して先に進んでも構いません。</uib-alert>
+                    <div ng-include="'edit.html'" ng-repeat="model in [temp.event]"></div>
+                </div>
+                
                 <div ng-show="active_tab=='entry'">
                     <div class="row">
                         <div class="col-md-5" ng-class="selected.entry?'hide-on-narrow':''">
