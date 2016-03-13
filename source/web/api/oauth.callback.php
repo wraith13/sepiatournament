@@ -133,12 +133,25 @@ try
 			"image" => $twitter_user->profile_image_url_https,
 			"links" => []
 		);
-		if ($twitter_user->url && 0 < strlen($twitter_user->url))
+		if ($twitter_user->url)
 		{
+			$url = $twitter_user->url;
+			if
+			(
+				$twitter_user->entities &&
+				$twitter_user->entities->url &&
+				$twitter_user->entities->url->urls &&
+				$twitter_user->entities->url->urls[0] &&
+				$twitter_user->entities->url->urls[0]->expanded_url
+			)
+			{
+				$url = $twitter_user->entities->url->urls[0]->expanded_url;
+			}
+			
 			$user["links"][] = array
 			(
-				type => "link",
-				url => $twitter_user->url,
+				"type" => "link",
+				"url" => $url
 			);
 		}
 		db_insert
