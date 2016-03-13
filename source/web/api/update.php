@@ -1,44 +1,68 @@
 <?php
 require_once __DIR__ . '/common/db.php';
+require_once __DIR__ . '/common/user.php';
 
 function main($db)
 {
 	session_start();
 	$user_id = $_SESSION['user_id'];
 	
-	$json = json_decode(file_get_contents('php://input'), true)["json"];
-	$json_id = $json["id"];
-	if (!$json_id)
+	$request_json = json_decode(file_get_contents('php://input'), true)["json"];
+	$request_json_id = $request_json["id"];
+	if (!$request_json_id)
 	{
 		return "id is null";
 	}
 	
-	$object = db_select_table
+	$object = db_select
 	(
 		$db,
-		"object where id='$json_id'",
-		array("json", "owner", "type", "remove")
+		"object",
+		array("json", "owner", "type", "remove"),
+		array("id" => $request_json_id)
 	)[0];
 	
 	if ($user_id != $object["owner"])
 	{
-		return "disallow($user_id,{$object['owner']}";
+		return "disallow";
 	}
 	
-	switch($json["type"])
+	$object_json = json_decode
+	(
+		$object["json"],
+		true
+	);
+	
+	if ($request_json["type"] != $object["type"])
+	{
+		return "type mismatch";
+	}
+	
+	switch($request_json["type"])
 	{
 	case "user":
-		$user = json_decode
+		$user = array_merge
 		(
-			$object["json"],
-			true
+			$object_json,
+			array
+			(
+				"name" => $request_json["name"],
+				"description" => $request_json["description"],
+				"nnid" => $request_json["nnid"]
+			)
 		);
-		$user["name"] = $json["name"];
-		$user["description"] = $json["description"];
-		$user["nnid"] = $json["nnid"];
-		$user_json = $db->real_escape_string(json_encode($user));
-		$user_search = $db->real_escape_string($user["name"] . " " . $user["description"] . " " . $user["twitter"]);
-		$query_result = db_query($db, "update object set json='$user_json', search='$user_search' where id='$json_id';");
+		db_update
+		(
+			$db,
+			"object",
+			array
+			(
+				"id" => $request_json_id,
+				"json" => json_encode($user),
+				"search" => make_user_search($user)
+			),
+			array("id")
+		);
 		return "success";
 	
 	default:

@@ -3,6 +3,8 @@
 require_once __DIR__ . '/common/db.php';
 require_once __DIR__ . '/uuid/uuid.php';
 require_once __DIR__ . '/twitteroauth.autoload.php';
+require_once __DIR__ . '/common/user.php';
+
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 try
@@ -50,34 +52,69 @@ try
 	$auth_id = $db->real_escape_string($twitter_user->id_str);
 	$user_id = null;
 	
-	$auth_target = db_select_table_for_signle_column($db, "auth where type='twitter' and id='$auth_id';", "target");
+	$auth_target = db_select
+	(
+		$db,
+		"auth",
+		array("target"),
+		array
+		(
+			"type" => "twitter",
+			"id" => $auth_id
+		)
+	);
 	
 	if (0 < count($auth_target))
 	{
-		$target = $user_id = $auth_target[0];
+		$target = $user_id = $auth_target[0]["target"];
 		
 		//	update auth
-		$auth_id = $db->real_escape_string($twitter_user->id_str);
-		$auth_json = $db->real_escape_string(json_encode($twitter_user));
-		db_query($db, "update auth set json = '$auth_json' where type='twitter' and id='$auth_id';");
+		db_update
+		(
+			$db,
+			"auth",
+			array
+			(
+				"type" => "twitter",
+				"id" => $auth_id,
+				"json" => json_encode($twitter_user)
+			),
+			array("type", "id")
+		);
 		
 		//	update object(user)
-		$user = json_decode
+		$user = array_merge
 		(
-			db_select_table_for_signle_column
+			json_decode
 			(
-				$db,
-				"object where id='$user_id'",
-				"json"
+				db_select
+				(
+					$db,
+					"object",
+					array("json"),
+					array("id"=>$user_id)
+				)
+				[0]["json"],
+				true
+			),
+			array
+			(
+				"twitter" => $twitter_user->screen_name,
+				"image" => $twitter_user->profile_image_url_https
 			)
-			[0],
-			true
 		);
-		$user["twitter"] = $twitter_user->screen_name;
-		$user["image"] = $twitter_user->profile_image_url_https;
-		$user_json = $db->real_escape_string(json_encode($user));
-		$user_search = $db->real_escape_string($user["name"] . " " . $user["description"] . " " . $user["twitter"]);
-		$query_result = db_query($db, "update object set json='$user_json', search='$user_search' where id='$user_id';");
+		db_update
+		(
+			$db,
+			"object",
+			array
+			(
+				"id" => $user_id,
+				"json" => json_encode($user),
+				"search" => make_user_search($user)
+			),
+			array("id")
+		);
 		
 		//	log
 		db_log_insert($db, $user_id, "update", $user_id, "login");
@@ -88,13 +125,13 @@ try
 		$user_id = UUID::v4();
 		$user = array
 		(
-			type => "user",
-			id => $user_id,
-			name => $twitter_user->name,
-			description => $twitter_user->description,
-			twitter => $twitter_user->screen_name,
-			image => $twitter_user->profile_image_url_https,
-			links => [],
+			"type" => "user",
+			"id" => $user_id,
+			"name" => $twitter_user->name,
+			"description" => $twitter_user->description,
+			"twitter" => $twitter_user->screen_name,
+			"image" => $twitter_user->profile_image_url_https,
+			"links" => []
 		);
 		if ($twitter_user->url && 0 < strlen($twitter_user->url))
 		{
@@ -104,15 +141,34 @@ try
 				url => $twitter_user->url,
 			);
 		}
-		$user_json = $db->real_escape_string(json_encode($user));
-		$user_search = $db->real_escape_string($user["name"] . " " . $user["description"] . " " . $user["twitter"]);
-		$query_result = db_query($db, "insert into object(id, owner, type, json, search) values('$user_id', '$user_id', 'user', '$user_json','$user_search');");
+		db_insert
+		(
+			$db,
+			"object",
+			array
+			(
+				"id" => $user_id,
+				"owner" => $user_id,
+				"type" => "user",
+				"json" => json_encode($user),
+				"search" => make_user_search($user)
+			)
+		);
 		$target = $user_id;
 		
 		//	insert auth
-		$auth_id = $db->real_escape_string($twitter_user->id_str);
-		$auth_json = $db->real_escape_string(json_encode($twitter_user));
-		db_query($db, "insert into auth(type, id, target, json) values('twitter','$auth_id','$user_id','$auth_json');");
+		db_insert
+		(
+			$db,
+			"auth",
+			array
+			(
+				"type" => "twitter",
+				"id" => $auth_id,
+				"target" => $user_id,
+				"json" => json_encode($twitter_user)
+			)
+		);
 		
 		//	log
 		db_log_insert($db, $user_id, "insert", $user_id, "login");
@@ -123,7 +179,6 @@ try
 }
 catch(Exception $e)
 {
-	//	プログラム的な異常で
 	db_log_exception($db, $e, $target, $target);
 }
 

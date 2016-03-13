@@ -6,11 +6,13 @@ print
 (
 	json_encode
 	(
-		db_select_table
+		db_select
 		(
 			$db,
-			"log order by at desc",
-			array("target", "at", "category", "operator", "message")
+			"log",
+			array("target", "at", "category", "operator", "message"),
+			null,
+			"at desc"
 		)
 	)
 );

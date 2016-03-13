@@ -34,7 +34,7 @@ function db_query($db, $query)
 function db_select_config($db)
 {
 	$result = [];
-	$pre_result = db_select_table($db, "config", array("name", "value"));
+	$pre_result = db_select($db, "config", array("name", "value"));
 	foreach($pre_result as $i)
 	{
 		$name = $i["name"];
@@ -44,10 +44,25 @@ function db_select_config($db)
 	return $result;
 }
 
-function db_select_table($db, $from, $columns)
+function db_select($db, $table, $columns, $wheres = null, $orderby = null)
 {
 	$result = [];
-	$columns_string = implode(",",$columns);
+	$columns_string = implode(",", $columns);
+	$from = $table;
+	if ($wheres)
+	{
+		$where_string_array = [];
+		foreach(db_real_escape_array($db, $wheres) as $key => $value)
+		{
+			$where_string_array[] = "$key='$value'";
+		}
+		$where_string = implode(" and ", $where_string_array);
+		$from = "$from where $where_string";
+	}
+	if ($orderby)
+	{
+		$from = "$from order by $orderby";
+	}
 	$query_result = db_query($db, "select $columns_string from $from;");
 	while($row = $query_result->fetch_assoc())
 	{
@@ -57,18 +72,6 @@ function db_select_table($db, $from, $columns)
 			$current[$i] = $row[$i];
 		}
 		$result[] = $current;
-	}
-	$query_result->free();
-	return $result;
-}
-
-function db_select_table_for_signle_column($db, $from, $column)
-{
-	$result = [];
-	$query_result = db_query($db, "select $column from $from;");
-	while($row = $query_result->fetch_assoc())
-	{
-		$result[] = $row[$column];
 	}
 	$query_result->free();
 	return $result;
@@ -93,4 +96,49 @@ function db_log_exception($db, $e, $target, $operator)
 		$target,
 		$e->getMessage() . " @ " . $e->getTraceAsString()
 	);
+}
+
+function db_real_escape_array($db, $array)
+{
+	$result = [];
+	foreach($array as $key => $value)
+	{
+		$result[$key] = $db->real_escape_string($value);
+	}
+	return $result;
+}
+function db_insert($db, $table, $array)
+{
+	$keys = [];
+	$values = [];
+	foreach(db_real_escape_array($db, $array) as $key => $value)
+	{
+		$keys[] = $key;
+		$values[] = $value;
+	}
+	$kes_string = implode("," ,$keys);
+	$values_string = implode("','", $values);
+	return db_query($db, "insert into $table($kes_string) values('$values_string');");
+}
+function db_update($db, $table, $array, $primary_keys)
+{
+	$sets = [];
+	$wheres = [];
+	foreach(db_real_escape_array($db, $array) as $key => $value)
+	{
+		$part = "$key='$value'";
+		if (in_array($key, $primary_keys))
+		{
+			$wheres[] = $part;
+		}
+		else
+		{
+			$sets[] = $part;
+		}
+	}
+	
+	$set_string = implode("," ,$sets);
+	$where_string = implode(" and ", $wheres);
+	
+	return db_query($db, "update $table set $set_string where $where_string;");
 }

@@ -9,7 +9,7 @@ function decode($json_list)
 	$result = [];
 	foreach($json_list as $i)
 	{
-		$result[] = json_decode($i);
+		$result[] = json_decode($i["json"]);
 	}
 	return $result;
 }
@@ -20,11 +20,12 @@ print
 	(
 		decode
 		(
-			db_select_table_for_signle_column
+			db_select
 			(
 				$db,
-				"object where id='$user_id'",
-				"json"
+				"object",
+				array("json"),
+				array("id" => $user_id)
 			)
 		)
 	)
