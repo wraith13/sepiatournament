@@ -7,6 +7,11 @@ require_once __DIR__ . '/common/user.php';
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 
+function get_twitter_image_url($twitter_user)
+{
+	return preg_replace('/_normal\.([^\.]*)$/', '.\1', $twitter_user->profile_image_url_https);
+}
+
 try
 {
 	$sns = $_GET["sns"];
@@ -100,7 +105,7 @@ try
 			array
 			(
 				"twitter" => $twitter_user->screen_name,
-				"image" => $twitter_user->profile_image_url_https
+				"image" => get_twitter_image_url($twitter_user)
 			)
 		);
 		db_update
@@ -130,7 +135,7 @@ try
 			"name" => $twitter_user->name,
 			"description" => $twitter_user->description,
 			"twitter" => $twitter_user->screen_name,
-			"image" => $twitter_user->profile_image_url_https,
+			"image" => get_twitter_image_url($twitter_user),
 			"links" => []
 		);
 		if ($twitter_user->url)
