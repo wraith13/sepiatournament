@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/common/db.php';
 require_once __DIR__ . '/common/user.php';
+require_once __DIR__ . '/common/string.php';
 
 function regulate_links($links)
 {
@@ -24,7 +25,7 @@ function regulate_links($links)
 			(
 				"type" => $link["type"],
 				"url" => $link["url"],
-				"title" => iconv_substr($link["title"], 0, 255)
+				"title" => typesafe_iconv_substr($link["title"], 0, 255)
 			);
 			if (10 <= count($result))
 			{
@@ -85,9 +86,9 @@ function main($db)
 				$object_json,
 				array
 				(
-					"name" => iconv_substr($request_json["name"], 0, 16),
-					"description" => iconv_substr($request_json["description"], 0, 1024),
-					"nnid" => iconv_substr($request_json["nnid"], 0, 16),
+					"name" => typesafe_iconv_substr($request_json["name"], 0, 16),
+					"description" => typesafe_iconv_substr($request_json["description"], 0, 1024),
+					"nnid" => typesafe_iconv_substr($request_json["nnid"], 0, 16),
 					"links" => regulate_links($request_json["links"])
 				)
 			);
