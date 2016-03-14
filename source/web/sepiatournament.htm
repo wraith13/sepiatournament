@@ -187,7 +187,7 @@
             <div ng-include="'link.edit.html'" ng-repeat="link in (model.links || [])"></div>
             <button ng-show="!model.links || model.links.length < 10" type="button" class='btn btn-default btn-lg btn-block' ng-click="addLink(model)"><span class="glyphicon glyphicon-plus"></span>リンクの追加</button>
 			<uib-alert ng-hide="!model.links || model.links.length < 10" type="warning">これ以上はリンクを追加できません。</uib-alert>
-			<h4></h4>
+			<h4>&nbsp;</h4>
             <button ng-hide="isUpdating" type="button" class="btn btn-primary btn-lg btn-block" ng-click="save(model)"><span class="glyphicon glyphicon-cloud-upload"></span>{{ model.id ? "保存": "作成"}}</button>
             <button ng-show="isUpdating" type="button" class="btn btn-primary btn-lg btn-block" ng-click="save(model)" disabled><span class="glyphicon glyphicon-cloud-upload"></span>{{ model.id ? "保存": "作成"}}</button>
         </script>
