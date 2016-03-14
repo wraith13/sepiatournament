@@ -98,8 +98,15 @@
         <script type="text/ng-template" id="jumbotron.html">
             <div class="jumbotron">
                 <span ng-include="'tag.html'"></span>
-                <h1><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span>{{model.name}}</h1>
+                <h1><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" src="{{model.image}}"/>{{model.name}}</h1>
                 <p>{{model.description}}</p>
+				
+				<h4 ng-show="model.twitter">twitter</h4>
+				<a ng-show="model.twitter" href="https://twitter.com/{{model.twitter}}" target="_blank">@{{model.twitter}}</a>
+				
+				<h4 ng-show="model.nnid">nintendo network id</h4>
+				{{model.nnid}}
+				
 				<h4 ng-show="model.links && model.links.length">link</h4>
                 <p ng-show="model.links" ng-repeat="link in model.links"><a ng-href="{{link.url}}" target="_blank">{{link.title || link.url}}</a></p>
                 <div ng-show="model.entries" ng-include="'match.entries.list.html'"></div>
@@ -168,13 +175,13 @@
             <div  ng-show="model.type=='event' || model.type=='match'" ng-include="'time.edit.html'" ></div>
             <div ng-include="'tag.edit.html'" ng-show="tags[model.type]"></div>
 			
-			<div ng-show="model.type=='user'">
+            <div ng-show="model.type=='user'">
             <h4>twitter</h4>
-			<a href="https://twitter.com/{{model.twitter}}" target="_blank"><img class="icon icon-mini" src="{{model.image}}"/>@{{model.twitter}}</a>
+            <a href="https://twitter.com/{{model.twitter}}" target="_blank"><img class="icon icon-mini" src="{{model.image}}"/>@{{model.twitter}}</a>
 
-            <h4>nintend network id</h4>
+            <h4>nintendo network id</h4>
             <input type="text" class="form-control" ng-model="model.nnid" placeholder="nnid" />
-			</div>
+            </div>
 			
             <h4>link</h4>
             <div ng-include="'link.edit.html'" ng-repeat="link in (model.links || [])"></div>

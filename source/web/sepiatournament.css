@@ -59,6 +59,15 @@ body {
 .btn-lg .glyphicon {
 	margin-right: 4px;
 }
+.icon-big {
+	margin-right: 16px;
+	width: 64px;
+	height: 64px;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+}
+
 .icon-mini {
 	margin-right: 4px;
 	width: 16px;
