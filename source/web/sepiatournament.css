@@ -59,6 +59,14 @@ body {
 .btn-lg .glyphicon {
 	margin-right: 4px;
 }
+.icon-mini {
+	margin-right: 4px;
+	width: 16px;
+	height: 16px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+}
 
 /* side list */
 @media screen and (max-width: 991px) {

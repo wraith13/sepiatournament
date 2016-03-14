@@ -167,6 +167,15 @@
             <input type="text" class="form-control" ng-model="model.description" placeholder="説明" />
             <div  ng-show="model.type=='event' || model.type=='match'" ng-include="'time.edit.html'" ></div>
             <div ng-include="'tag.edit.html'" ng-show="tags[model.type]"></div>
+			
+			<div ng-show="model.type=='user'">
+            <h4>twitter</h4>
+			<a href="https://twitter.com/{{model.twitter}}" target="_blank"><img class="icon icon-mini" src="{{model.image}}"/>@{{model.twitter}}</a>
+
+            <h4>nintend network id</h4>
+            <input type="text" class="form-control" ng-model="model.nnid" placeholder="nnid" />
+			</div>
+			
             <h4>link</h4>
             <div ng-include="'link.edit.html'" ng-repeat="link in (model.links || [])"></div>
             <button type="button" class='btn btn-default btn-lg btn-block' ng-click="addLink(model)"><span class="glyphicon glyphicon-plus"></span>リンクの追加</button>
