@@ -177,6 +177,13 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     }).success(function (data, status, headers, config) {
 		if (data && 0 < data.length) {
 	        $scope.logonUser = data[0];
+			if ($scope.logonUser && $scope.requireLoginRequestPath) {
+				var path = $scope.requireLoginRequestPath.substr(1);
+				if (0 < path.length) {
+					$scope.selectTab(path);
+				}
+				$scope.requireLoginRequestPath = null;
+			}
 		}
     }).error(function (data, status, headers, config) {
     });
@@ -287,12 +294,20 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		if (hash) {
 			console.log("goto: " +hash);
 			$scope.selectTab($location.hash());
+		} else {
+			var init_path = $location.search()["path"];
+			if (init_path && 0 < init_path.length) {
+				console.log("goto: " +init_path);
+				$scope.selectTab(init_path);
+			} else {
+				var first_path = $location.path().substr(1);
+				if (0 < first_path.length) {
+					console.log("goto: " +first_path);
+					$scope.selectTab(first_path);
+				}
+			}
 		}
     }, 0);
-    var init_path = $location.search()["path"];
-    if (init_path && 0 < init_path.length) {
-		$scope.selectTab(path);
-	}
 	
 
     //  cache
@@ -994,11 +1009,11 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         }
     };
 
-	$scope.requireLogin = function() {
+	$scope.requireLogin = function(tab) {
 		if ($scope.logonUser) {
 			return true;
 		} else {
-			$scope.requireLoginRequestPath = $location.path();
+			$scope.requireLoginRequestPath = "/" +tab;
 			$scope.selectTab("login");
 			return false;
 		}
