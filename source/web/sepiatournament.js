@@ -270,7 +270,6 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             $scope.active_tab = null;
 			$location.path("/");
         }
-		$location.replace();
         if ("match" == $scope.active_tab) {
             $scope.update_unmatches();
         }
@@ -308,7 +307,10 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			}
 		}
     }, 0);
-	
+
+	$rootScope.$on('$locationChangeSuccess', function() {
+		$scope.selectTab($location.path().substr(1));
+	});
 
     //  cache
     $scope.getCache = function (type, key) {
