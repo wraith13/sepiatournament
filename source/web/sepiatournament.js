@@ -258,9 +258,12 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.isCollapsed = false;
         if (0 <= $scope.mastertabs.indexOf(tab)) {
             $scope.active_tab = tab;
+			$location.path("/" +tab);
         } else {
             $scope.active_tab = null;
+			$location.path("/");
         }
+		$location.replace();
         if ("match" == $scope.active_tab) {
             $scope.update_unmatches();
         }
@@ -280,11 +283,17 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     setTimeout(function () {
 		var hash = $location.hash();
 		console.log("hash: " +hash);
+		console.log("path: " +$location.path());
 		if (hash) {
 			console.log("goto: " +hash);
 			$scope.selectTab($location.hash());
 		}
     }, 0);
+    var init_path = $location.search()["path"];
+    if (init_path && 0 < init_path.length) {
+		$scope.selectTab(path);
+	}
+	
 
     //  cache
     $scope.getCache = function (type, key) {

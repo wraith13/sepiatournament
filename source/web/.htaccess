@@ -1,1 +1,10 @@
 DirectoryIndex index.html index.php sepiatournament.htm splatournament.htm
+
+RewriteEngine On
+RewriteBase /
+RewriteRule event(.*) ?path=event$1 [L]
+RewriteRule entry(.*) ?path=entry$1 [L]
+RewriteRule member(.*) ?path=member$1 [L]
+RewriteRule match(.*) ?path=match$1 [L]
+RewriteRule tree(.*) ?path=tree$1 [L]
+RewriteRule profile(.*) ?path=profile$1 [L]

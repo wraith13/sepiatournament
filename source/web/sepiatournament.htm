@@ -70,24 +70,24 @@
                     <a class="navbar-brand visible-xs" href="#" ng-click="selectTab(null)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
                 </div>
                 <nav class="navbar-collapse collapse" uib-collapse="!isCollapsed">
-                    <a href="#" role="button" class="navbar-brand" ng-click="selectTab()" ng-hide="isCollapsed"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
+                    <a href="/" role="button" class="navbar-brand" ng-click="selectTab()" ng-hide="isCollapsed"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
                     <ul class="nav navbar-nav" ng-hide="is_loading">
                         <li ng-class="active_tab == tab ? 'active': ''" ng-repeat="tab in tabs track by $index">
-                            <a href="#{{tab}}" ng-click="selectTab(tab)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[tab]"></span>{{tab}}</a>
+                            <a href="/{{tab}}" ng-click="selectTab(tab)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[tab]"></span>{{tab}}</a>
                         </li>
                     </ul>
                     
                     <ul class="nav navbar-nav navbar-right">
-                        <li ng-hide="logonUser"><a href="#login" ng-click="requireLogin()"><span class="glyphicon glyphicon-log-in"></span>login</a></li>
+                        <li ng-hide="logonUser"><a href="/login" ng-click="requireLogin()"><span class="glyphicon glyphicon-log-in"></span>login</a></li>
                         
                         <li ng-show="logonUser" class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" ng-click="isCollapsed2 = !isCollapsed2"><img class="user-icon" ng-src="{{logonUser.image}}" alt="{{logonUser.name}}" /><span class="caret"></span></a>
                             <ul class="dropdown-menu" uib-collapse="!isCollapsed2">
                                 <li ng-class="active_tab == tab ? 'active': ''" ng-repeat="tab in userTabs">
-                                    <a href="#{{tab}}" ng-click="selectTab(tab)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[tab]"></span>{{tab}}</a>
+                                    <a href="/{{tab}}" ng-click="selectTab(tab)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[tab]"></span>{{tab}}</a>
                                 </li>
                                 <li role="separator" class="divider"></li>
-		                        <li><a href="#logout" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span>logout</a></li>
+		                        <li><a href="#" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span>logout</a></li>
                             </ul>
                         </li>
                     </ul>                    
