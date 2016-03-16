@@ -319,7 +319,7 @@
                 </div>
             </div>
         </div>
-        <div ng-show="!(is_loading||active_tab)">
+        <div ng-show="!(is_loading||active_tab)" ng-cloak>
             <div class="big-header">
             
                 <uib-alert type="warning">
@@ -333,7 +333,7 @@
                 </div>
             </div>
         </div>
-        <div ng-show="active_tab=='login'">
+        <div ng-show="active_tab=='login'" ng-cloak>
             <div class="big-header">
                 <div class="container">
                     <div class="jumbotron">
@@ -343,7 +343,7 @@
             </div>
         </div>
 
-        <div class="container theme-showcase" role="main">
+        <div class="container theme-showcase" role="main" ng-cloak>
 
             <div class="alert alert-danger" role="alert" ng-hide="true">
                 <strong>JavaScriptが無効になっています。</strong>
