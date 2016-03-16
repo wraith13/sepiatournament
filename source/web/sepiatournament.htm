@@ -102,13 +102,13 @@
                 <p>{{model.description}}</p>
 				
 				<h4 ng-show="model.twitter">twitter</h4>
-				<a ng-show="model.twitter" href="https://twitter.com/{{model.twitter}}" target="_blank">@{{model.twitter}}</a>
+				<a ng-show="model.twitter" href="https://twitter.com/{{model.twitter}}" rel="noopener" target="_blank">@{{model.twitter}}</a>
 				
 				<h4 ng-show="model.nnid">nintendo network id</h4>
 				{{model.nnid}}
 				
 				<h4 ng-show="model.links && model.links.length">link</h4>
-                <p ng-show="model.links" ng-repeat="link in model.links"><a ng-href="{{link.url}}" target="_blank">{{link.title || link.url}}</a></p>
+                <p ng-show="model.links" ng-repeat="link in model.links"><a ng-href="{{link.url}}" rel="noopener" target="_blank">{{link.title || link.url}}</a></p>
                 <div ng-show="model.entries" ng-include="'match.entries.list.html'"></div>
             </div>
         </script>
@@ -157,7 +157,7 @@
 
         <script type="text/ng-template" id="link.edit.html">
             <p class="input-group link-edit">
-                <a ng-href="{{link.url}}" target="_blank"><span class="form-control">{{link.title || link.url || "右の編集ボタンをクリックすると編集できます。"}}</span></a>
+                <a ng-href="{{link.url}}" rel="noopener" target="_blank"><span class="form-control">{{link.title || link.url || "右の編集ボタンをクリックすると編集できます。"}}</span></a>
                 <span class="input-group-btn">
                     <button uib-popover-template="'popup.link.edit.html'" type="button" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i></button>
                 </span>
@@ -195,7 +195,7 @@
 			
             <div ng-show="model.type=='user'">
             <h4>twitter</h4>
-            <a href="https://twitter.com/{{model.twitter}}" target="_blank"><img class="icon icon-mini" src="{{model.image}}"/>@{{model.twitter}}</a>
+            <a href="https://twitter.com/{{model.twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" src="{{model.image}}"/>@{{model.twitter}}</a>
 
             <h4>nintendo network id</h4>
             <input type="text" class="form-control" ng-model="model.nnid" placeholder="nnid" />
@@ -269,7 +269,7 @@
 			<div ng-show="model.entries" ng-include="'match.entries.list.html'" ng-repeat="model in [model]"></div>
 			<p class="list-group-item-text">{{model.description}}</p>
 			<p class="list-group-item-text" ng-show="model.links && 0 < model.links.length">
-                <a ng-href="{{model.links[0].url}}" target="_blank" ng-click="$event.stopPropagation()">{{model.links[0].title || model.links[0].url}}</a>
+                <a ng-href="{{model.links[0].url}}" rel="noopener" target="_blank" ng-click="$event.stopPropagation()">{{model.links[0].title || model.links[0].url}}</a>
             </p>
         </script>
 		
