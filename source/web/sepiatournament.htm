@@ -171,7 +171,7 @@
             <h4>name</h4>
             <input type="text" class="form-control" ng-model="model.name" placeholder="名前" />
             <h4>description</h4>
-            <input type="text" class="form-control" ng-model="model.description" placeholder="説明" />
+			<textarea class="form-control" rows="10" ng-model="model.description" placeholder="説明" ></textarea>
 			
             <h4 ng-show="model.type=='event'">開催期間</h4>
             <h4 ng-show="model.type=='match'">試合時間</h4>
