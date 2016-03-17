@@ -178,17 +178,43 @@
 			<div ng-show="model.type=='event' || model.type=='match'" ng-include="'time.edit.html'" ></div>
 			
             <h4>private</h4>
-			<label class="checkbox-inline"><input type="checkbox" ng-model="model.is_private">非公開</label>
+			<div class="row">
+				<div class="col-md-6">
+					<button type="button" class="btn btn-block"	ng-class="!model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=false;">
+						<span class="glyphicon" ng-class="!model.is_private ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
+						公開
+					</button>
+				</div>
+				<div class="col-md-6">
+					<button type="button" class="btn btn-block"	ng-class="model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=true;">
+						<span class="glyphicon" ng-class="model.is_private ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
+						非公開
+				</div>
+			</div>
+			
 			
             <div  ng-show="model.type=='event'">
-            <h4>entry style</h4>
-			<label class="checkbox-inline"><input type="radio" ng-model="model.is_closed" ng-value="true">クローズド</label>
-			<label class="checkbox-inline"><input type="radio" ng-model="model.is_closed" ng-value="false">オープン</label>
-			
-            <h4>募集枠</h4>
-            <input type="text" class="form-control" ng-model="model.max_entry" placeholder="募集枠" />
-            <h4>募集期間</h4>
-			<div ng-include="'time.edit.html'" ng-repeat="model in [model.entryspan]"></div>
+				<h4>entry style</h4>
+				<div class="row">
+					<div class="col-md-6">
+						<button type="button" class="btn btn-block"	ng-class="!model.is_closed ? 'btn-primary': 'btn-default'" ng-click="model.is_closed=false;">
+							<span class="glyphicon" ng-class="!model.is_closed ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
+							オープン
+					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-block"	ng-class="model.is_closed ? 'btn-primary': 'btn-default'" ng-click="model.is_closed=true;">
+							<span class="glyphicon" ng-class="model.is_closed ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
+							クローズド
+						</button>
+					</div>
+				</div>
+				
+				<div ng-hide="model.is_closed">
+					<h4>募集枠</h4>
+					<input type="text" class="form-control" ng-model="model.max_entry" placeholder="募集枠" />
+					<h4>募集期間</h4>
+					<div ng-include="'time.edit.html'" ng-repeat="model in [model.entryspan]"></div>
+				</div>
 			</div>
 			
             <div ng-include="'tag.edit.html'" ng-show="tags[model.type]"></div>
