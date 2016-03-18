@@ -101,6 +101,12 @@
                 <h1><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h1>
                 <p>{{model.description}}</p>
 				
+				<div ng-show="(model.type=='event' || model.type=='match') && (model.startAt || model.endAt)">
+				<h4 ng-show="model.type=='event'">開催日時</h4>
+				<h4 ng-show="model.type=='match'">試合日時</h4>
+				{{model.startAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }} ～ {{model.endAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }}
+				</div>
+				
 				<h4 ng-show="model.twitter">twitter</h4>
 				<a ng-show="model.twitter" href="https://twitter.com/{{model.twitter}}" rel="noopener" target="_blank">@{{model.twitter}}</a>
 				
@@ -124,7 +130,7 @@
         <script type="text/ng-template" id="time.edit.html">
             <p class="input-group">
 				<span class="input-group-addon">開始</span>
-                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd HH:mm" ng-model="model.startAt" is-open="selected.openedStartCalendar" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd HH:mm" ng-model="model.startAt" ng-model-options="{timezone:'+900'}" is-open="selected.openedStartCalendar" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="openCalendar('Start')"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
@@ -134,7 +140,7 @@
             </p>
             <p class="input-group">
 				<span class="input-group-addon">終了</span>
-                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd HH:mm" ng-model="model.endAt" is-open="selected.openedEndCalendar" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd HH:mm" ng-model="model.endAt" ng-model-options="{timezone:'+900'}" is-open="selected.openedEndCalendar" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="openCalendar('End')"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
