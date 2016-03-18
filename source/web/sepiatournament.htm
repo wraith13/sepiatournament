@@ -168,69 +168,80 @@
         </script>
 
         <script type="text/ng-template" id="edit.html">
-            <h4>name</h4>
-            <input type="text" class="form-control" ng-model="model.name" placeholder="名前" />
-            <h4>description</h4>
-			<textarea class="form-control" rows="10" ng-model="model.description" placeholder="説明" ></textarea>
+		
+			<ul class="nav nav-tabs">
+				<li role="presentation" ng-class="{active:!preview}" ng-click="preview=false;"><a href="#"><span class="glyphicon glyphicon-pencil"></span>edit</a></li>
+				<li role="presentation" ng-class="{active:preview}" ng-click="preview=true;"><a href="#"><span class="glyphicon glyphicon-eye-open"></span>preview</a></li>
+			</ul>
 			
-            <h4 ng-show="model.type=='event'">開催期間</h4>
-            <h4 ng-show="model.type=='match'">試合時間</h4>
-			<div ng-show="model.type=='event' || model.type=='match'" ng-include="'time.edit.html'" ></div>
-			
-            <h4>private</h4>
-			<div class="row">
-				<div class="col-md-6">
-					<button type="button" class="btn btn-block"	ng-class="!model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=false;">
-						<span class="glyphicon" ng-class="!model.is_private ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
-						公開
-					</button>
-				</div>
-				<div class="col-md-6">
-					<button type="button" class="btn btn-block"	ng-class="model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=true;">
-						<span class="glyphicon" ng-class="model.is_private ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
-						非公開
-				</div>
-			</div>
-			
-			
-            <div  ng-show="model.type=='event'">
-				<h4>entry style</h4>
+			<div ng-show="!preview">
+				<h4>name</h4>
+				<input type="text" class="form-control" ng-model="model.name" placeholder="名前" />
+				<h4>description</h4>
+				<textarea class="form-control" rows="10" ng-model="model.description" placeholder="説明" ></textarea>
+				
+				<h4 ng-show="model.type=='event'">開催期間</h4>
+				<h4 ng-show="model.type=='match'">試合時間</h4>
+				<div ng-show="model.type=='event' || model.type=='match'" ng-include="'time.edit.html'" ></div>
+				
+				<h4>private</h4>
 				<div class="row">
 					<div class="col-md-6">
-						<button type="button" class="btn btn-block"	ng-class="!model.is_closed ? 'btn-primary': 'btn-default'" ng-click="model.is_closed=false;">
-							<span class="glyphicon" ng-class="!model.is_closed ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
-							オープン
+						<button type="button" class="btn btn-block"	ng-class="!model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=false;">
+							<span class="glyphicon" ng-class="!model.is_private ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
+							公開
+						</button>
 					</div>
 					<div class="col-md-6">
-						<button type="button" class="btn btn-block"	ng-class="model.is_closed ? 'btn-primary': 'btn-default'" ng-click="model.is_closed=true;">
-							<span class="glyphicon" ng-class="model.is_closed ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
-							クローズド
-						</button>
+						<button type="button" class="btn btn-block"	ng-class="model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=true;">
+							<span class="glyphicon" ng-class="model.is_private ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
+							非公開
 					</div>
 				</div>
 				
-				<div ng-hide="model.is_closed">
-					<h4>募集枠</h4>
-					<input type="text" class="form-control" ng-model="model.max_entry" placeholder="募集枠" />
-					<h4>募集期間</h4>
-					<div ng-include="'time.edit.html'" ng-repeat="model in [model.entryspan]"></div>
+				
+				<div  ng-show="model.type=='event'">
+					<h4>entry style</h4>
+					<div class="row">
+						<div class="col-md-6">
+							<button type="button" class="btn btn-block"	ng-class="!model.is_closed ? 'btn-primary': 'btn-default'" ng-click="model.is_closed=false;">
+								<span class="glyphicon" ng-class="!model.is_closed ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
+								オープン
+						</div>
+						<div class="col-md-6">
+							<button type="button" class="btn btn-block"	ng-class="model.is_closed ? 'btn-primary': 'btn-default'" ng-click="model.is_closed=true;">
+								<span class="glyphicon" ng-class="model.is_closed ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
+								クローズド
+							</button>
+						</div>
+					</div>
+					
+					<div ng-hide="model.is_closed">
+						<h4>募集枠</h4>
+						<input type="text" class="form-control" ng-model="model.max_entry" placeholder="募集枠" />
+						<h4>募集期間</h4>
+						<div ng-include="'time.edit.html'" ng-repeat="model in [model.entryspan]"></div>
+					</div>
 				</div>
+				
+				<div ng-include="'tag.edit.html'" ng-show="tags[model.type]"></div>
+				
+				<div ng-show="model.type=='user'">
+				<h4>twitter</h4>
+				<a href="https://twitter.com/{{model.twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" src="{{model.image}}"/>@{{model.twitter}}</a>
+	
+				<h4>nintendo network id</h4>
+				<input type="text" class="form-control" ng-model="model.nnid" placeholder="nnid" />
+				</div>
+				
+				<h4>link</h4>
+				<div ng-include="'link.edit.html'" ng-repeat="link in (model.links || [])"></div>
+				<button ng-show="!model.links || model.links.length < 10" type="button" class='btn btn-default btn-lg btn-block' ng-click="addLink(model)"><span class="glyphicon glyphicon-plus"></span>リンクの追加</button>
+				<uib-alert ng-hide="!model.links || model.links.length < 10" type="warning">これ以上はリンクを追加できません。</uib-alert>
 			</div>
 			
-            <div ng-include="'tag.edit.html'" ng-show="tags[model.type]"></div>
+			<div ng-show="preview" ng-include="'jumbotron.html'" ng-repeat="model in [model]"></div>
 			
-            <div ng-show="model.type=='user'">
-            <h4>twitter</h4>
-            <a href="https://twitter.com/{{model.twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" src="{{model.image}}"/>@{{model.twitter}}</a>
-
-            <h4>nintendo network id</h4>
-            <input type="text" class="form-control" ng-model="model.nnid" placeholder="nnid" />
-            </div>
-			
-            <h4>link</h4>
-            <div ng-include="'link.edit.html'" ng-repeat="link in (model.links || [])"></div>
-            <button ng-show="!model.links || model.links.length < 10" type="button" class='btn btn-default btn-lg btn-block' ng-click="addLink(model)"><span class="glyphicon glyphicon-plus"></span>リンクの追加</button>
-			<uib-alert ng-hide="!model.links || model.links.length < 10" type="warning">これ以上はリンクを追加できません。</uib-alert>
 			<h4>&nbsp;</h4>
             <button ng-hide="isUpdating" type="button" class="btn btn-primary btn-lg btn-block" ng-click="save(model)"><span class="glyphicon glyphicon-cloud-upload"></span>{{ model.id ? "保存": "作成"}}</button>
             <button ng-show="isUpdating" type="button" class="btn btn-primary btn-lg btn-block" ng-click="save(model)" disabled><span class="glyphicon glyphicon-cloud-upload"></span>{{ model.id ? "保存": "作成"}}</button>
@@ -586,10 +597,7 @@
                 
                 <div ng-show="active_tab=='profile'">
                 	<h3>profile</h3>
-                    <div class="row">
-                        <div ng-include="'jumbotron.html'" ng-repeat="model in [logonUser]"></div>
-                        <div ng-include="'edit.html'" ng-repeat="model in [logonUser]"></div>
-                    </div>
+                    <div ng-include="'edit.html'" ng-repeat="model in [logonUser]"></div>
                 </div>
 
                 <div ng-show="active_tab=='log'">
