@@ -98,7 +98,7 @@
         <script type="text/ng-template" id="jumbotron.html">
             <div class="jumbotron">
                 <span ng-include="'tag.html'"></span>
-                <h1><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" src="{{model.image}}"/>{{model.name}}</h1>
+                <h1><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h1>
                 <p>{{model.description}}</p>
 				
 				<h4 ng-show="model.twitter">twitter</h4>
