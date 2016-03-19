@@ -98,17 +98,33 @@
         <script type="text/ng-template" id="jumbotron.html">
             <div class="jumbotron">
                 <span ng-include="'tag.html'"></span>
+				
+				<div ng-show="model.type=='event'" style="float:right;">
+					開催者: <a href="https://twitter.com/{{getObject('user',model.owner).twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" src="{{getObject('user',model.owner).image}}"/>{{getObject('user',model.owner).name}}</a>
+				</div>
+				
                 <h1><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h1>
                 <p>{{model.description}}</p>
 				
-				<div ng-show="(model.type=='event' || model.type=='match') && (model.startAt || model.endAt)">
+				<div ng-show="(model.type=='event' || model.type=='match') && model.term && (model.term.startAt || model.term.endAt)">
 				<h4 ng-show="model.type=='event'">開催日時</h4>
 				<h4 ng-show="model.type=='match'">試合日時</h4>
-				{{model.startAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }} ～ {{model.endAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }}
+				<i class="glyphicon glyphicon-calendar"></i>{{model.term.startAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }} ～ {{model.term.endAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }}
+				</div>
+
+				<div ng-show="model.type=='event'">
+					<h4>参加受付</h4>
+					<div ng-show="model.is_private"><i class="glyphicon glyphicon-lock"></i>プライベート</div>
+					<div ng-hide="model.is_private"><i class="glyphicon glyphicon-globe"></i>一般募集</div>
+				</div>
+				
+				<div ng-show="model.type=='event' && !model.is_private && model.entryTerm && (model.entryTerm.startAt || model.entryTerm.endAt)">
+				<h4>募集期間</h4>
+				<i class="glyphicon glyphicon-calendar"></i>{{model.entryTerm.startAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }} ～ {{model.entryTerm.endAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }}
 				</div>
 				
 				<h4 ng-show="model.twitter">twitter</h4>
-				<a ng-show="model.twitter" href="https://twitter.com/{{model.twitter}}" rel="noopener" target="_blank">@{{model.twitter}}</a>
+				<a ng-show="model.twitter" href="https://twitter.com/{{model.twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" src="{{model.image}}"/>@{{model.twitter}}</a>
 				
 				<h4 ng-show="model.nnid">nintendo network id</h4>
 				{{model.nnid}}
@@ -130,9 +146,9 @@
         <script type="text/ng-template" id="time.edit.html">
             <p class="input-group">
 				<span class="input-group-addon">開始</span>
-                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd HH:mm" ng-model="model.startAt" ng-model-options="{timezone:'+900'}" is-open="selected.openedStartCalendar" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd HH:mm" ng-model="model.startAt" ng-model-options="{timezone:'+900'}" is-open="selected['opened'+model.name+'StartCalendar']" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="openCalendar('Start')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    <button type="button" class="btn btn-default" ng-click="openCalendar(model.name+'Start')"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
                 <span class="input-group-btn">
                     <button uib-popover-template="'startAt.time.edit.html'" type="button" class="btn btn-default"><i class="glyphicon glyphicon-time"></i></button>
@@ -140,9 +156,9 @@
             </p>
             <p class="input-group">
 				<span class="input-group-addon">終了</span>
-                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd HH:mm" ng-model="model.endAt" ng-model-options="{timezone:'+900'}" is-open="selected.openedEndCalendar" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd HH:mm" ng-model="model.endAt" ng-model-options="{timezone:'+900'}" is-open="selected['opened'+model.name+'EndCalendar']" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default" ng-click="openCalendar('End')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    <button type="button" class="btn btn-default" ng-click="openCalendar(model.name+'End')"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
                 <span class="input-group-btn">
                     <button uib-popover-template="'endAt.time.edit.html'" type="button" class="btn btn-default"><i class="glyphicon glyphicon-time"></i></button>
@@ -186,47 +202,28 @@
 				<h4>description</h4>
 				<textarea class="form-control" rows="10" ng-model="model.description" placeholder="説明" ></textarea>
 				
-				<h4 ng-show="model.type=='event'">開催期間</h4>
-				<h4 ng-show="model.type=='match'">試合時間</h4>
-				<div ng-show="model.type=='event' || model.type=='match'" ng-include="'time.edit.html'" ></div>
-				
-				<h4>private</h4>
-				<div class="row">
-					<div class="col-md-6">
-						<button type="button" class="btn btn-block"	ng-class="!model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=false;">
-							<span class="glyphicon" ng-class="!model.is_private ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
-							公開
-						</button>
-					</div>
-					<div class="col-md-6">
-						<button type="button" class="btn btn-block"	ng-class="model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=true;">
-							<span class="glyphicon" ng-class="model.is_private ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
-							非公開
-					</div>
+				<div ng-show="model.type=='event' || model.type=='match'">
+					<h4 ng-show="model.type=='event'">開催期間</h4>
+					<h4 ng-show="model.type=='match'">試合時間</h4>
+					<div ng-include="'time.edit.html'" ng-repeat="model in [model.term]"></div>
 				</div>
 				
+				<h4>参加受付</h4>
+				<div class="row">
+					<div class="col-md-6">
+						<button type="button" class="btn btn-block"	ng-class="!model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=false;"><i class="glyphicon glyphicon-globe"></i>一般募集</button>
+					</div>
+					<div class="col-md-6">
+						<button type="button" class="btn btn-block"	ng-class="model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=true;"><i class="glyphicon glyphicon-lock"></i>プライベート</button>
+					</div>
+				</div>
+				<uib-alert ng-show="!model.is_private" type="info">[一般募集]にしておくと[イベント一覧]に表示され、参加希望者が参加申請を行い、開催者がそれを承認する形になります。プライベートの場合と同様に開催者が参加招待を行うこともできます。</uib-alert>
+				<uib-alert ng-show="model.is_private" type="info">[プライベート]にしておくと[イベント一覧]には表示されず、開催者が参加招待を行い、参加候補者がそれを承認する形になります。</uib-alert>
 				
 				<div  ng-show="model.type=='event'">
-					<h4>entry style</h4>
-					<div class="row">
-						<div class="col-md-6">
-							<button type="button" class="btn btn-block"	ng-class="!model.is_closed ? 'btn-primary': 'btn-default'" ng-click="model.is_closed=false;">
-								<span class="glyphicon" ng-class="!model.is_closed ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
-								オープン
-						</div>
-						<div class="col-md-6">
-							<button type="button" class="btn btn-block"	ng-class="model.is_closed ? 'btn-primary': 'btn-default'" ng-click="model.is_closed=true;">
-								<span class="glyphicon" ng-class="model.is_closed ? 'glyphicon-check': 'glyphicon-unchecked'"></span>
-								クローズド
-							</button>
-						</div>
-					</div>
-					
-					<div ng-hide="model.is_closed">
-						<h4>募集枠</h4>
-						<input type="text" class="form-control" ng-model="model.max_entry" placeholder="募集枠" />
+					<div ng-hide="model.is_private">
 						<h4>募集期間</h4>
-						<div ng-include="'time.edit.html'" ng-repeat="model in [model.entryspan]"></div>
+						<div ng-include="'time.edit.html'" ng-repeat="model in [model.entryTerm]"></div>
 					</div>
 				</div>
 				

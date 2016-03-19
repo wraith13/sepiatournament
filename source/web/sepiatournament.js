@@ -177,6 +177,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     }).success(function (data, status, headers, config) {
 		if (data && 0 < data.length) {
 	        $scope.logonUser = data[0];
+			$scope.addObject("user", $scope.logonUser);
 			if ($scope.logonUser && $scope.requireLoginRequestPath) {
 				var path = $scope.requireLoginRequestPath.substr(1);
 				if (0 < path.length) {
@@ -188,16 +189,27 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     }).error(function (data, status, headers, config) {
     });
 
+	$scope.regulateEvent = function(event) {
+		event = event || { };
+        event.type = event.type || "event";
+		if (!event.owner && $scope.logonUser) {
+			event.owner = $scope.logonUser.id;
+		}
+		event.term = event.term  || { name:"term" };
+		event.entryTerm = event.entryTerm || { name:"entryTerm" };
+		return event;
+	};
     $scope.regulateModel = function () {
         $scope.temp = {};
         $scope.repository = {};
         $scope.selected = {};
         $scope.cache = {};
         $scope.model = $scope.model || {};
-        $scope.model.event = $scope.model.event || { type: "event" };
+        $scope.model.event = $scope.regulateEvent($scope.model.event || { });
         $scope.makeSureId($scope.model.event);
         $scope.repository.entry = $scope.model.entries = $scope.model.entries || [];
-        $scope.repository.member = $scope.model.members = $scope.model.members || [];
+        $scope.repository.member = $scope.model.members = $scope.model.members || []; // old
+        $scope.repository.user = $scope.model.users = $scope.model.users || [];
         $scope.repository.match = $scope.model.matches = $scope.model.matches || [];
         $scope.initTag();
     };
@@ -283,7 +295,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.requireLogin(tab);
         }
 		if ("event.new" == $scope.active_tab) {
-			$scope.temp.event = { type:'event' };
+			$scope.temp.event = $scope.regulateEvent();
 		}
     };
     setTimeout(function () {
