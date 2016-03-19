@@ -1149,13 +1149,18 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			url: "/api/update.php",
 			data: { json:model }
 		}).success(function (data, status, headers, config) {
-			switch(data) {
-			case "success":
-	            $scope.addAlert({ type: 'success', msg: '保存しました。(' +data +')'});
-				break;
-			default:
-	            $scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data +')'});
-				break;
+			if (data) {
+				if ("success" == data.type) {
+		            $scope.addAlert({ type: 'success', msg: '保存しました。'});
+				} else {
+					if (data.error) {
+						$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +' : ' +data.error +')'});
+					} else {
+						$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +')'});
+					}
+				}
+			} else {
+				$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(null result)'});
 			}
 			$scope.isUpdating = false;
 		}).error(function (data, status, headers, config) {
