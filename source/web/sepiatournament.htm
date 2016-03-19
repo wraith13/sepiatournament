@@ -407,7 +407,7 @@
                 <div ng-hide="active_tab">
                     <div ng-hide="viewmode">
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.new')">イベントを開催する</button>
-                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.list')">イベントに参加する</button>
+                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event')">イベントに参加する</button>
         
                         <div class="row" style="margin-top:32px;">
                             <div class="col-md-6">
@@ -428,17 +428,58 @@
                     </div>
                 </div>
 
-                <div ng-show="active_tab=='event'">
-                    <div ng-include="'edit.html'" ng-repeat="model in [model.event]"></div>
-                    <h4>next</h4>
-                    <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('entry')">参加チームを登録する</button>
-                </div>
-
                 <div ng-show="active_tab=='event.new'">
                     <uib-alert type="info">開催するイベントの各種情報を入力して保存ボタンをクリックしてください。このフォールで入力情報は後から編集可能なのでまずは名前だけ入力して先に進んでも構いません。</uib-alert>
                     <div ng-include="'edit.html'" ng-repeat="model in [temp.event]"></div>
                 </div>
                 
+                <div ng-show="active_tab=='event'">
+                    <div class="row">
+                        <div class="col-md-5" ng-class="selected.event?'hide-on-narrow':''">
+                            <div ng-include="'filter.html'" ng-repeat="type in ['event']"></div>
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-success glyphicon glyphicon-plus"
+                                    ng-click="selectTab('event.new')"
+                                    ng-hide="viewmode">
+                                    イベントの開催
+                                </li>
+                                <li ng-include="'entries.list.item.html'"
+                                    class="list-group-item"
+                                    ng-class="{'active': model == selected.event}"
+                                    ng-repeat="model in model.events | filter:filterEvent track by $index"
+                                    ng-click="selectEvent(model)">
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-7" ng-show="selected.event">
+                            <button type="button" class='btn glyphicon glyphicon-chevron-left show-on-narrow' ng-click="selectEvent(null)">戻る</button>
+                            <div ng-show="!viewmode">
+                                <button type="button"
+                                        class='btn btn-danger glyphicon glyphicon-trash'
+                                        ng-click="removeEvent(selected.event)"
+                                        style="float:right">
+                                    イベントの削除
+                                </button>
+                                <div ng-include="'edit.html'" ng-repeat="model in [selected.event]"></div>
+                                <div  ng-show="0<selected.eventMatches.length">
+                                    <h4>match</h4>
+                                    <div ng-include="'matches.list.html'" ng-repeat="model in [selected.eventMatches]"></div>
+                                </div>
+                            </div>
+                            <div ng-show="viewmode">
+                                <div ng-include="'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
+                                <div ng-show="0<selected.eventMatches.length">
+                                    <h4>match</h4>
+                                    <div ng-include="'matches.list.html'" ng-repeat="model in [selected.eventMatches]"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7" ng-hide="selected.event" ng-class="!selected.event?'hide-on-narrow':''">
+                            <uib-alert type="info">左からイベントを選択してください。</uib-alert>
+                        </div>
+                    </div>
+                </div>
+
                 <div ng-show="active_tab=='entry'">
                     <div class="row">
                         <div class="col-md-5" ng-class="selected.entry?'hide-on-narrow':''">

@@ -282,6 +282,19 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             $scope.active_tab = null;
 			$location.path("/");
         }
+        if ("event" == $scope.active_tab) {
+			$http({
+				method: 'GET',
+				url: "/api/object.php?type=event"
+			}).success(function (data, status, headers, config) {
+				if (data && 0 < data.length) {
+					$scope.model.events = data;
+				} else {
+					$scope.model.events = data;
+				}
+			}).error(function (data, status, headers, config) {
+			});
+        }
         if ("match" == $scope.active_tab) {
             $scope.update_unmatches();
         }
@@ -427,6 +440,27 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         });
         return result;
     };
+
+	//	event
+    $scope.selectEvent = function (event) {
+        $scope.selectObject("event", event);
+        $scope.selected.eventMatches = []; // server からとってくる
+    }
+    $scope.addEvent = function () {
+        $scope.addObject("event", $scope.regulateEvent());
+    };
+    $scope.removeEvent = function (event) {
+        $scope.removeObject("event", event);
+    };
+    $scope.filterEvent = function (value, index, array) {
+        var search = $scope.selected.eventSearch;
+        return (!(search) ||
+            0 == search.length ||
+            0 <= (value.name || "").indexOf(search) ||
+            0 <= (value.description || "").indexOf(search)) &&
+            $scope.filterByTag(value);
+    }
+
 
     //  entry
     $scope.selectEntry = function (entry) {
