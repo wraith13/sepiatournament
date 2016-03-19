@@ -1151,6 +1151,10 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.isUpdating = false;
 		});
 	};
+	
+	$scope.server_datetime_to_client = function(datetime)	{
+		return datetime.replace(' ','T')+'Z';
+	}
 
     $scope.$watchCollection('checkModel', function () {
         $scope.checkResults = [];
