@@ -113,13 +113,13 @@
 				</div>
 
 				<div ng-show="model.type=='event'">
-					<h4>参加受付</h4>
+					<h4>参加受付種別</h4>
 					<div ng-show="model.is_private"><i class="glyphicon glyphicon-lock"></i>プライベート</div>
 					<div ng-hide="model.is_private"><i class="glyphicon glyphicon-globe"></i>一般募集</div>
 				</div>
 				
 				<div ng-show="model.type=='event' && !model.is_private && model.entryTerm && (model.entryTerm.startAt || model.entryTerm.endAt)">
-				<h4>募集期間</h4>
+				<h4>参加受付期間</h4>
 				<i class="glyphicon glyphicon-calendar"></i>{{model.entryTerm.startAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }} ～ {{model.entryTerm.endAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }}
 				</div>
 				
@@ -208,7 +208,7 @@
 					<div ng-include="'time.edit.html'" ng-repeat="model in [model.term]"></div>
 				</div>
 				
-				<h4>参加受付</h4>
+				<h4>参加受付種別</h4>
 				<div class="row">
 					<div class="col-md-6">
 						<button type="button" class="btn btn-block"	ng-class="!model.is_private ? 'btn-primary': 'btn-default'" ng-click="model.is_private=false;"><i class="glyphicon glyphicon-globe"></i>一般募集</button>
@@ -222,7 +222,7 @@
 				
 				<div  ng-show="model.type=='event'">
 					<div ng-hide="model.is_private">
-						<h4>募集期間</h4>
+						<h4>参加受付期間</h4>
 						<div ng-include="'time.edit.html'" ng-repeat="model in [model.entryTerm]"></div>
 					</div>
 				</div>
