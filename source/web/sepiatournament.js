@@ -176,7 +176,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 
     $http({
         method: 'GET',
-        url: "/api/user.php"
+        url: "/api/object.php"
     }).success(function (data, status, headers, config) {
 		if (data && 0 < data.length) {
 	        $scope.logonUser = data[0];
