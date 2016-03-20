@@ -242,8 +242,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             $scope.viewmode = true;
             $scope.tabs = ["entry", "member", "match", "tree"];
             $scope.selectTab($location.hash());
-            $rootScope.title = $scope.app.name = $scope.model.event.name;
-            $scope.app.type = $scope.model.event.type;
+            $rootScope.title = $scope.model.event.name +" - " +$scope.app.name;
             $scope.is_loading = false;
         }).error(function (data, status, headers, config) {
             $scope.addAlert({ type: 'danger', msg: 'インポート中にエラーが発生しました。 '});
@@ -269,7 +268,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "log": "list"
     };
     $scope.mastertabs = ["event", "event.new", "event.list", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log", "profile"];
-    $scope.tabs = ["event", "member", "log"];
+    $scope.defaultTabs = ["event", "member", "log"];
+    $scope.tabs = $scope.defaultTabs;
     $scope.userTabs = ["profile","event","entry"];
     $scope.requireLoginTabs = ["event.new", "profile"];
 	$scope.active_base = "";
@@ -310,6 +310,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		if (".." == tab) {
 			$scope.active_base = "";
 			$scope.old_path = "";
+		    $scope.tabs = $scope.defaultTabs;
+			$scope.model.event = null;
 		}
         if (0 <= $scope.mastertabs.indexOf(tab)) {
             $scope.active_tab = tab;
@@ -336,8 +338,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					if (data && 0 < data.length && "event" == data[0].type) {
 			            $scope.tabs = ["entry", "member", "match", "tree"];
 						$scope.model.event = data[0];
-						$rootScope.title = $scope.app.name = $scope.model.event.name;
-						$scope.app.type = $scope.model.event.type;
+			            $rootScope.title = $scope.model.event.name +" - " +$scope.app.name;
 			            $scope.active_tab = null;
 						if (3 <= parts.length) {
 				            $scope.active_tab = parts[2];

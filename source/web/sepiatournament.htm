@@ -70,8 +70,11 @@
                     <a class="navbar-brand visible-xs" href="#" ng-click="selectTab(null)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
                 </div>
                 <nav class="navbar-collapse collapse" uib-collapse="!isCollapsed">
-                    <a href="{{active_base.length ? active_base: '/' }}" role="button" class="navbar-brand" ng-click="selectTab()" ng-hide="isCollapsed"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
+                    <a href="/" role="button" class="navbar-brand" ng-click="selectTab('..')" ng-hide="isCollapsed"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
                     <ul class="nav navbar-nav" ng-hide="is_loading">
+                        <li ng-show="active_base.length && model.event" ng-class="!active_tab ? 'active': ''">
+                            <a href="{{active_base}}" ng-click="selectTab()"><span class="glyphicon glyphicon-tower"></span>{{model.event.name}}</a>
+                        </li>
                         <li ng-class="active_tab == tab ? 'active': ''" ng-repeat="tab in tabs track by $index">
                             <a href="{{active_base}}/{{tab}}" ng-click="selectTab(tab)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[tab]"></span>{{tab}}</a>
                         </li>
@@ -425,6 +428,8 @@
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('entry')">参加チーム一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('match')">試合一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('tree')">トーナメントツリーを見る</button>
+                        <h4>&nbsp;</h4>
+                        <button type="button" class='btn btn-default btn-lg btn-block' ng-click="selectTab('..')">トップページに戻る</button>
                     </div>
                 </div>
 
