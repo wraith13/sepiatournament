@@ -167,6 +167,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         method: 'GET',
         url: "version.json"
     }).success(function (data, status, headers, config) {
+		//	イベントモードの URL を直接開くとなぜかhtmlソースが丸々 data として入ってくる為、とりあえずの止血。
 		if (data.length < 64) {
 	        $scope.app.version = data;
 		}
