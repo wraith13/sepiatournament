@@ -167,7 +167,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         method: 'GET',
         url: "version.json"
     }).success(function (data, status, headers, config) {
-        $scope.app.version = data;
+		if (data.length < 64) {
+	        $scope.app.version = data;
+		}
     }).error(function (data, status, headers, config) {
     });
 
