@@ -281,8 +281,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				path = path.substr(1);
 			}
 		}
-		if (0 < $scope.active_base.length && path && $scope.active_base == path.substr(0, $scope.active_base.length)) {
-			path = path.substr($scope.active_base.length);
+		if (0 < $scope.active_base.length && path && $scope.active_base == ("/" +path).substr(0, $scope.active_base.length)) {
+			path = path.substr($scope.active_base.length -1);
 			while("/" == path.substr(0,1)) {
 				path = path.substr(1);
 			}
@@ -294,6 +294,11 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					$scope.active_base
 			):
 			path;
+		if (new_path) {
+			while("/" == new_path.substr(0,1)) {
+				new_path = new_path.substr(1);
+			}
+		}
 		if ($scope.old_path == new_path) {
 			return;
 		}
@@ -309,11 +314,13 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         if (0 <= $scope.mastertabs.indexOf(tab)) {
             $scope.active_tab = tab;
 			new_path = $scope.active_base ?
-				"/" +$scope.active_base +"/" +path:
+				$scope.active_base +"/" +path:
 				"/" +path;
         } else {
             $scope.active_tab = null;
-			new_path = "/" +$scope.active_base;
+			new_path = $scope.active_base ?
+				$scope.active_base:
+				"/";
         }
 		if (new_path != $location.path()) {
 			$location.path(new_path);
@@ -321,7 +328,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		$scope.active_object = 2 <= parts.length ? parts[1]: null;
         if ("event" == $scope.active_tab) {
 			if ($scope.active_object) {
-				$scope.active_base = "event/" +$scope.active_object;
+				$scope.active_base = "/event/" +$scope.active_object;
 				$http({
 					method: 'GET',
 					url: "/api/object.php?id=" +$scope.active_object
