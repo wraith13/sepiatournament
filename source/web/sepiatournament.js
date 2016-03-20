@@ -205,8 +205,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.selected = {};
         $scope.cache = {};
         $scope.model = $scope.model || {};
-        $scope.model.event = $scope.regulateEvent($scope.model.event || { });
-        $scope.makeSureId($scope.model.event);
+        //$scope.model.event = $scope.regulateEvent($scope.model.event || { });
+        //$scope.makeSureId($scope.model.event);
         $scope.repository.entry = $scope.model.entries = $scope.model.entries || [];
         $scope.repository.member = $scope.model.members = $scope.model.members || []; // old
         $scope.repository.user = $scope.model.users = $scope.model.users || [];
@@ -272,28 +272,92 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     $scope.tabs = ["event", "entry", "member", "match", "tree", "log"];
     $scope.userTabs = ["profile","event","entry"];
     $scope.requireLoginTabs = ["event.new", "profile"];
-    $scope.selectTab = function (tab) {
+	$scope.active_base = "";
+	$scope.old_path = "dummy";
+	$scope.loop_centinel = 0;
+    $scope.selectTab = function (path) {
+		if (path) {
+			while("/" == path.substr(0,1)) {
+				path = path.substr(1);
+			}
+		}
+		if (0 < $scope.active_base.length && path && $scope.active_base == path.substr(0, $scope.active_base.length)) {
+			path = path.substr($scope.active_base.length);
+			while("/" == path.substr(0,1)) {
+				path = path.substr(1);
+			}
+		}
+		var new_path = 0 < $scope.active_base.length ?
+			(
+				path ?
+					$scope.active_base +"/" +path:
+					$scope.active_base
+			):
+			path;
+		if ($scope.old_path == new_path) {
+			return;
+		}
+		$scope.old_path = new_path;
+		var parts = path ? path.split("/"): [null];
+		var tab = parts[0];
         $scope.selected = {};
         $scope.isCollapsed = false;
+		if (".." == tab) {
+			$scope.active_base = "";
+			$scope.old_path = "";
+		}
         if (0 <= $scope.mastertabs.indexOf(tab)) {
             $scope.active_tab = tab;
-			$location.path("/" +tab);
+			new_path = $scope.active_base ?
+				"/" +$scope.active_base +"/" +path:
+				"/" +path;
         } else {
             $scope.active_tab = null;
-			$location.path("/");
+			new_path = "/" +$scope.active_base;
         }
+		if (new_path != $location.path()) {
+			$location.path(new_path);
+		}
+		$scope.active_object = 2 <= parts.length ? parts[1]: null;
         if ("event" == $scope.active_tab) {
-			$http({
-				method: 'GET',
-				url: "/api/object.php?type=event"
-			}).success(function (data, status, headers, config) {
-				if (data && 0 < data.length) {
-					$scope.model.events = data;
-				} else {
-					$scope.model.events = data;
-				}
-			}).error(function (data, status, headers, config) {
-			});
+			if ($scope.active_object) {
+				$scope.active_base = "event/" +$scope.active_object;
+				$http({
+					method: 'GET',
+					url: "/api/object.php?id=" +$scope.active_object
+				}).success(function (data, status, headers, config) {
+					if (data && 0 < data.length && "event" == data[0].type) {
+			            $scope.tabs = ["entry", "member", "match", "tree"];
+						$scope.model.event = data[0];
+						$rootScope.title = $scope.app.name = $scope.model.event.name;
+						$scope.app.type = $scope.model.event.type;
+			            $scope.active_tab = null;
+						if (3 <= parts.length) {
+				            $scope.active_tab = parts[2];
+						}
+					} else {
+			            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。'});
+					}
+				}).error(function (data, status, headers, config) {
+		            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。(' +status +')'});
+				});
+			} else {
+				$scope.model.events = [];
+				$http({
+					method: 'GET',
+					url: "/api/object.php?type=event"
+				}).success(function (data, status, headers, config) {
+					if (data) {
+						if (0 < data.length) {
+							$scope.model.events = data;
+						}
+					} else {
+			            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。'});
+					}
+				}).error(function (data, status, headers, config) {
+		            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。(' +status +')'});
+				});
+			}
         }
         if ("match" == $scope.active_tab) {
             $scope.update_unmatches();

@@ -49,7 +49,7 @@
     <!-- d3.js -->
     <script src="/js/mbostock/d3/d3.min.js"></script>
 
-    <link href="sepiatournament.css" rel="stylesheet" />
+    <link href="/sepiatournament.css" rel="stylesheet" />
 
 </head>
 <body id="body" ng-controller="sepiatournament">
@@ -368,7 +368,7 @@
                 
                 <div class="container">
                     <div class="jumbotron">
-                        <div ng-include="'jumbotron.html'" ng-repeat="model in [viewmode?model.event:app]"></div>
+                        <div ng-include="'jumbotron.html'" ng-repeat="model in [model.event||app]"></div>
                     </div>
                 </div>
             </div>
@@ -405,7 +405,7 @@
             <div ng-hide="is_loading">
 
                 <div ng-hide="active_tab">
-                    <div ng-hide="viewmode">
+                    <div ng-hide="model.event">
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.new')">イベントを開催する</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event')">イベントに参加する</button>
         
@@ -421,7 +421,7 @@
                         </div>
                                             
                     </div>
-                    <div ng-show="viewmode">
+                    <div ng-show="model.event">
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('entry')">参加チーム一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('match')">試合一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('tree')">トーナメントツリーを見る</button>
@@ -453,26 +453,9 @@
                         </div>
                         <div class="col-md-7" ng-show="selected.event">
                             <button type="button" class='btn glyphicon glyphicon-chevron-left show-on-narrow' ng-click="selectEvent(null)">戻る</button>
-                            <div ng-show="!viewmode">
-                                <button type="button"
-                                        class='btn btn-danger glyphicon glyphicon-trash'
-                                        ng-click="removeEvent(selected.event)"
-                                        style="float:right">
-                                    イベントの削除
-                                </button>
-                                <div ng-include="'edit.html'" ng-repeat="model in [selected.event]"></div>
-                                <div  ng-show="0<selected.eventMatches.length">
-                                    <h4>match</h4>
-                                    <div ng-include="'matches.list.html'" ng-repeat="model in [selected.eventMatches]"></div>
-                                </div>
-                            </div>
-                            <div ng-show="viewmode">
-                                <div ng-include="'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
-                                <div ng-show="0<selected.eventMatches.length">
-                                    <h4>match</h4>
-                                    <div ng-include="'matches.list.html'" ng-repeat="model in [selected.eventMatches]"></div>
-                                </div>
-                            </div>
+                            <div ng-include="'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
+							<h4>&nbsp;</h4>
+                        	<button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event/'+selected.event.id)">このイベントのページに移動</button>
                         </div>
                         <div class="col-md-7" ng-hide="selected.event" ng-class="!selected.event?'hide-on-narrow':''">
                             <uib-alert type="info">左からイベントを選択してください。</uib-alert>
@@ -677,6 +660,6 @@
         </div>
     </footer>
 
-    <script type="text/javascript" src="sepiatournament.js"></script>
+    <script type="text/javascript" src="/sepiatournament.js"></script>
 </body>
 </html>
