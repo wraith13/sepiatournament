@@ -270,7 +270,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     $scope.mastertabs = ["event", "event.new", "event.list", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log", "profile"];
     $scope.defaultTabs = ["event", "member", "log"];
     $scope.tabs = $scope.defaultTabs;
-    $scope.userTabs = ["profile","event","entry"];
+    $scope.userTabs = ["profile"];
     $scope.requireLoginTabs = ["event.new", "profile"];
 	$scope.active_base = "";
 	$scope.old_path = "dummy";
