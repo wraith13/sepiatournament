@@ -1331,8 +1331,14 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					if ("success" == data.type) {
 						$scope.addAlert({ type: 'success', msg: '保存しました。'});
 						$scope.editmode = false;
-						if (is_new && "event" == model.type) {
-							$scope.selectTab('event/'+data.json.id);
+						if (is_new) {
+							if ("event" == model.type) {
+								$scope.selectTab('event/'+data.json.id);
+							}
+							if ("entry" == model.type) {
+								$scope.selectTab("entry", true);
+								$scope.selected.entry = model;
+							}
 						}
 					} else {
 						if (data.error) {
