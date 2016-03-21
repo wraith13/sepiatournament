@@ -558,52 +558,18 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     };
     $scope.removeEvent = function (event) {
 		if (window.confirm("このイベントを削除します。")) {
-			$scope.isUpdating = true;
-			$http({
-				method: 'GET',
-				url: "/api/request.token.php"
-			}).success(function (data, status, headers, config) {
-				$scope.request_token = data;
-				$http({
-					method: 'PUT',
-					url: "/api/remove.php",
-					data: {
-						id:event.id,
-						request_token: data
-					}
-				}).success(function (data, status, headers, config) {
-					if (data) {
-						if ("success" == data.type) {
-							$scope.addAlert({ type: 'success', msg: '削除しました。'});
-							$scope.removeObject("event", event);
-							$scope.selected.event = null;
-							$scope.model.event = null;
-							if ("" != $scope.active_base && "event" == $scope.active_base.split("/")[1])
-							{
-								$scope.selectTab("..");
-							}
-							else
-							{
-								$scope.selectTab("event", true);
-							}
-						} else {
-							if (data.error) {
-								$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +' : ' +data.error +')'});
-							} else {
-								$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +')'});
-							}
-						}
-					} else {
-						$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(null result)'});
-					}
-					$scope.isUpdating = false;
-				}).error(function (data, status, headers, config) {
-					$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
-					$scope.isUpdating = false;
-				});
-			}).error(function (data, status, headers, config) {
-				$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
-				$scope.isUpdating = false;
+			$scope.remove(event, function(){
+				$scope.removeObject("event", event);
+				$scope.selected.event = null;
+				$scope.model.event = null;
+				if ("" != $scope.active_base && "event" == $scope.active_base.split("/")[1])
+				{
+					$scope.selectTab("..");
+				}
+				else
+				{
+					$scope.selectTab("event", true);
+				}
 			});
 		}
     };
@@ -639,31 +605,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     };
     $scope.removeEntry = function (entry) {
 		if (window.confirm("このエントリーを削除します。")) {
-			$scope.isUpdating = true;
-			$http({
-				method: 'PUT',
-				url: "/api/remove.php",
-				data: { id:entry.id }
-			}).success(function (data, status, headers, config) {
-				if (data) {
-					if ("success" == data.type) {
-						$scope.addAlert({ type: 'success', msg: '削除しました。'});
-						$scope.removeObject("entry", event);
-						$scope.selected.entry = null;
-					} else {
-						if (data.error) {
-							$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +' : ' +data.error +')'});
-						} else {
-							$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +')'});
-						}
-					}
-				} else {
-					$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(null result)'});
-				}
-				$scope.isUpdating = false;
-			}).error(function (data, status, headers, config) {
-				$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
-				$scope.isUpdating = false;
+			$scope.remove(event, function(){
+				$scope.removeObject("entry", entry);
+				$scope.selected.entry = null;
 			});
 		}
     };
@@ -1406,6 +1350,48 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				$scope.isUpdating = false;
 		});
 	};
+    $scope.remove = function (model, on_success) {
+		$scope.isUpdating = true;
+		$http({
+			method: 'GET',
+			url: "/api/request.token.php"
+		}).success(function (data, status, headers, config) {
+			$scope.request_token = data;
+			$http({
+				method: 'PUT',
+				url: "/api/remove.php",
+				data: {
+					id:model.id,
+					request_token: data
+				}
+			}).success(function (data, status, headers, config) {
+				if (data) {
+					if ("success" == data.type) {
+						$scope.addAlert({ type: 'success', msg: '削除しました。'});
+						if (on_success)
+						{
+							on_success();
+						}
+					} else {
+						if (data.error) {
+							$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +' : ' +data.error +')'});
+						} else {
+							$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +')'});
+						}
+					}
+				} else {
+					$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(null result)'});
+				}
+				$scope.isUpdating = false;
+			}).error(function (data, status, headers, config) {
+				$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
+				$scope.isUpdating = false;
+			});
+		}).error(function (data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
+			$scope.isUpdating = false;
+		});
+    };
 	
 	$scope.server_datetime_to_client = function(datetime)	{
 		return datetime.replace(' ','T')+'Z';
