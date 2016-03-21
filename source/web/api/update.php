@@ -119,6 +119,9 @@ function main($db)
 				$object["entryTerm"] = regulate_term($request_json, "entryTerm");
 				break;
 				
+			case "entry":
+				break;
+			
 			default:
 				return array
 				(
@@ -205,6 +208,9 @@ function main($db)
 			case "event":
 				$object_json["term"] = regulate_term($request_json, "term");
 				$object_json["entryTerm"] = regulate_term($request_json, "entryTerm");
+				break;
+				
+			case "entry":
 				break;
 				
 			default:
