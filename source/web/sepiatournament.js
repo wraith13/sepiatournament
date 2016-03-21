@@ -560,35 +560,47 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		if (window.confirm("このイベントを削除します。")) {
 			$scope.isUpdating = true;
 			$http({
-				method: 'PUT',
-				url: "/api/remove.php",
-				data: { id:event.id }
+				method: 'GET',
+				url: "/api/request.token.php"
 			}).success(function (data, status, headers, config) {
-				if (data) {
-					if ("success" == data.type) {
-						$scope.addAlert({ type: 'success', msg: '削除しました。'});
-						$scope.removeObject("event", event);
-						$scope.selected.event = null;
-						$scope.model.event = null;
-						if ("" != $scope.active_base && "event" == $scope.active_base.split("/")[1])
-						{
-							$scope.selectTab("..");
-						}
-						else
-						{
-							$scope.selectTab("event", true);
+				$scope.request_token = data;
+				$http({
+					method: 'PUT',
+					url: "/api/remove.php",
+					data: {
+						id:event.id,
+						request_token: data
+					}
+				}).success(function (data, status, headers, config) {
+					if (data) {
+						if ("success" == data.type) {
+							$scope.addAlert({ type: 'success', msg: '削除しました。'});
+							$scope.removeObject("event", event);
+							$scope.selected.event = null;
+							$scope.model.event = null;
+							if ("" != $scope.active_base && "event" == $scope.active_base.split("/")[1])
+							{
+								$scope.selectTab("..");
+							}
+							else
+							{
+								$scope.selectTab("event", true);
+							}
+						} else {
+							if (data.error) {
+								$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +' : ' +data.error +')'});
+							} else {
+								$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +')'});
+							}
 						}
 					} else {
-						if (data.error) {
-							$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +' : ' +data.error +')'});
-						} else {
-							$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +')'});
-						}
+						$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(null result)'});
 					}
-				} else {
-					$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(null result)'});
-				}
-				$scope.isUpdating = false;
+					$scope.isUpdating = false;
+				}).error(function (data, status, headers, config) {
+					$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
+					$scope.isUpdating = false;
+				});
 			}).error(function (data, status, headers, config) {
 				$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
 				$scope.isUpdating = false;
@@ -1355,31 +1367,43 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		$scope.isUpdating = true;
 		var is_new = !model.id;
 		$http({
-			method: 'PUT',
-			url: "/api/update.php",
-			data: { json:model }
+			method: 'GET',
+			url: "/api/request.token.php"
 		}).success(function (data, status, headers, config) {
-			if (data) {
-				if ("success" == data.type) {
-		            $scope.addAlert({ type: 'success', msg: '保存しました。'});
-					$scope.editmode = false;
-					if (is_new && "event" == model.type) {
-						$scope.selectTab('event/'+data.json.id);
+			$scope.request_token = data;
+			$http({
+				method: 'PUT',
+				url: "/api/update.php",
+				data: {
+					json:model,
+					request_token: data
+				}
+			}).success(function (data, status, headers, config) {
+				if (data) {
+					if ("success" == data.type) {
+						$scope.addAlert({ type: 'success', msg: '保存しました。'});
+						$scope.editmode = false;
+						if (is_new && "event" == model.type) {
+							$scope.selectTab('event/'+data.json.id);
+						}
+					} else {
+						if (data.error) {
+							$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +' : ' +data.error +')'});
+						} else {
+							$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +')'});
+						}
 					}
 				} else {
-					if (data.error) {
-						$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +' : ' +data.error +')'});
-					} else {
-						$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +')'});
-					}
+					$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(null result)'});
 				}
-			} else {
-				$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(null result)'});
-			}
-			$scope.isUpdating = false;
+				$scope.isUpdating = false;
+			}).error(function (data, status, headers, config) {
+				$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
+				$scope.isUpdating = false;
+			});
 		}).error(function (data, status, headers, config) {
-			$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
-			$scope.isUpdating = false;
+				$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
+				$scope.isUpdating = false;
 		});
 	};
 	

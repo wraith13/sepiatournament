@@ -195,6 +195,7 @@ try
 	
 	session_regenerate_id(true);
 	$_SESSION['user_id'] = $user_id;
+	$_SESSION['request_token'] = UUID::v4();
 }
 catch(Exception $e)
 {

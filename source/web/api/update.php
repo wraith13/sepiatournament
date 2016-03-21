@@ -80,7 +80,18 @@ function main($db)
 			);
 		}
 		
-		$request_json = json_decode(file_get_contents('php://input'), true)["json"];
+		$request_data = json_decode(file_get_contents('php://input'), true);
+		$request_json = $request_data["json"];
+		
+		if ($_SESSION['request_token'] != $request_data["request_token"])
+		{
+			return array
+			(
+				"type" => "error",
+				"message" => "invalid request token"
+			);
+		}
+		
 		$request_json_id = $request_json["id"];
 		if (!$request_json_id)
 		{
@@ -237,5 +248,6 @@ function main($db)
 }
 
 print(json_encode(main($db)));
+$_SESSION['request_token'] = UUID::v4();
 
 ?>
