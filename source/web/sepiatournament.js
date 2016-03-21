@@ -207,6 +207,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.model = $scope.model || {};
         //$scope.model.event = $scope.regulateEvent($scope.model.event || { });
         //$scope.makeSureId($scope.model.event);
+        $scope.repository.event = $scope.model.events = $scope.model.events || [];
         $scope.repository.entry = $scope.model.entries = $scope.model.entries || [];
         $scope.repository.member = $scope.model.members = $scope.model.members || []; // old
         $scope.repository.user = $scope.model.users = $scope.model.users || [];
@@ -277,7 +278,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 	$scope.active_base = "";
 	$scope.old_path = "dummy";
 	$scope.loop_centinel = 0;
-    $scope.selectTab = function (path) {
+    $scope.selectTab = function (path, force_reload) {
 		if (path) {
 			while("/" == path.substr(0,1)) {
 				path = path.substr(1);
@@ -301,7 +302,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				new_path = new_path.substr(1);
 			}
 		}
-		if ($scope.old_path == new_path) {
+		if ($scope.old_path == new_path && !force_reload) {
 			return;
 		}
 		$scope.old_path = new_path;
@@ -540,7 +541,43 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.addObject("event", $scope.regulateEvent());
     };
     $scope.removeEvent = function (event) {
-        $scope.removeObject("event", event);
+		if (window.confirm("このイベントを削除します。")) {
+			$scope.isUpdating = true;
+			$http({
+				method: 'PUT',
+				url: "/api/remove.php",
+				data: { id:event.id }
+			}).success(function (data, status, headers, config) {
+				if (data) {
+					if ("success" == data.type) {
+						$scope.addAlert({ type: 'success', msg: '削除しました。'});
+						$scope.removeObject("event", event);
+						$scope.selected.event = null;
+						$scope.model.event = null;
+						if ("" != $scope.active_base && "event" == $scope.active_base.split("/")[1])
+						{
+							$scope.selectTab("..");
+						}
+						else
+						{
+							$scope.selectTab("event", true);
+						}
+					} else {
+						if (data.error) {
+							$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +' : ' +data.error +')'});
+						} else {
+							$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +data.message +')'});
+						}
+					}
+				} else {
+					$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(null result)'});
+				}
+				$scope.isUpdating = false;
+			}).error(function (data, status, headers, config) {
+				$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
+				$scope.isUpdating = false;
+			});
+		}
     };
     $scope.filterEvent = function (value, index, array) {
         var search = $scope.selected.eventSearch;
@@ -1268,6 +1305,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 	
 	$scope.save = function(model) {
 		$scope.isUpdating = true;
+		var is_new = !model.id;
 		$http({
 			method: 'PUT',
 			url: "/api/update.php",
@@ -1277,6 +1315,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				if ("success" == data.type) {
 		            $scope.addAlert({ type: 'success', msg: '保存しました。'});
 					$scope.editmode = false;
+					if (is_new && "event" == model.type) {
+						$scope.selectTab('event/'+data.json.id);
+					}
 				} else {
 					if (data.error) {
 						$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +' : ' +data.error +')'});

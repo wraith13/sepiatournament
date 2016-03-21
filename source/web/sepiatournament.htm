@@ -372,7 +372,7 @@
             </div>
             <div ng-show="editmode && has_write_permission(model.event)" class="container">
                 <button type="button" class='btn btn-warning' ng-click="editmode=false;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
-                <button type="button" class='btn btn-danger' ng-click="removeEvent(selected.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
+                <button type="button" class='btn btn-danger' ng-click="removeEvent(model.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
                 <h4>&nbsp;</h4>
                 <div ng-include="'edit.html'" ng-repeat="model in [model.event||app]"></div>
             </div>
@@ -460,7 +460,7 @@
                             <button ng-hide="editmode && has_write_permission(selected.event)" type="button" class='btn show-on-narrow btn-default' ng-click="selectEvent(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
                             <button ng-show="!editmode && has_write_permission(selected.event)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
                             <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-warning' ng-click="editmode=false;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
-                            <button type="button" class='btn btn-danger' ng-click="removeEvent(selected.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
+                            <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-danger' ng-click="removeEvent(selected.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
 							<h4>&nbsp;</h4>
 		                    <div ng-include="editmode && has_write_permission(selected.event) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
 							<h4>&nbsp;</h4>

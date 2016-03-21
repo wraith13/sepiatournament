@@ -130,6 +130,7 @@ function main($db)
 					"search" => make_search($object)
 				)
 			);
+			db_log_insert($db, $id, "insert", $user_id, "sucess");
 			return array
 			(
 				"type" => "success",
@@ -215,6 +216,7 @@ function main($db)
 				),
 				array("id")
 			);
+			db_log_insert($db, $request_json_id, "update", $user_id, "sucess");
 			return array
 			(
 				"type" => "success",

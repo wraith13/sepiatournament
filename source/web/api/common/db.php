@@ -142,3 +142,34 @@ function db_update($db, $table, $array, $primary_keys)
 	
 	return db_query($db, "update $table set $set_string where $where_string;");
 }
+function db_has_write_permission($db, $user_id, $target_id)
+{
+	if ($user_id && $target_id)
+	{
+		if ($user_id == $target_id)
+		{
+			return true;
+		}
+		
+		$array = db_select
+		(
+			$db,
+			"object",
+			array("id", "parent", "owner", "json"),
+			array("id" => $target_id)
+		)[0];
+		
+		if ($user_id == $array["owner"])
+		{
+			return true;
+		}
+		
+		//if (json 内の users 内に $user_id と一致するユーザーが入れば)
+		//{
+		//	return true;
+		//}
+		
+		return db_has_write_permission($db, $user_id, $array["parent"]);
+	}
+	return false;
+}

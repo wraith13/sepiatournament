@@ -27,8 +27,8 @@ function get_object($db)
 		"object",
 		array("parent", "owner", "private", "json"),
 		$request_type ?
-			array("type" => $request_type):
-			array("id" => ($_REQUEST["id"] ?: $user_id))
+			array("type" => $request_type, "remove" => 0):
+			array("id" => ($_REQUEST["id"] ?: $user_id), "remove" => 0)
 	);
 }
 
