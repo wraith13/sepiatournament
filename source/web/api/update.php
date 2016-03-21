@@ -95,6 +95,16 @@ function main($db)
 		$request_json_id = $request_json["id"];
 		if (!$request_json_id)
 		{
+			$parent = $request_json["parent"];
+			if ($parent && !db_has_write_permission($db, $user_id, $parent))
+			{
+				return array
+				(
+					"type" => "error",
+					"message" => "disallow"
+				);
+			}
+			
 			$id = UUID::v4();
 			$object = array
 			(
@@ -138,6 +148,7 @@ function main($db)
 				(
 					"id" => $id,
 					"type" => $request_json["type"],
+					"parent" => $parent,
 					"owner" => $user_id,
 					"private" => $is_private,
 					"json" => json_encode($object),
@@ -154,15 +165,7 @@ function main($db)
 		}
 		else
 		{
-			$object = db_select
-			(
-				$db,
-				"object",
-				array("json", "owner", "type", "remove"),
-				array("id" => $request_json_id)
-			)[0];
-			
-			if ($user_id != $object["owner"])
+			if (!db_has_write_permission($db, $user_id, $request_json_id))
 			{
 				return array
 				(
@@ -170,6 +173,14 @@ function main($db)
 					"message" => "disallow"
 				);
 			}
+			
+			$object = db_select
+			(
+				$db,
+				"object",
+				array("json", "owner", "type", "remove"),
+				array("id" => $request_json_id)
+			)[0];
 			
 			$is_private = $request_json["is_private"];
 			

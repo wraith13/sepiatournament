@@ -20,17 +20,25 @@ function decode($json_list)
 function get_object($db)
 {
 	$user_id = $_SESSION['user_id'];
-	$request_type = $_REQUEST["type"];
+	$condition = [];
+	foreach(array("id", "parent", "type") as $i)
+	{
+		if ($_REQUEST[$i])
+		{
+			$condition[$i] = $_REQUEST[$i];
+		}
+	}
+	if (0 == count($condition))
+	{
+		$condition["id"] = $user_id;
+	}
+	$condition["remove"] = 0;
 	return db_select
 	(
 		$db,
 		"object",
 		array("parent", "owner", "private", "json"),
-		(
-			$request_type ?
-				array("type" => $request_type, "remove" => 0):
-				array("id" => ($_REQUEST["id"] ?: $user_id), "remove" => 0)
-		),
+		$condition,
 		"created_at desc"
 	);
 }
