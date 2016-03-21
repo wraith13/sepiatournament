@@ -91,7 +91,7 @@ function main($db)
 				"type" => $request_json["type"],
 				"name" =>  typesafe_iconv_substr($request_json["name"], 0, 16),
 				"description" =>  typesafe_iconv_substr($request_json["description"], 0, 1024),
-				"links" => regulate_links($request_json["links"])
+				"links" => regulate_links($request_json["links"]),
 			);
 			$is_private = $request_json["is_private"] ? 1: 0;
 			switch($request_json["type"])
@@ -127,7 +127,8 @@ function main($db)
 					"owner" => $user_id,
 					"private" => $is_private,
 					"json" => json_encode($object),
-					"search" => make_search($object)
+					"search" => make_search($object),
+					"created_at" => "dummy",
 				)
 			);
 			db_log_insert($db, $id, "insert", $user_id, "sucess");

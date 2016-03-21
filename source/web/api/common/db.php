@@ -114,11 +114,18 @@ function db_insert($db, $table, $array)
 	foreach(db_real_escape_array($db, $array) as $key => $value)
 	{
 		$keys[] = $key;
-		$values[] = $value;
+		if ("created_at" == $key)
+		{
+			$values[] = 'UTC_TIMESTAMP()';
+		}
+		else
+		{
+			$values[] = "'" . $value . "'";
+		}
 	}
 	$kes_string = implode("," ,$keys);
-	$values_string = implode("','", $values);
-	return db_query($db, "insert into $table($kes_string) values('$values_string');");
+	$values_string = implode(",", $values);
+	return db_query($db, "insert into $table($kes_string) values($values_string);");
 }
 function db_update($db, $table, $array, $primary_keys)
 {

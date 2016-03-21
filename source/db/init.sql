@@ -10,15 +10,16 @@ create table object
 	private tinyint default 0 not null,
 	json text,
 	search text,
-	remove tinyint default 0 not null
+	remove tinyint default 0 not null,
+	created_at datetime not null
 );
-create index object_parent on object (parent);
-create index object_type on object (type);
+create index object_parent on object (parent, type, created_at desc);
+create index object_type on object (type, created_at desc);
 
 create table log
 (
 	target varchar(64) not null,
-	at timestamp not null,
+	at datetime not null,
 	category varchar(16) not null,
 	operator varchar(64),
 	message varchar(1024) not null,
@@ -41,10 +42,10 @@ create table queue
 	target varchar(64) not null,
 	type varchar(32) not null,
 	item varchar(64) not null,
-	at timestamp not null,
+	at datetime not null,
 	primary key(target, type, item)
 );
-create index queue_at on auth (target, type, at);
+create index queue_at on queue (target, type, at);
 
 create table config
 (

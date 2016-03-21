@@ -136,7 +136,7 @@ try
 			"description" => $twitter_user->description,
 			"twitter" => $twitter_user->screen_name,
 			"image" => get_twitter_image_url($twitter_user),
-			"links" => []
+			"links" => [],
 		);
 		if ($twitter_user->url)
 		{
@@ -169,7 +169,8 @@ try
 				"owner" => $user_id,
 				"type" => "user",
 				"json" => json_encode($user),
-				"search" => make_user_search($user)
+				"search" => make_user_search($user),
+				"created_at" => "dummy",
 			)
 		);
 		$target = $user_id;
