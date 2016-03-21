@@ -100,10 +100,10 @@
                 <span ng-include="'tag.html'"></span>
 				
 				<div ng-show="model.type=='event'" style="float:right;">
-					開催者: <a href="https://twitter.com/{{getObject('user',model.owner).twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" src="{{getObject('user',model.owner).image}}"/>{{getObject('user',model.owner).name}}</a>
+					開催者: <a href="https://twitter.com/{{getObject('user',model.owner).twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" ng-src="{{getObject('user',model.owner).image}}"/>{{getObject('user',model.owner).name}}</a>
 				</div>
 				
-                <h1><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h1>
+                <h1><span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h1>
                 <p>{{model.description}}</p>
 				
 				<div ng-show="(model.type=='event' || model.type=='match') && model.term && (model.term.startAt || model.term.endAt)">
@@ -305,7 +305,7 @@
 		
         <script type="text/ng-template" id="entries.list.item.html">
 			<span ng-include="'tag.html'"></span>
-			<h4 class="list-group-item-heading"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h4>
+			<h4 class="list-group-item-heading"><span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon user-icon" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h4>
 			<div ng-show="model.entries" ng-include="'match.entries.list.html'" ng-repeat="model in [model]"></div>
 			<p class="list-group-item-text">{{model.description}}</p>
 			<p class="list-group-item-text" ng-show="model.links && 0 < model.links.length">
@@ -468,7 +468,6 @@
 		                    <div ng-include="editmode && has_write_permission(selected.event) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
 							<h4>&nbsp;</h4>
                         	<button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event/'+selected.event.id)">このイベントのページに移動</button>
-                            
                         </div>
                         <div class="col-md-7" ng-hide="selected.event" ng-class="!selected.event?'hide-on-narrow':''">
                             <uib-alert type="info">左からイベントを選択してください。</uib-alert>
@@ -529,11 +528,6 @@
                         <div class="col-md-5" ng-class="selected.member?'hide-on-narrow':''">
                             <div ng-include="'filter.html'" ng-repeat="type in ['member']"></div>
                             <ul class="list-group">
-                                <li class="list-group-item list-group-item-success glyphicon glyphicon-plus"
-                                    ng-click="addMember()"
-                                    ng-hide="viewmode">
-                                    メンバーの追加
-                                </li>
                                 <li ng-include="'entries.list.item.html'"
                                     class="list-group-item"
                                     ng-class="{'active': model == selected.member}"
@@ -543,23 +537,14 @@
                             </ul>
                         </div>
                         <div class="col-md-7" ng-show="selected.member">
-                            <button type="button" class='btn glyphicon glyphicon-chevron-left show-on-narrow' ng-click="selectMember(null)">戻る</button>
-                            <div ng-show="!viewmode">
-                                <button type="button"
-                                        class='btn btn-danger glyphicon glyphicon-trash'
-                                        ng-click="removeMember(selected.member)"
-                                        style="float:right">
-                                    メンバーの削除
-                                </button>
-                                <div ng-include="'edit.html'" ng-repeat="model in [selected.member]"></div>
-                            </div>
-                            <div ng-show="viewmode">
-                                <div ng-include="'jumbotron.html'" ng-repeat="model in [selected.member]"></div>
-                            </div>
+                            <button ng-hide="editmode && has_write_permission(selected.member)" type="button" class='btn show-on-narrow btn-default' ng-click="selectMember(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
+                            <button ng-show="!editmode && has_write_permission(selected.member)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                            <button ng-show="editmode && has_write_permission(selected.member)" type="button" class='btn btn-warning' ng-click="editmode=false;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
+							<h4>&nbsp;</h4>
+		                    <div ng-include="editmode && has_write_permission(selected.member) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.member]"></div>
                         </div>
                         <div class="col-md-7" ng-hide="selected.member" ng-class="!selected.member?'hide-on-narrow':''">
-                            <uib-alert type="info" ng-show="!viewmode">左からメンバーを追加あるいは選択してください。</uib-alert>
-                            <uib-alert type="info" ng-show="viewmode">左からメンバーを選択してください。</uib-alert>
+                            <uib-alert type="info">左からメンバーを選択してください。</uib-alert>
                         </div>
                     </div>
                 </div>

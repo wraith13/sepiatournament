@@ -258,6 +258,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "event": "tower",
         "entry":"flag",
         "member":"user",
+        "user":"user",
         "match":"flash",
         "import": "cloud-upload",
         "export":"cloud-download",
@@ -352,7 +353,6 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。(' +status +')'});
 				});
 			} else {
-				$scope.model.events = [];
 				$http({
 					method: 'GET',
 					url: "/api/object.php?type=event"
@@ -368,6 +368,22 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。(' +status +')'});
 				});
 			}
+        }
+        if ("member" == $scope.active_tab) {
+				$http({
+					method: 'GET',
+					url: "/api/object.php?type=user"
+				}).success(function (data, status, headers, config) {
+					if (data) {
+						if (0 < data.length) {
+							$scope.model.members = data;
+						}
+					} else {
+			            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。'});
+					}
+				}).error(function (data, status, headers, config) {
+		            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。(' +status +')'});
+				});
         }
         if ("match" == $scope.active_tab) {
             $scope.update_unmatches();
