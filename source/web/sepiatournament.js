@@ -360,7 +360,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				}).success(function (data, status, headers, config) {
 					if (data) {
 						if (0 < data.length) {
-							$scope.model.events = data;
+							$scope.repository.event = $scope.model.events = data;
 						}
 					} else {
 			            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。'});
@@ -377,7 +377,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				}).success(function (data, status, headers, config) {
 					if (data) {
 						if (0 < data.length) {
-							$scope.model.entries = data;
+							$scope.repository.entry = $scope.model.entries = data;
 						}
 					} else {
 			            $scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。'});
@@ -393,7 +393,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				}).success(function (data, status, headers, config) {
 					if (data) {
 						if (0 < data.length) {
-							$scope.model.members = data;
+							$scope.repository.member = $scope.model.members = data;
 						}
 					} else {
 			            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。'});
