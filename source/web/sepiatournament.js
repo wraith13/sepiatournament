@@ -346,11 +346,11 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 						$scope.model.event = data[0];
 			            $rootScope.title = $scope.model.event.name +" - " +$scope.app.name;
 			            $scope.active_tab = null;
-						if (3 <= parts.length) {
-				            $scope.active_tab = parts[2];
-						}
 				        $scope.repository.entry = $scope.model.entries = [];
 				        $scope.repository.match = $scope.model.matches = [];
+						if (3 <= parts.length) {
+							$scope.selectTab(parts[2], true);
+						}
 					} else {
 			            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。'});
 					}
