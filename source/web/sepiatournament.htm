@@ -86,10 +86,10 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li ng-hide="logonUser"><a href="{{active_base}}/login" ng-click="requireLogin()"><span class="glyphicon glyphicon-log-in"></span>login</a></li>
                         
-                        <li ng-class="active_tab == tab ? 'active': ''" ng-repeat="tab in userTabs">
+                        <li ng-show="logonUser" ng-class="active_tab == tab ? 'active': ''" ng-repeat="tab in userTabs">
                             <a href="{{active_base}}/{{tab}}" ng-click="selectTab(tab)"><img ng-show="'profile'==tab" class="user-icon" ng-src="{{logonUser.image}}" alt="{{logonUser.name}}" /><span ng-hide="'profile'==tab" class="glyphicon" ng-class="'glyphicon-'+tabIcon[tab]"></span>{{tab}}</a>
                         </li>
-                        <li><a href="#" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span>logout</a></li>
+                        <li ng-show="logonUser" ><a href="#" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span>logout</a></li>
                     </ul>                    
                 </nav>
             </div>
