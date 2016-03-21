@@ -316,6 +316,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.old_path = "";
 		    $scope.tabs = $scope.defaultTabs;
 			$scope.model.event = null;
+	        $scope.repository.entry = $scope.model.entries = [];
+	        $scope.repository.match = $scope.model.matches = [];
 		}
         if (0 <= $scope.mastertabs.indexOf(tab)) {
             $scope.active_tab = tab;
@@ -347,6 +349,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 						if (3 <= parts.length) {
 				            $scope.active_tab = parts[2];
 						}
+				        $scope.repository.entry = $scope.model.entries = [];
+				        $scope.repository.match = $scope.model.matches = [];
 					} else {
 			            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。'});
 					}
