@@ -339,7 +339,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					url: "/api/object.php?id=" +$scope.active_object
 				}).success(function (data, status, headers, config) {
 					if (data && 0 < data.length && "event" == data[0].type) {
-			            $scope.tabs = ["entry", "member", "match", "tree"];
+			            $scope.tabs = ["entry", "match", "tree"];
 						$scope.model.event = data[0];
 			            $rootScope.title = $scope.model.event.name +" - " +$scope.app.name;
 			            $scope.active_tab = null;
