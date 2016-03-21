@@ -445,6 +445,8 @@
                 <div ng-show="active_tab=='event'">
                     <div class="row">
                         <div class="col-md-5" ng-class="selected.event?'hide-on-narrow':''">
+	                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.new')">イベントを開催する</button>
+							<h4>&nbsp;</h4>
                             <div ng-include="'filter.html'" ng-repeat="type in ['event']"></div>
                             <ul class="list-group">
                                 <li ng-include="'entries.list.item.html'"
@@ -454,12 +456,11 @@
                                     ng-click="selectEvent(model)">
                                 </li>
                             </ul>
-	                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.new')">イベントを開催する</button>
                         </div>
                         <div class="col-md-7" ng-show="selected.event">
                             <button ng-hide="editmode && has_write_permission(selected.event)" type="button" class='btn show-on-narrow btn-default' ng-click="selectEvent(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
                             <button ng-show="!editmode && has_write_permission(selected.event)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
-                            <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-warning' ng-click="editmode=false;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
+                            <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-warning' ng-click="editCancel(selected.event)"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
                             <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-danger' ng-click="removeEvent(selected.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
 							<h4>&nbsp;</h4>
 		                    <div ng-include="editmode && has_write_permission(selected.event) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
@@ -475,13 +476,10 @@
                 <div ng-show="active_tab=='entry'">
                     <div class="row">
                         <div class="col-md-5" ng-class="selected.entry?'hide-on-narrow':''">
+	                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="addEntry()">チームを追加</button>
+							<h4>&nbsp;</h4>
                             <div ng-include="'filter.html'" ng-repeat="type in ['entry']"></div>
                             <ul class="list-group">
-                                <li class="list-group-item list-group-item-success glyphicon glyphicon-plus"
-                                    ng-click="addEntry()"
-                                    ng-hide="viewmode">
-                                    チームの追加
-                                </li>
                                 <li ng-include="'entries.list.item.html'"
                                     class="list-group-item"
                                     ng-class="{'active': model == selected.entry}"
@@ -491,31 +489,15 @@
                             </ul>
                         </div>
                         <div class="col-md-7" ng-show="selected.entry">
-                            <button type="button" class='btn glyphicon glyphicon-chevron-left show-on-narrow' ng-click="selectEntry(null)">戻る</button>
-                            <div ng-show="!viewmode">
-                                <button type="button"
-                                        class='btn btn-danger glyphicon glyphicon-trash'
-                                        ng-click="removeEntry(selected.entry)"
-                                        style="float:right">
-                                    チームの削除
-                                </button>
-                                <div ng-include="'edit.html'" ng-repeat="model in [selected.entry]"></div>
-                                <div  ng-show="0<selected.entryMatches.length">
-                                    <h4>match</h4>
-                                    <div ng-include="'matches.list.html'" ng-repeat="model in [selected.entryMatches]"></div>
-                                </div>
-                            </div>
-                            <div ng-show="viewmode">
-                                <div ng-include="'jumbotron.html'" ng-repeat="model in [selected.entry]"></div>
-                                <div ng-show="0<selected.entryMatches.length">
-                                    <h4>match</h4>
-                                    <div ng-include="'matches.list.html'" ng-repeat="model in [selected.entryMatches]"></div>
-                                </div>
-                            </div>
+                            <button ng-hide="editmode && has_write_permission(selected.entry)" type="button" class='btn show-on-narrow btn-default' ng-click="selectEntry(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
+                            <button ng-show="!editmode && has_write_permission(selected.entry)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                            <button ng-show="editmode && has_write_permission(selected.entry)" type="button" class='btn btn-warning' ng-click="editCancel(selected.entry)"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
+                            <button ng-show="editmode && has_write_permission(selected.entry)" type="button" class='btn btn-danger' ng-click="removeEntry(selected.entry)" style="float:right"><i class="glyphicon glyphicon-trash"></i>エントリーの削除</button>
+							<h4>&nbsp;</h4>
+		                    <div ng-include="editmode && has_write_permission(selected.entry) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.entry]"></div>
                         </div>
                         <div class="col-md-7" ng-hide="selected.entry" ng-class="!selected.entry?'hide-on-narrow':''">
-                            <uib-alert type="info" ng-show="!viewmode">左からチームを追加あるいは選択してください。</uib-alert>
-                            <uib-alert type="info" ng-show="viewmode">左からチームを選択してください。</uib-alert>
+                            <uib-alert type="info">左からチームを選択してください。</uib-alert>
                         </div>
                     </div>
                 </div>
