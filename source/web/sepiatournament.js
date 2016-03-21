@@ -267,6 +267,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         "profile": "pencil",
         "log": "list"
     };
+	$scope.editmode = false;
     $scope.mastertabs = ["event", "event.new", "event.list", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log", "profile"];
     $scope.defaultTabs = ["event", "member", "log"];
     $scope.tabs = $scope.defaultTabs;
@@ -305,6 +306,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		$scope.old_path = new_path;
 		var parts = path ? path.split("/"): [null];
 		var tab = parts[0];
+		$scope.editmode = false;
         $scope.selected = {};
         $scope.isCollapsed = false;
 		if (".." == tab) {
@@ -1258,6 +1260,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			if (data) {
 				if ("success" == data.type) {
 		            $scope.addAlert({ type: 'success', msg: '保存しました。'});
+					$scope.editmode = false;
 				} else {
 					if (data.error) {
 						$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +' : ' +data.error +')'});
@@ -1277,8 +1280,16 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 	
 	$scope.server_datetime_to_client = function(datetime)	{
 		return datetime.replace(' ','T')+'Z';
-	}
+	};
 
+	$scope.has_write_permission = function(object) {
+		return object && $scope.logonUser && (
+			object.owner == $scope.logonUser.id ||
+			(object.users && 0 <= $scope.arrayObjectIndexOf(object.users, $scope.logonUser.id)) ||
+			(object.parent && $scope.has_write_permission(getObject("event",object.parent)))
+		);
+	};
+	
     $scope.$watchCollection('checkModel', function () {
         $scope.checkResults = [];
         angular.forEach($scope.checkModel, function (value, key) {

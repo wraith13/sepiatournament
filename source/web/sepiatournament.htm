@@ -360,7 +360,7 @@
             </div>
         </div>
         <div ng-show="!(is_loading||active_tab)" ng-cloak>
-            <div class="big-header">
+            <div class="big-header" ng-hide="editmode && has_write_permission(model.event)">
             
                 <uib-alert type="warning">
                     現在、このWebサイトのサービスは公開開発中のものであり、現時点では正常にご利用頂くことはできません。今月中(2016-03)に正式サービス開始予定です。
@@ -369,8 +369,15 @@
                 <div class="container">
                     <div class="jumbotron">
                         <div ng-include="'jumbotron.html'" ng-repeat="model in [model.event||app]"></div>
+                        <button ng-show="!editmode && has_write_permission(model.event)" type="button" class='btn btn-default' ng-click="editmode=true;" style="float:right"><i class="glyphicon glyphicon-pencil"></i>編集</button>
                     </div>
                 </div>
+            </div>
+            <div ng-show="editmode && has_write_permission(model.event)" class="container">
+                <button type="button" class='btn btn-warning' ng-click="editmode=false;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
+                <button type="button" class='btn btn-danger' ng-click="removeEvent(selected.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
+                <h4>&nbsp;</h4>
+                <div ng-include="'edit.html'" ng-repeat="model in [model.event||app]"></div>
             </div>
         </div>
         <div ng-show="active_tab=='login'" ng-cloak>
@@ -424,7 +431,7 @@
                         -->
                                             
                     </div>
-                    <div ng-show="model.event">
+                    <div ng-show="model.event && !(editmode && has_write_permission(model.event))">
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('entry')">参加チーム一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('match')">試合一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('tree')">トーナメントツリーを見る</button>
@@ -443,11 +450,6 @@
                         <div class="col-md-5" ng-class="selected.event?'hide-on-narrow':''">
                             <div ng-include="'filter.html'" ng-repeat="type in ['event']"></div>
                             <ul class="list-group">
-                                <li class="list-group-item list-group-item-success glyphicon glyphicon-plus"
-                                    ng-click="selectTab('event.new')"
-                                    ng-hide="viewmode">
-                                    イベントの開催
-                                </li>
                                 <li ng-include="'entries.list.item.html'"
                                     class="list-group-item"
                                     ng-class="{'active': model == selected.event}"
@@ -455,12 +457,18 @@
                                     ng-click="selectEvent(model)">
                                 </li>
                             </ul>
+	                        <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.new')">イベントを開催する</button>
                         </div>
                         <div class="col-md-7" ng-show="selected.event">
-                            <button type="button" class='btn glyphicon glyphicon-chevron-left show-on-narrow' ng-click="selectEvent(null)">戻る</button>
-                            <div ng-include="'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
+                            <button ng-hide="editmode && has_write_permission(selected.event)" type="button" class='btn show-on-narrow btn-default' ng-click="selectEvent(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
+                            <button ng-show="!editmode && has_write_permission(selected.event)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                            <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-warning' ng-click="editmode=false;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
+                            <button type="button" class='btn btn-danger' ng-click="removeEvent(selected.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
+							<h4>&nbsp;</h4>
+		                    <div ng-include="editmode && has_write_permission(selected.event) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
 							<h4>&nbsp;</h4>
                         	<button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event/'+selected.event.id)">このイベントのページに移動</button>
+                            
                         </div>
                         <div class="col-md-7" ng-hide="selected.event" ng-class="!selected.event?'hide-on-narrow':''">
                             <uib-alert type="info">左からイベントを選択してください。</uib-alert>
