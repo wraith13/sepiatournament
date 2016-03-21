@@ -308,9 +308,6 @@
 			<h4 class="list-group-item-heading"><span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon user-icon" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h4>
 			<div ng-show="model.entries" ng-include="'match.entries.list.html'" ng-repeat="model in [model]"></div>
 			<p class="list-group-item-text">{{model.description}}</p>
-			<p class="list-group-item-text" ng-show="model.links && 0 < model.links.length">
-                <a ng-href="{{model.links[0].url}}" rel="noopener" target="_blank" ng-click="$event.stopPropagation()">{{model.links[0].title || model.links[0].url}}</a>
-            </p>
         </script>
 		
         <script type="text/ng-template" id="tag.html">
