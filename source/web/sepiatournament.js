@@ -847,6 +847,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				if (data) {
 					if ("success" == data.type) {
 						$scope.addAlert({ type: 'success', msg: '保存しました。'});
+						$scope.loadMatches();
 					} else {
 						if (data.error) {
 							$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +' : ' +data.error +')'});
