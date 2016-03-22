@@ -349,10 +349,10 @@ function main($db)
 				
 			case "match":
 				$object_json["term"] = regulate_term($request_json, "term");
-				$object_json["entries"] = regulate_id_array($json["entries"]);
-				$object_json["level"] = intval(typesafe_iconv_substr($json["level"], 0, 16), 10);
-				$object_json["weight"] = intval(typesafe_iconv_substr($json["weight"], 0, 16), 10);
-				$object_json["winners"] = regulate_id_array($json["winners"]);
+				$object_json["entries"] = regulate_id_array($request_json["entries"]);
+				$object_json["level"] = intval(typesafe_iconv_substr($request_json["level"], 0, 16), 10);
+				$object_json["weight"] = intval(typesafe_iconv_substr($request_json["weight"], 0, 16), 10);
+				$object_json["winners"] = regulate_id_array($request_json["winners"]);
 				break;
 				
 			case "entry":

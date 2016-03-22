@@ -131,6 +131,8 @@
 				
 				<h4 ng-show="model.links && model.links.length">link</h4>
                 <p ng-show="model.links" ng-repeat="link in model.links"><a ng-href="{{link.url}}" rel="noopener" target="_blank">{{link.title || link.url}}</a></p>
+				
+				<h4 ng-show="model.entries">entries * result</h4>
                 <div ng-show="model.entries" ng-include="'match.entries.list.html'"></div>
             </div>
         </script>
@@ -244,8 +246,9 @@
 				<button ng-show="!model.links || model.links.length < 10" type="button" class='btn btn-default btn-lg btn-block' ng-click="addLink(model)"><span class="glyphicon glyphicon-plus"></span>リンクの追加</button>
 				<uib-alert ng-hide="!model.links || model.links.length < 10" type="warning">これ以上はリンクを追加できません。</uib-alert>
 				
-				<h4>entry * result</h4>
+				<h4 ng-show="model.entries">entry * result</h4>
 				<div ng-show="model.entries" ng-include="'match.entries.list.edit.html'"></div>
+				
 			</div>
 			
 			<div ng-show="preview" ng-include="'jumbotron.html'" ng-repeat="model in [model]"></div>
@@ -278,7 +281,7 @@
             <ul class="list-group" ng-click="$event.stopPropagation()">
                 <li class="list-group-item"
                     ng-repeat="entry in model.entries track by $index"
-                    ng-click="viewmode ? showEntry(entry): setWinner(model,entry)"
+                    ng-click="setWinner(model,entry)"
                     ng-class="getMatchEntryClass(model,entry)">
                     <span ng-show="searchEntry(entry)">
                         <span ng-class="getMatchResultClass(model,entry)"></span>
@@ -296,9 +299,10 @@
         </script>
 
         <script type="text/ng-template" id="match.entries.list.html">
-            <ul class="list-group">
+            <ul class="list-group" ng-click="$event.stopPropagation()">
                 <li class="list-group-item"
-                    ng-repeat="entry in model.entries track by $index"
+                    ng-repeat="entry in model.entries"
+                    ng-click="showEntry(entry)"
                     ng-class="getMatchEntryClass(model,entry)">
                     <span ng-show="searchEntry(entry)">
                         <span ng-class="getMatchResultClass(model,entry)"></span>
