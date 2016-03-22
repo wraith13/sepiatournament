@@ -337,7 +337,15 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			}).success(function (data, status, headers, config) {
 				if (data) {
 					if (0 < data.length) {
-						$scope.repository.match = $scope.model.matches = data;
+						$scope.repository.match = $scope.model.matches = data.sort(function(a, b) {
+							if (a.index == b.index) {
+								return 0;
+							}
+							if (a.index < b.index) {
+								return -1;
+							}
+							return 1;
+						});
 					}
 					if ("match" == $scope.active_tab) {
 						$scope.update_unmatches();
@@ -812,6 +820,46 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         }
 
         $scope.regulateMatch();
+		
+		$scope.isUpdating = true;
+		$http({
+			method: 'GET',
+			url: "/api/request.token.php"
+		}).success(function (data, status, headers, config) {
+			$scope.request_token = data;
+			$http({
+				method: 'PUT',
+				url: "/api/update.php",
+				data: {
+					parent: $scope.model.event.id,
+					type: "match",
+					method: "replace",
+					bulk: $scope.model.matches,
+					request_token: data
+				}
+			}).success(function (data, status, headers, config) {
+				if (data) {
+					if ("success" == data.type) {
+						$scope.addAlert({ type: 'success', msg: '保存しました。'});
+					} else {
+						if (data.error) {
+							$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +' : ' +data.error +')'});
+						} else {
+							$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +data.message +')'});
+						}
+					}
+				} else {
+					$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(null result)'});
+				}
+				$scope.isUpdating = false;
+			}).error(function (data, status, headers, config) {
+				$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
+				$scope.isUpdating = false;
+			});
+		}).error(function (data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
+			$scope.isUpdating = false;
+		});
     };
     $scope.appendMatch = function () {
         console.log("【🐛バグ】ここはまだ実装中！！！💢💢💢");

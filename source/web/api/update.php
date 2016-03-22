@@ -54,6 +54,38 @@ function regulate_term($json, $label)
 	return $result;
 }
 
+function regulate_id_array($id_array, $replace_id_array)
+{
+	$result = [];
+	foreach($id_array as $id)
+	{
+		if
+		(
+			$id &&
+			iconv_strlen($id) < 128
+		)
+		{
+			if ($replace_id_array)
+			{
+				$result[] = $replace_id_array[$id] ?: $id;
+			}
+			else
+			{
+				$result[] = $id;
+			}
+			if (10 <= count($result))
+			{
+				break;
+			}
+		}
+		else
+		{
+			throw new Exception("invalid id list data");
+		}
+	}
+	return $result;
+}
+
 function make_search($object)
 {
 	$result = $object["name"] . " " . $object["description"];
@@ -89,6 +121,100 @@ function main($db)
 			(
 				"type" => "error",
 				"message" => "invalid request token"
+			);
+		}
+		
+		$request_buik = $request_data["bulk"];
+		if ($request_buik)
+		{
+			$parent = $request_data["parent"];
+			if ($parent && !db_has_write_permission($db, $user_id, $parent))
+			{
+				return array
+				(
+					"type" => "error",
+					"message" => "disallow"
+				);
+			}
+			
+			$request_method = $request_data["method"];
+			$request_type = $request_data["type"];
+			if ("replace" == $request_method && $request_type)
+			{
+				db_update
+				(
+					$db,
+					"object",
+					array
+					(
+						"parent" => $parent,
+						"type" => $request_type,
+						"remove" => 1
+					),
+					array("parent", "type")
+				);
+			}
+			$index = 0;
+			$replace_id_array = [];
+			foreach($request_buik as $json)
+			{
+				$id = UUID::v4();
+				$replace_id_array[$json["id"]] = $id;
+				$object = array
+				(
+					"id" => $id,
+					"type" => $json["type"],
+					"name" =>  typesafe_iconv_substr($json["name"], 0, 16),
+					"description" =>  typesafe_iconv_substr($json["description"], 0, 1024),
+					"links" => regulate_links($json["links"]),
+				);
+				$is_private = $json["is_private"] ? 1: 0;
+				switch($json["type"])
+				{
+					
+				case "match":
+					$object["index"] = $index;
+					$object["term"] = regulate_term($json, "term");
+					$object["entries"] = regulate_id_array($json["entries"], $replace_id_array);
+					$object["level"] = typesafe_iconv_substr($json["level"], 0, 16);
+					$object["weight"] = typesafe_iconv_substr($json["weight"], 0, 16);
+					$object["winners"] = regulate_id_array($json["winners"], $replace_id_array);
+					break;
+					
+				
+				default:
+					return array
+					(
+						"type" => "error",
+						"message" => "unknown type"
+					);
+				}
+				
+				db_insert
+				(
+					$db,
+					"object",
+					array
+					(
+						"id" => $id,
+						"type" => $json["type"],
+						"parent" => $parent,
+						"owner" => $user_id,
+						"private" => $is_private,
+						"json" => json_encode($object),
+						"search" => make_search($object),
+						"created_at" => "dummy",
+					)
+				);
+				
+				++$index;
+			}
+			
+			db_log_insert($db, $parent, $request_buik, $user_id, $request_type);
+			return array
+			(
+				"type" => "success",
+				"json" => $object
 			);
 		}
 		
@@ -219,6 +345,14 @@ function main($db)
 			case "event":
 				$object_json["term"] = regulate_term($request_json, "term");
 				$object_json["entryTerm"] = regulate_term($request_json, "entryTerm");
+				break;
+				
+			case "match":
+				$object_json["term"] = regulate_term($request_json, "term");
+				$object_json["entries"] = regulate_id_array($json["entries"]);
+				$object_json["level"] = typesafe_iconv_substr($json["level"], 0, 16);
+				$object_json["weight"] = typesafe_iconv_substr($json["weight"], 0, 16);
+				$object_json["winners"] = regulate_id_array($json["winners"]);
 				break;
 				
 			case "entry":
