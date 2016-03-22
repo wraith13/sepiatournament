@@ -505,7 +505,7 @@
                 <div ng-show="active_tab=='entry'">
                     <div class="row">
                         <div class="col-md-5" ng-class="selected.entry?'hide-on-narrow':''">
-	                        <button ng-show="has_write_permission(event)" type="button" class='btn btn-primary btn-lg btn-block' ng-click="addEntry()">チームを追加</button>
+	                        <button ng-show="has_write_permission(model.event)" type="button" class='btn btn-primary btn-lg btn-block' ng-click="addEntry()">チームを追加</button>
 							<h4>&nbsp;</h4>
                             <div ng-include="'filter.html'" ng-repeat="type in ['entry']"></div>
                             <ul class="list-group">
