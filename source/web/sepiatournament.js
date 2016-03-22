@@ -311,6 +311,44 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		$scope.editmode = false;
         $scope.selected = {};
         $scope.isCollapsed = false;
+		$scope.loadEntries = function() {
+			$http({
+				method: 'GET',
+				url: "/api/object.php?type=entry&parent=" +$scope.model.event.id
+			}).success(function (data, status, headers, config) {
+				if (data) {
+					if (0 < data.length) {
+						$scope.repository.entry = $scope.model.entries = data;
+					}
+					if ("match" == $scope.active_tab) {
+						$scope.update_unmatches();
+					}
+				} else {
+					$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。'});
+				}
+			}).error(function (data, status, headers, config) {
+				$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。(' +status +')'});
+			});
+		};
+		$scope.loadMatches = function() {
+			$http({
+				method: 'GET',
+				url: "/api/object.php?type=match&parent=" +$scope.model.event.id
+			}).success(function (data, status, headers, config) {
+				if (data) {
+					if (0 < data.length) {
+						$scope.repository.match = $scope.model.matches = data;
+					}
+					if ("match" == $scope.active_tab) {
+						$scope.update_unmatches();
+					}
+				} else {
+					$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。'});
+				}
+			}).error(function (data, status, headers, config) {
+				$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。(' +status +')'});
+			});
+		};
 		if (".." == tab) {
 			$scope.active_base = "";
 			$scope.old_path = "";
@@ -348,6 +386,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			            $scope.active_tab = null;
 				        $scope.repository.entry = $scope.model.entries = [];
 				        $scope.repository.match = $scope.model.matches = [];
+						$scope.loadEntries();
+						$scope.loadMatches();
 						if (3 <= parts.length) {
 							$scope.selectTab(parts[2], true);
 						}
@@ -373,22 +413,6 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。(' +status +')'});
 				});
 			}
-        }
-        if ("entry" == $scope.active_tab) {
-				$http({
-					method: 'GET',
-					url: "/api/object.php?type=entry&parent=" +$scope.model.event.id
-				}).success(function (data, status, headers, config) {
-					if (data) {
-						if (0 < data.length) {
-							$scope.repository.entry = $scope.model.entries = data;
-						}
-					} else {
-			            $scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。'});
-					}
-				}).error(function (data, status, headers, config) {
-		            $scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。(' +status +')'});
-				});
         }
         if ("member" == $scope.active_tab) {
 				$http({
