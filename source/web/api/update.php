@@ -176,8 +176,8 @@ function main($db)
 					$object["index"] = $index;
 					$object["term"] = regulate_term($json, "term");
 					$object["entries"] = regulate_id_array($json["entries"], $replace_id_array);
-					$object["level"] = typesafe_iconv_substr($json["level"], 0, 16);
-					$object["weight"] = typesafe_iconv_substr($json["weight"], 0, 16);
+					$object["level"] = intval(typesafe_iconv_substr($json["level"], 0, 16), 10);
+					$object["weight"] = intval(typesafe_iconv_substr($json["weight"], 0, 16), 10);
 					$object["winners"] = regulate_id_array($json["winners"], $replace_id_array);
 					break;
 					
@@ -350,8 +350,8 @@ function main($db)
 			case "match":
 				$object_json["term"] = regulate_term($request_json, "term");
 				$object_json["entries"] = regulate_id_array($json["entries"]);
-				$object_json["level"] = typesafe_iconv_substr($json["level"], 0, 16);
-				$object_json["weight"] = typesafe_iconv_substr($json["weight"], 0, 16);
+				$object_json["level"] = intval(typesafe_iconv_substr($json["level"], 0, 16), 10);
+				$object_json["weight"] = intval(typesafe_iconv_substr($json["weight"], 0, 16), 10);
 				$object_json["winners"] = regulate_id_array($json["winners"]);
 				break;
 				
