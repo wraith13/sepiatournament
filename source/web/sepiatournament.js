@@ -171,6 +171,18 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     }).error(function (data, status, headers, config) {
     });
 
+	$http({
+		method: 'GET',
+		url: "/api/object.php?type=user"
+	}).success(function (data, status, headers, config) {
+		if (data) {
+			if (0 < data.length) {
+		        $scope.repository.user = $scope.model.users = data;
+			}
+		}
+	}).error(function (data, status, headers, config) {
+	});
+	
     $http({
         method: 'GET',
         url: "/api/object.php"
