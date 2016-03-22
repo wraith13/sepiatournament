@@ -323,6 +323,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					if ("match" == $scope.active_tab) {
 						$scope.update_unmatches();
 					}
+					if ("tree" == $scope.active_tab) {
+						$scope.update_tree();
+					}
 				} else {
 					$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。'});
 				}
@@ -349,6 +352,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					}
 					if ("match" == $scope.active_tab) {
 						$scope.update_unmatches();
+					}
+					if ("tree" == $scope.active_tab) {
+						$scope.update_tree();
 					}
 				} else {
 					$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。'});
