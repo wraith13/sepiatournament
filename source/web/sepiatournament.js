@@ -609,7 +609,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     };
     $scope.removeEntry = function (entry) {
 		if (window.confirm("このエントリーを削除します。")) {
-			$scope.remove(event, function(){
+			$scope.remove(entry, function(){
 				$scope.removeObject("entry", entry);
 				$scope.selected.entry = null;
 			});
@@ -739,7 +739,11 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         var entries_count = $scope.model.entries.length;
         var unmatched_match = [];
         var addMatch = function (entries) {
-            var match = { type:"match" };
+            var match = {
+				type:"match",
+				parent:$scope.model.event.id,
+				owner:$scope.logonUser.id
+			};
             match.entries = entries;
             $scope.model.matches.push(match);
             unmatched_match.push(match);

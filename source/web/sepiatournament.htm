@@ -243,6 +243,9 @@
 				<div ng-include="'link.edit.html'" ng-repeat="link in (model.links || [])"></div>
 				<button ng-show="!model.links || model.links.length < 10" type="button" class='btn btn-default btn-lg btn-block' ng-click="addLink(model)"><span class="glyphicon glyphicon-plus"></span>リンクの追加</button>
 				<uib-alert ng-hide="!model.links || model.links.length < 10" type="warning">これ以上はリンクを追加できません。</uib-alert>
+				
+				<h4>entry * result</h4>
+				<div ng-show="model.entries" ng-include="'match.entries.list.edit.html'"></div>
 			</div>
 			
 			<div ng-show="preview" ng-include="'jumbotron.html'" ng-repeat="model in [model]"></div>
@@ -271,11 +274,31 @@
             </div>
         </script>
 
-        <script type="text/ng-template" id="match.entries.list.html">
+        <script type="text/ng-template" id="match.entries.list.edit.html">
             <ul class="list-group" ng-click="$event.stopPropagation()">
                 <li class="list-group-item"
                     ng-repeat="entry in model.entries track by $index"
                     ng-click="viewmode ? showEntry(entry): setWinner(model,entry)"
+                    ng-class="getMatchEntryClass(model,entry)">
+                    <span ng-show="searchEntry(entry)">
+                        <span ng-class="getMatchResultClass(model,entry)"></span>
+                        <span ng-include="'tag.html'" ng-repeat="model in [searchEntry(entry)]"></span>
+                        <span class="glyphicon" ng-class="'glyphicon-'+tabIcon.entry"></span>
+                        {{searchEntry(entry).name}}<span ng-hide="searchEntry(entry).name"><i>名称未設定</i></span>
+                    </span>
+                    <span ng-hide="searchEntry(entry)">
+                        <span ng-include="'tag.html'" ng-repeat="model in [getMatch(entry)]"></span>
+                        <span class="glyphicon" ng-class="'glyphicon-'+tabIcon.match"></span>
+                        {{getMatch(entry).name}} の勝者
+                    </span>
+                </li>
+            </ul>
+        </script>
+
+        <script type="text/ng-template" id="match.entries.list.html">
+            <ul class="list-group">
+                <li class="list-group-item"
+                    ng-repeat="entry in model.entries track by $index"
                     ng-class="getMatchEntryClass(model,entry)">
                     <span ng-show="searchEntry(entry)">
                         <span ng-class="getMatchResultClass(model,entry)"></span>
@@ -549,7 +572,7 @@
                                 通常、抽選は参加登録が締め切られてから実施されます。
                             </uib-alert>
                         </div>
-                        <div ng-show="0 < model.matches.length && !selected.match">
+                        <div ng-show="0 < model.matches.length">
                             <div ng-show="0 < unmatches.length" style="margin-bottom:24px;">
                                 <uib-alert type="info">次のチームがトーナメントに組み込まれていません。</uib-alert>
                                 <ul class="list-group">
@@ -573,21 +596,34 @@
                                 </button>
                                 -->
                             </div>
-                            <div ng-include="'matches.list.html'" ng-repeat="model in [model.matches]"></div>
-                            <button type="button" class='btn btn-danger' style="float:right" ng-click="remakeMatch()" ng-hide="viewmode">
-                                現在の抽選を全て破棄して抽選の再実行
-                            </button>
-                            <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('tree')">トーナメントツリーを見る</button>
-                        </div>
-                        <div ng-show="selected.match && !viewmode">
-                            <button type="button" class='btn glyphicon glyphicon-chevron-left' ng-click="selectMatch(null)">戻る</button>
-                            <div ng-include="'edit.html'" ng-repeat="model in [selected.match]"></div>
-                            <h4>entry</h4>
-                            <div ng-show="model.entries" ng-include="'match.entries.list.html'" ng-repeat="model in [selected.match]"></div>
-                        </div>
-                        <div ng-show="selected.match && viewmode">
-                            <button type="button" class='btn glyphicon glyphicon-chevron-left' ng-click="selectMatch(null)">戻る</button>
-                            <div ng-include="'jumbotron.html'" ng-repeat="model in [selected.match]"></div>
+                            
+                            <div class="row">
+                                <div class="col-md-5" ng-class="selected.match?'hide-on-narrow':''">
+                                    <div ng-include="'filter.html'" ng-repeat="type in ['match']"></div>
+                                    <ul class="list-group">
+                                        <li
+                                            ng-include="'entries.list.item.html'"
+                                            class="list-group-item"
+                                            ng-show="2<=model.entries.length"
+                                            ng-repeat="model in model.matches | filter:filterMatch track by $index"
+                                            ng-click="selectMatch(model)">
+                                        </li>
+                                    </ul>
+                                    <button ng-show="has_write_permission(event)" type="button" class='btn btn-danger' ng-click="remakeMatch()" ng-hide="viewmode">
+                                        現在の抽選を全て破棄して抽選の再実行
+                                    </button>
+                                </div>
+                                <div class="col-md-7" ng-show="selected.match">
+                                    <button ng-hide="editmode && has_write_permission(selected.match)" type="button" class='btn show-on-narrow btn-default' ng-click="selectMatch(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
+                                    <button ng-show="!editmode && has_write_permission(selected.match)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                                    <button ng-show="editmode && has_write_permission(selected.match)" type="button" class='btn btn-warning' ng-click="editCancel(selected.match)"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
+                                    <h4>&nbsp;</h4>
+                                    <div ng-include="editmode && has_write_permission(selected.match) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.match]"></div>
+                                </div>
+                                <div class="col-md-7" ng-hide="selected.match" ng-class="!selected.entry?'hide-on-narrow':''">
+                                    <uib-alert type="info">左から試合を選択してください。</uib-alert>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
