@@ -794,6 +794,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				parent:$scope.model.event.id,
 				owner:$scope.logonUser.id
 			};
+			$scope.makeSureId(match);
             match.entries = entries;
             $scope.model.matches.push(match);
             unmatched_match.push(match);
@@ -831,7 +832,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             var match1 = unmatched_match.shift();
             var match2 = unmatched_match.shift();
             if (match1 && match2) {
-                addMatch([$scope.makeSureId(match1), $scope.makeSureId(match2)]);
+                addMatch([match1.id, match2.id]);
             } else {
                 break;
             }
@@ -917,7 +918,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     };
     $scope.remakeMatch = function () {
         $scope.cache = {};
-        $scope.model.matches = [];
+		$scope.repository.match = $scope.model.matches = [];
         $scope.update_unmatches();
         $scope.makeMatch();
     };
