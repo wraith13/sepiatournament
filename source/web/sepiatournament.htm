@@ -387,11 +387,6 @@
         </div>
         <div ng-show="!(is_loading||active_tab)" ng-cloak>
             <div class="big-header" ng-hide="editmode && has_write_permission(model.event)">
-            
-                <uib-alert type="warning">
-                    現在、このWebサイトのサービスは公開開発中のものであり、現時点では正常にご利用頂くことはできません。今月中(2016-03)に正式サービス開始予定です。
-                </uib-alert>
-                
                 <div class="container">
                     <div class="jumbotron">
                         <div ng-include="'jumbotron.html'" ng-repeat="model in [model.event||app]"></div>
@@ -438,6 +433,11 @@
             <div ng-hide="is_loading">
 
                 <div ng-hide="active_tab">
+                
+                    <uib-alert type="warning">
+                        現在、このWebサイトのサービスは公開開発中兼α版であり、現時点では最小限の機能しか正常に動作しません。開発中の環境であり、予告なく一時的に利用不能になったりデータが消える恐れがある為、ご利用になられる際は <a href="https://twitter.com/sepiatournament" target="_blank" rel="noopener">@sepiatournament</a> までご一報ください。今月中(2016-03)に正式サービス開始予定です。
+                    </uib-alert>
+                    
                     <div ng-hide="model.event">
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.new')">イベントを開催する</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event')">イベントに参加する</button>
