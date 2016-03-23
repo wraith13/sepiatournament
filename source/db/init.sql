@@ -47,6 +47,15 @@ create table queue
 );
 create index queue_at on queue (target, type, at);
 
+create table tag
+(
+	target varchar(64) not null,
+	type varchar(32) not null,
+	tag varchar(64) not null,
+	primary key(target, tag)
+);
+create index tag_type on tag (type, tag);
+
 create table config
 (
 	name varchar(128) not null primary key,
