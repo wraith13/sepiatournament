@@ -917,10 +917,12 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.regulateMatch();
     };
     $scope.remakeMatch = function () {
-        $scope.cache = {};
-		$scope.repository.match = $scope.model.matches = [];
-        $scope.update_unmatches();
-        $scope.makeMatch();
+		if (window.confirm("現在の抽選(試合結果等を含む)を全て破棄して抽選の再実行します。")) {
+			$scope.cache = {};
+			$scope.repository.match = $scope.model.matches = [];
+			$scope.update_unmatches();
+			$scope.makeMatch();
+		}
     };
     $scope.showEntry = function (entry) {
         var entryBody = $scope.searchEntry(entry);
@@ -1432,7 +1434,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 								$scope.selectTab('event/'+data.json.id);
 							}
 							if ("entry" == model.type) {
-								$scope.selectTab("entry", true);
+								$scope.loadEntries();
 								$scope.selected.entry = model;
 							}
 						}
