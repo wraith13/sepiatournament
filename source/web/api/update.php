@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/common/db.php';
-require_once __DIR__ . '/common/user.php';
 require_once __DIR__ . '/common/string.php';
 require_once __DIR__ . '/uuid/uuid.php';
 
@@ -82,16 +81,6 @@ function regulate_id_array($id_array, $replace_id_array)
 		{
 			throw new Exception("invalid id list data");
 		}
-	}
-	return $result;
-}
-
-function make_search($object)
-{
-	$result = $object["name"] . " " . $object["description"];
-	if ($object["twitter"])
-	{
-		$result = $result . " " . $object["twitter"];
 	}
 	return $result;
 }

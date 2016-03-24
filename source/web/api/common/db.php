@@ -180,3 +180,13 @@ function db_has_write_permission($db, $user_id, $target_id)
 	}
 	return false;
 }
+
+function make_search($object)
+{
+	$result = $object["name"] . " " . $object["description"];
+	if ($object["twitter"])
+	{
+		$result = $result . " " . $object["twitter"];
+	}
+	return $result;
+}

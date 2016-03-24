@@ -3,7 +3,6 @@
 require_once __DIR__ . '/common/db.php';
 require_once __DIR__ . '/uuid/uuid.php';
 require_once __DIR__ . '/twitteroauth.autoload.php';
-require_once __DIR__ . '/common/user.php';
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 
@@ -116,7 +115,7 @@ try
 			(
 				"id" => $user_id,
 				"json" => json_encode($user),
-				"search" => make_user_search($user)
+				"search" => make_search($user)
 			),
 			array("id")
 		);
@@ -169,7 +168,7 @@ try
 				"owner" => $user_id,
 				"type" => "user",
 				"json" => json_encode($user),
-				"search" => make_user_search($user),
+				"search" => make_search($user),
 				"created_at" => "dummy",
 			)
 		);
