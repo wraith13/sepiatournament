@@ -376,6 +376,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			});
 		};
 		if (".." == tab) {
+			$rootScope.title = $scope.app.name;
 			$scope.active_base = "";
 			$scope.old_path = "";
 		    $scope.tabs = $scope.defaultTabs;
