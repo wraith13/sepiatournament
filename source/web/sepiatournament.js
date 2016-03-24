@@ -1029,10 +1029,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             var height_count = ($scope.model.entries.length - ($scope.unmatches || []).length);
             var width_count = $scope.model.matches[$scope.model.matches.length -1].level +2.0;
 
-			var size_rate = 0.7;
-
-            var height_base_unit = 32 *size_rate;
-            var width_base_unit = 64 *size_rate;
+            var height_base_unit = 32;
+            var width_base_unit = 64;
 
             var height_unit = Math.max(document_height / height_count, height_base_unit);
             var width_unit = Math.max(document_width / width_count, width_base_unit);
@@ -1045,7 +1043,13 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
                 height_unit = Math.max(document_height / height_count, height_base_unit);
                 width_unit = Math.max(document_width / width_count, width_base_unit);
             }
-
+			
+			var size_rate = document_width / (width_unit *width_count);
+			if (size_rate < 1.0) {
+                height_unit *= size_rate;
+                width_unit *= size_rate;
+			}
+			
             var font_size = 12 * (1 + (((width_unit - width_base_unit) / width_base_unit) + ((height_unit - height_base_unit) / (height_base_unit * 2))) / 4) *size_rate;
 
             //var margin = { top: 30, right: 10, bottom: 10, left: 10 },
