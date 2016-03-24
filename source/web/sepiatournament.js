@@ -383,6 +383,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.model.event = null;
 	        $scope.repository.entry = $scope.model.entries = [];
 	        $scope.repository.match = $scope.model.matches = [];
+			$scope.clear_tree();
 		}
         if (0 <= $scope.mastertabs.indexOf(tab)) {
             $scope.active_tab = tab;
@@ -919,6 +920,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     };
     $scope.remakeMatch = function () {
 		if (window.confirm("現在の抽選(試合結果等を含む)を全て破棄して抽選の再実行します。")) {
+			$scope.clear_tree();
 			$scope.cache = {};
 			$scope.repository.match = $scope.model.matches = [];
 			$scope.update_unmatches();
@@ -1011,7 +1013,12 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     };
 
     //  tree
-    var vis = d3.select("#chart").append("svg").append("g");
+	$scope.vis = d3.select("#chart").append("svg").append("g");
+	$scope.clear_tree = function()	{
+		d3.select("#chart svg g").remove();
+		d3.select("#chart svg").remove();
+		$scope.vis = d3.select("#chart").append("svg").append("g");
+	}
     
     angular.element($window).on('resize', function () { $scope.update_tree(); });
     $scope.update_tree = function () {
@@ -1064,7 +1071,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 
             var tree = d3.layout.tree()
                 .size([height, width]);
-            vis.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            $scope.vis.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             var diagonal = d3.svg.diagonal()
                 .projection(function (d) { return [halfWidth -(d.y - halfWidth), d.x]; });
@@ -1143,7 +1150,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
                 nodes.forEach(function (d) { d.y = d.depth * width_unit + halfWidth; });
 
                 // Update the nodes…
-                var node = vis.selectAll("g.node")
+                var node = $scope.vis.selectAll("g.node")
                     .data(nodes, function (d) { return d.id || (d.id = ++i); });
 
                 // Enter any new nodes at the parent's previous position.
@@ -1196,7 +1203,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
                     .style("fill-opacity", 1e-6);
 
                 // Update the links...
-                var link = vis.selectAll("path.link")
+                var link = $scope.vis.selectAll("path.link")
                     .data(tree.links(nodes), function (d) { return d.target.id; });
 
                 // Enter any new links at the parent's previous position.
