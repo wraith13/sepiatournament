@@ -311,3 +311,20 @@ path.winner {
     margin-right: 16px;
     color:#DDFFFF;
 }
+
+/* particle */
+.particle {
+	pointer-events:none;
+    background-color:#99DDDD;
+	position:fixed;
+	
+	height:8px;
+	width:8px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	
+    filter:alpha(opacity=50);
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+}
