@@ -399,6 +399,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				method: 'GET',
 				url: "/api/object.php?type=entry&parent=" +$scope.model.event.id
 			}).success(function (data, status, headers, config) {
+				loading.isEnd = true;
 				if (data) {
 					if (0 < data.length) {
 						$scope.repository.entry = $scope.model.entries = data;
@@ -412,7 +413,6 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				} else {
 					$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。'});
 				}
-				loading.isEnd = true;
 			}).error(function (data, status, headers, config) {
 				$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。(' +status +')'});
 				loading.isEnd = true;
@@ -425,6 +425,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				method: 'GET',
 				url: "/api/object.php?type=match&parent=" +$scope.model.event.id
 			}).success(function (data, status, headers, config) {
+				loading.isEnd = true;
 				if (data) {
 					if (0 < data.length) {
 						$scope.repository.match = $scope.model.matches = data.sort(function(a, b) {
@@ -441,12 +442,12 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 						$scope.update_unmatches();
 					}
 					if ("tree" == $scope.active_tab) {
+						loading.isEnd = true;
 						$scope.update_tree();
 					}
 				} else {
 					$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。'});
 				}
-				loading.isEnd = true;
 			}).error(function (data, status, headers, config) {
 				$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。(' +status +')'});
 				loading.isEnd = true;
