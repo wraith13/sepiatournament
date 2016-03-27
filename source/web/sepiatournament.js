@@ -205,6 +205,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					particle.x = Math.random();
 				}
 				particle.y = (moveLapse -particle.baseLapse) /moveSpan;
+				if (data.isUpload) {
+					particle.y = 1.0 -particle.y;
+				}
 			});
 		}
 		angular.forEach(data.particles, function (particle, index) {
@@ -929,6 +932,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.regulateMatch();
 		
 		$scope.isUpdating = true;
+		var loading = { isUpload:true };
+		$scope.loadingAnimation(loading);
 		$http({
 			method: 'GET',
 			url: "/api/request.token.php"
@@ -960,13 +965,16 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(null result)'});
 				}
 				$scope.isUpdating = false;
+				loading.isEnd = true;
 			}).error(function (data, status, headers, config) {
 				$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
 				$scope.isUpdating = false;
+				loading.isEnd = true;
 			});
 		}).error(function (data, status, headers, config) {
 			$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
 			$scope.isUpdating = false;
+			loading.isEnd = true;
 		});
     };
     $scope.appendMatch = function () {
@@ -1512,6 +1520,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 	$scope.save = function(model) {
 		$scope.isUpdating = true;
 		var is_new = !model.id;
+		var loading = { isUpload:true };
+		$scope.loadingAnimation(loading);
 		$http({
 			method: 'GET',
 			url: "/api/request.token.php"
@@ -1549,17 +1559,22 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(null result)'});
 				}
 				$scope.isUpdating = false;
+				loading.isEnd = true;
 			}).error(function (data, status, headers, config) {
 				$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
 				$scope.isUpdating = false;
+				loading.isEnd = true;
 			});
 		}).error(function (data, status, headers, config) {
-				$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
-				$scope.isUpdating = false;
+			$scope.addAlert({ type: 'danger', msg: '保存できませんでした。(' +status +')'});
+			$scope.isUpdating = false;
+			loading.isEnd = true;
 		});
 	};
     $scope.remove = function (model, on_success) {
 		$scope.isUpdating = true;
+		var loading = { isUpload:true };
+		$scope.loadingAnimation(loading);
 		$http({
 			method: 'GET',
 			url: "/api/request.token.php"
@@ -1591,13 +1606,16 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(null result)'});
 				}
 				$scope.isUpdating = false;
+				loading.isEnd = true;
 			}).error(function (data, status, headers, config) {
 				$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
 				$scope.isUpdating = false;
+				loading.isEnd = true;
 			});
 		}).error(function (data, status, headers, config) {
 			$scope.addAlert({ type: 'danger', msg: '削除できませんでした。(' +status +')'});
 			$scope.isUpdating = false;
+			loading.isEnd = true;
 		});
     };
 	
