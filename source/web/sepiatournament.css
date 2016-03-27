@@ -323,8 +323,4 @@ path.winner {
 	border-radius: 4px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
-	
-    filter:alpha(opacity=50);
-    -moz-opacity: 0.5;
-    opacity: 0.5;
 }

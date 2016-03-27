@@ -668,6 +668,10 @@
         </div>
     </footer>
 
+    <div ng-repeat="data in loadings">
+        <div class="particle" ng-repeat="particle in data.particles" style="{{particle.style}}"></div>
+    </div>
+        
     <script type="text/javascript" src="/sepiatournament.js"></script>
 </body>
 </html>
