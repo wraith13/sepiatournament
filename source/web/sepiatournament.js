@@ -111,7 +111,7 @@ app.directive('jsonText', function() {
     };
 });
 
-app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, $location, $filter, uuid2) {
+app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, $location, $filter, $timeout, uuid2) {
 
     //  http://stackoverflow.com/questions/20789373/shuffle-array-in-ng-repeat-angular
     $scope.shuffleArray = function (array) {
@@ -154,6 +154,72 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     $scope.toJson = function (object) {
         return angular.toJson(object, true);
     };
+
+	$scope.loadings = [];
+	$scope.loadingAnimation = function(data) {
+		var maxParticleCount = 50;
+		var moveSpan = 5000;
+		var fadeSpan = 1000;
+		var now = new Date().getTime();
+		data = data || { };
+		$scope.makeSureId(data);
+		if (!data.startAt) {
+			data.startAt = now;
+			$scope.loadings.push(data); 
+		}
+		data.particles = data.particles || [];
+		if (data.isEnd) {
+			data.endAt = data.endAt || now;
+			if (data.endAt +fadeSpan < now) {
+				var index = $scope.loadings.indexOf(data);
+				$scope.loadings.splice(index, 1);
+				return; // ここでアニメーションは終了
+			}
+		}
+		var moveLapse = (data.endAt || now) -data.startAt;
+		
+		if (data.isEnd) {
+			var fadeLapse = now -data.endAt;
+			var alpha = fadeLapse /fadeSpan;
+			var opacity = 1.0 -alpha;
+			//	透明度を上げていく。
+			angular.forEach(data.particles, function (particle, index) {
+				particle.opacity = opacity;
+			});
+		} else {
+			var nextParticleSpan = moveSpan / maxParticleCount;
+			var particleCount = Math.min(maxParticleCount, (moveLapse /nextParticleSpan) +1)
+			while(data.particles.length < particleCount) {
+				//	particle 作成
+				data.particles.push({
+					baseLapse: (data.particles.length) *nextParticleSpan,
+					opacity: 1.0,
+					x: Math.random()
+				});
+			}
+			
+			angular.forEach(data.particles, function (particle, index) {
+				while((particle.baseLapse +moveSpan) < moveLapse) {
+					particle.baseLapse += moveSpan;
+					//	横位置の変更
+					particle.x = Math.random();
+				}
+				particle.y = (moveLapse -particle.baseLapse) /moveSpan;
+			});
+		}
+		angular.forEach(data.particles, function (particle, index) {
+			particle.style = ""+
+				"left:"+ (particle.x *100) +"vw;" +
+				"top:"+ (particle.y *100) +"vh;" +
+				"filter:" + "alpha(opacity=" +particle.opacity *100.0 +");" +
+				"-moz-opacity:" +particle.opacity +";" +
+				"opacity:" +particle.opacity +";"
+		});
+
+		$timeout(function() {
+			$scope.loadingAnimation(data);
+		});
+	};
 
     $scope.app = {
         type: "app",
@@ -324,6 +390,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.selected = {};
         $scope.isCollapsed = false;
 		$scope.loadEntries = function() {
+			var loading = { }
+			$scope.loadingAnimation(loading);
 			$http({
 				method: 'GET',
 				url: "/api/object.php?type=entry&parent=" +$scope.model.event.id
@@ -341,11 +409,15 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				} else {
 					$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。'});
 				}
+				loading.isEnd = true;
 			}).error(function (data, status, headers, config) {
 				$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。(' +status +')'});
+				loading.isEnd = true;
 			});
 		};
 		$scope.loadMatches = function() {
+			var loading = { }
+			$scope.loadingAnimation(loading);
 			$http({
 				method: 'GET',
 				url: "/api/object.php?type=match&parent=" +$scope.model.event.id
@@ -371,8 +443,10 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				} else {
 					$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。'});
 				}
+				loading.isEnd = true;
 			}).error(function (data, status, headers, config) {
 				$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。(' +status +')'});
+				loading.isEnd = true;
 			});
 		};
 		if (".." == tab) {
@@ -403,6 +477,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         if ("event" == $scope.active_tab) {
 			if ($scope.active_object) {
 				$scope.active_base = "/event/" +$scope.active_object;
+				var loading = { }
+				$scope.loadingAnimation(loading);
 				$http({
 					method: 'GET',
 					url: "/api/object.php?id=" +$scope.active_object
@@ -422,10 +498,14 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					} else {
 			            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。'});
 					}
+					loading.isEnd = true;
 				}).error(function (data, status, headers, config) {
 		            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。(' +status +')'});
+					loading.isEnd = true;
 				});
 			} else {
+				var loading = { }
+				$scope.loadingAnimation(loading);
 				$http({
 					method: 'GET',
 					url: "/api/object.php?type=event"
@@ -437,12 +517,16 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					} else {
 			            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。'});
 					}
+					loading.isEnd = true;
 				}).error(function (data, status, headers, config) {
 		            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。(' +status +')'});
+					loading.isEnd = true;
 				});
 			}
         }
         if ("member" == $scope.active_tab) {
+				var loading = { }
+				$scope.loadingAnimation(loading);
 				$http({
 					method: 'GET',
 					url: "/api/object.php?type=user"
@@ -454,8 +538,10 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					} else {
 			            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。'});
 					}
+					loading.isEnd = true;
 				}).error(function (data, status, headers, config) {
 		            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。(' +status +')'});
+					loading.isEnd = true;
 				});
         }
         if ("match" == $scope.active_tab) {
