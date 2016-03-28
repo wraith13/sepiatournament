@@ -324,3 +324,16 @@ path.winner {
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 }
+/* notification-panel */
+.notification-panel {
+	pointer-events: none;
+	position: fixed;
+	top: 35vh;
+    text-align: center;
+	width:100%;
+}
+.notification-panel div.alert {
+    filter:alpha(opacity=90);
+    -moz-opacity: 0.9;
+    opacity: 0.9;
+}

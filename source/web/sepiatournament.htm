@@ -407,12 +407,6 @@
                 このページは JavaScript に強く依存しています。
                 JavaScriptを有効にしてから再読み込みしてください。
             </div>
-            <uib-alert
-                ng-repeat="alert in alerts"
-                type="{{alert.type}}"
-                close="closeAlert($index)"
-                dismiss-on-timeout="3000">{{alert.msg}}
-            </uib-alert>
 
             <!--
             <div id="picker"></div>
@@ -672,6 +666,16 @@
         <div class="particle" ng-repeat="particle in data.particles" style="{{particle.style}}"></div>
     </div>
         
+    <div class="notification-panel" ng-cloak>
+	    <div class="container">
+            <uib-alert
+                ng-repeat="alert in alerts"
+                type="{{alert.type}}"
+                close="closeAlert($index)"
+                dismiss-on-timeout="3000">{{alert.msg}}
+            </uib-alert>
+        </div>
+    </div>
     <script type="text/javascript" src="/sepiatournament.js"></script>
 </body>
 </html>
