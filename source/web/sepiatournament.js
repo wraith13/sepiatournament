@@ -157,9 +157,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 
 	$scope.loadings = [];
 	$scope.loadingAnimation = function(data) {
-		var maxParticleCount = 50;
-		var moveSpan = 5000;
-		var fadeSpan = 1000;
+		var maxParticleCount = 30;
+		var moveSpan = 3000;
+		var fadeSpan = 300;
 		var now = new Date().getTime();
 		data = data || { };
 		$scope.makeSureId(data);
