@@ -497,8 +497,6 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			            $scope.active_tab = null;
 				        $scope.repository.entry = $scope.model.entries = [];
 				        $scope.repository.match = $scope.model.matches = [];
-						$scope.loadEntries();
-						$scope.loadMatches();
 						if (3 <= parts.length) {
 							$scope.selectTab(parts[2], true);
 						}
@@ -551,10 +549,27 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 					loading.isEnd = true;
 				});
         }
+        if ("entry" == $scope.active_tab) {
+			$scope.loadEntries();
+			if (0 == $scope.repository.match.length) {
+				$scope.loadMatches();
+			}
+			$scope.repository.match.length
+        }
         if ("match" == $scope.active_tab) {
+			if (0 == $scope.repository.entry.length) {
+				$scope.loadEntries();
+			}
+			$scope.loadMatches();
             $scope.update_unmatches();
         }
         if ("tree" == $scope.active_tab) {
+			if (0 == $scope.repository.entry.length) {
+				$scope.loadEntries();
+			}
+			if (0 == $scope.repository.match.length) {
+				$scope.loadMatches();
+			}
             $scope.update_tree();
         }
         if ("log" == $scope.active_tab) {
@@ -1119,7 +1134,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     
     angular.element($window).on('resize', function () { $scope.update_tree(); });
     $scope.update_tree = function () {
-        if ($scope.model.matches && 0 < $scope.model.matches.length) {
+        if ($scope.model.matches && 0 < $scope.model.matches.length && $scope.model.entries && 0 < $scope.model.entries.length ) {
             var document_height = document.documentElement.clientHeight -144;
             var document_width = document.documentElement.clientWidth;
 
