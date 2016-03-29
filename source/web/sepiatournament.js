@@ -48,7 +48,7 @@ angular.module('angularUUID2', []).factory('uuid2', [
 //    document.getElementById("picker").appendChild(pickerButton);
 //};
 
-var app = angular.module("sepiatournament", ['ui.router', "ui.bootstrap", "angularUUID2"]);
+var app = angular.module("sepiatournament", ['ui.router', "ui.bootstrap", "angularUUID2", "ngCookies"]);
 
 app.config(["$locationProvider", function ($locationProvider) {
     $locationProvider.html5Mode({
@@ -111,7 +111,7 @@ app.directive('jsonText', function() {
     };
 });
 
-app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, $location, $filter, $timeout, uuid2) {
+app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, $location, $filter, $timeout, $cookies, uuid2) {
 
     //  http://stackoverflow.com/questions/20789373/shuffle-array-in-ng-repeat-angular
     $scope.shuffleArray = function (array) {
@@ -259,6 +259,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		if (data && 0 < data.length) {
 	        $scope.logonUser = data[0];
 			$scope.addObject("user", $scope.logonUser);
+			$scope.requireLoginRequestPath = $cookies.get('requireLoginRequestPath');
+			$cookies.put('requireLoginRequestPath', null);
 			if ($scope.logonUser && $scope.requireLoginRequestPath) {
 				var path = $scope.requireLoginRequestPath.substr(1);
 				if (0 < path.length) {
@@ -1409,7 +1411,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		}
 	};
 	$scope.login = function(sns) {
-		// todo: $scope.requireLoginRequestPath を cookie に保存し、ログイン成功時にその画面へ戻る
+		
+  var favoriteCookie = $cookies.get('myFavorite');
+  		$cookies.put('requireLoginRequestPath', $scope.requireLoginRequestPath);
 		window.location.href = "/api/oauth.php?sns=" +sns;
 		//$location.path("/api/oauth.php?sns=" +sns);
 	};
