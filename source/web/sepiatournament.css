@@ -315,7 +315,7 @@ path.winner {
 /* particle */
 .particle {
 	pointer-events:none;
-    background-color:#99DDDD;
+    background-color:#008888;
 	position:fixed;
 	
 	height:8px;
