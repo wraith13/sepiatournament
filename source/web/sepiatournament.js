@@ -386,6 +386,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		if ($scope.old_path == new_path && !force_reload) {
 			return;
 		}
+		window.scrollTo(0,0);
 		$scope.old_path = new_path;
 		var parts = path ? path.split("/"): [null];
 		var tab = parts[0];
@@ -727,7 +728,6 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             0 <= (value.description || "").indexOf(search)) &&
             $scope.filterByTag(value);
     }
-
 
     //  entry
     $scope.selectEntry = function (entry) {
