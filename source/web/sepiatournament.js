@@ -530,6 +530,33 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			}
         }
         if ("member" == $scope.active_tab) {
+			if ($scope.active_object) {
+				$scope.active_base = "/member/" +$scope.active_object;
+				var loading = { }
+				$scope.loadingAnimation(loading);
+				$http({
+					method: 'GET',
+					url: "/api/object.php?id=" +$scope.active_object
+				}).success(function (data, status, headers, config) {
+					if (data && 0 < data.length && "user" == data[0].type) {
+			            $scope.tabs = []; // ["entry", "match", "tree"];
+						$scope.model.mode = data[0];
+			            $rootScope.title = $scope.model.mode.name +" - " +$scope.app.name;
+			            $scope.active_tab = null;
+				        $scope.repository.entry = $scope.model.entries = [];
+				        $scope.repository.match = $scope.model.matches = [];
+						if (3 <= parts.length) {
+							$scope.selectTab(parts[2], true);
+						}
+					} else {
+			            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。'});
+					}
+					loading.isEnd = true;
+				}).error(function (data, status, headers, config) {
+		            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。(' +status +')'});
+					loading.isEnd = true;
+				});
+			} else {
 				var loading = { }
 				$scope.loadingAnimation(loading);
 				$http({
@@ -548,6 +575,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。(' +status +')'});
 					loading.isEnd = true;
 				});
+			}
         }
         if ("entry" == $scope.active_tab) {
 			$scope.loadEntries();
