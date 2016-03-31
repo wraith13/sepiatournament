@@ -288,8 +288,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.selected = {};
         $scope.cache = {};
         $scope.model = $scope.model || {};
-        //$scope.model.event = $scope.regulateEvent($scope.model.event || { });
-        //$scope.makeSureId($scope.model.event);
+        //$scope.model.mode = $scope.regulateEvent($scope.model.mode || { });
+        //$scope.makeSureId($scope.model.mode);
         $scope.repository.event = $scope.model.events = $scope.model.events || [];
         $scope.repository.entry = $scope.model.entries = $scope.model.entries || [];
         $scope.repository.member = $scope.model.members = $scope.model.members || []; // old
@@ -400,7 +400,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.loadingAnimation(loading);
 			$http({
 				method: 'GET',
-				url: "/api/object.php?type=entry&parent=" +$scope.model.event.id
+				url: "/api/object.php?type=entry&parent=" +$scope.model.mode.id
 			}).success(function (data, status, headers, config) {
 				loading.isEnd = true;
 				if (data) {
@@ -426,7 +426,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.loadingAnimation(loading);
 			$http({
 				method: 'GET',
-				url: "/api/object.php?type=match&parent=" +$scope.model.event.id
+				url: "/api/object.php?type=match&parent=" +$scope.model.mode.id
 			}).success(function (data, status, headers, config) {
 				loading.isEnd = true;
 				if (data) {
@@ -461,7 +461,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.active_base = "";
 			$scope.old_path = "";
 		    $scope.tabs = $scope.defaultTabs;
-			$scope.model.event = null;
+			$scope.model.mode = null;
 	        $scope.repository.entry = $scope.model.entries = [];
 	        $scope.repository.match = $scope.model.matches = [];
 			$scope.clear_tree();
@@ -492,8 +492,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				}).success(function (data, status, headers, config) {
 					if (data && 0 < data.length && "event" == data[0].type) {
 			            $scope.tabs = ["entry", "match", "tree"];
-						$scope.model.event = data[0];
-			            $rootScope.title = $scope.model.event.name +" - " +$scope.app.name;
+						$scope.model.mode = data[0];
+			            $rootScope.title = $scope.model.mode.name +" - " +$scope.app.name;
 			            $scope.active_tab = null;
 				        $scope.repository.entry = $scope.model.entries = [];
 				        $scope.repository.match = $scope.model.matches = [];
@@ -725,7 +725,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.remove(event, function(){
 				$scope.removeObject("event", event);
 				$scope.selected.event = null;
-				$scope.model.event = null;
+				$scope.model.mode = null;
 				if ("" != $scope.active_base && "event" == $scope.active_base.split("/")[1])
 				{
 					$scope.selectTab("..");
@@ -763,7 +763,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         $scope.selected.entry = {
 			type: "entry",
 			owner: $scope.logonUser.id,
-			parent: $scope.model.event.id
+			parent: $scope.model.mode.id
 		};
     };
     $scope.removeEntry = function (entry) {
@@ -900,7 +900,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         var addMatch = function (entries) {
             var match = {
 				type:"match",
-				parent:$scope.model.event.id,
+				parent:$scope.model.mode.id,
 				owner:$scope.logonUser.id
 			};
 			$scope.makeSureId(match);
@@ -961,7 +961,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				method: 'PUT',
 				url: "/api/update.php",
 				data: {
-					parent: $scope.model.event.id,
+					parent: $scope.model.mode.id,
 					type: "match",
 					method: "replace",
 					bulk: $scope.model.matches,

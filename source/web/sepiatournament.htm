@@ -68,16 +68,16 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand visible-xs" ng-hide="active_base.length && model.event" href="#" ng-click="selectTab('..')"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
-                    <a class="navbar-brand visible-xs" ng-show="active_base.length && model.event" href="#" ng-click="selectTab('..')"><span ng-show="active_base.length && model.event" class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span></a>
-                    <a class="navbar-brand visible-xs" ng-show="active_base.length && model.event" ng-class="!active_tab ? 'active': ''" href="{{active_base}}" ng-click="selectTab()"><span class="glyphicon glyphicon-tower"></span>{{model.event.name}}</a>
+                    <a class="navbar-brand visible-xs" ng-hide="active_base.length && model.mode" href="#" ng-click="selectTab('..')"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
+                    <a class="navbar-brand visible-xs" ng-show="active_base.length && model.mode" href="#" ng-click="selectTab('..')"><span ng-show="active_base.length && model.mode" class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span></a>
+                    <a class="navbar-brand visible-xs" ng-show="active_base.length && model.mode" ng-class="!active_tab ? 'active': ''" href="{{active_base}}" ng-click="selectTab()"><span class="glyphicon glyphicon-tower"></span>{{model.mode.name}}</a>
                 </div>
                 <nav class="navbar-collapse collapse" uib-collapse="!isCollapsed">
-                    <a ng-hide="isCollapsed || (active_base.length && model.event)" href="/" role="button" class="navbar-brand" ng-click="selectTab('..')"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
-                    <a ng-hide="isCollapsed || !(active_base.length && model.event)" href="/" role="button" class="navbar-brand" ng-click="selectTab('..')"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span></a>
+                    <a ng-hide="isCollapsed || (active_base.length && model.mode)" href="/" role="button" class="navbar-brand" ng-click="selectTab('..')"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
+                    <a ng-hide="isCollapsed || !(active_base.length && model.mode)" href="/" role="button" class="navbar-brand" ng-click="selectTab('..')"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span></a>
                     <ul class="nav navbar-nav" ng-hide="is_loading">
-                        <li ng-show="active_base.length && model.event" ng-class="!active_tab ? 'active': ''">
-                            <a href="{{active_base}}" ng-click="selectTab()"><span class="glyphicon glyphicon-tower"></span>{{model.event.name}}</a>
+                        <li ng-show="active_base.length && model.mode" ng-class="!active_tab ? 'active': ''">
+                            <a href="{{active_base}}" ng-click="selectTab()"><span class="glyphicon glyphicon-tower"></span>{{model.mode.name}}</a>
                         </li>
                         <li ng-class="active_tab == tab ? 'active': ''" ng-repeat="tab in tabs track by $index">
                             <a href="{{active_base}}/{{tab}}" ng-click="selectTab(tab)"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[tab]"></span>{{tab}}</a>
@@ -376,19 +376,19 @@
             </div>
         </div>
         <div ng-show="!(is_loading||active_tab)" ng-cloak>
-            <div class="big-header" ng-hide="editmode && has_write_permission(model.event)">
+            <div class="big-header" ng-hide="editmode && has_write_permission(model.mode)">
                 <div class="container">
                     <div class="jumbotron">
-                        <div ng-include="'jumbotron.html'" ng-repeat="model in [model.event||app]"></div>
-                        <button ng-show="!editmode && has_write_permission(model.event)" type="button" class='btn btn-default' ng-click="editmode=true;" style="float:right"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                        <div ng-include="'jumbotron.html'" ng-repeat="model in [model.mode||app]"></div>
+                        <button ng-show="!editmode && has_write_permission(model.mode)" type="button" class='btn btn-default' ng-click="editmode=true;" style="float:right"><i class="glyphicon glyphicon-pencil"></i>編集</button>
                     </div>
                 </div>
             </div>
-            <div ng-show="editmode && has_write_permission(model.event)" class="container">
+            <div ng-show="editmode && has_write_permission(model.mode)" class="container">
                 <button type="button" class='btn btn-warning' ng-click="editmode=false;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
-                <button type="button" class='btn btn-danger' ng-click="removeEvent(model.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
+                <button type="button" class='btn btn-danger' ng-click="removeEvent(model.mode)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
                 <h4>&nbsp;</h4>
-                <div ng-include="'edit.html'" ng-repeat="model in [model.event||app]"></div>
+                <div ng-include="'edit.html'" ng-repeat="model in [model.mode||app]"></div>
             </div>
         </div>
         <div ng-show="active_tab=='login'" ng-cloak>
@@ -422,7 +422,7 @@
                         現在、このWebサイトのサービスは公開開発中兼α版であり、現時点では最小限の機能しか正常に動作しません。開発中の環境であり、予告なく一時的に利用不能になったりデータが消える恐れがある為、ご利用になられる際は <a href="https://twitter.com/sepiatournament" target="_blank" rel="noopener">@sepiatournament</a> までご一報ください。<del>今月中(2016-03)</del>2016年4月中に正式サービス開始予定です。
                     </uib-alert>
                     
-                    <div ng-hide="model.event">
+                    <div ng-hide="model.mode">
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event.new')">イベントを開催する</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event')">イベントに参加する</button>
         
@@ -441,7 +441,7 @@
                         -->
                                             
                     </div>
-                    <div ng-show="model.event && !(editmode && has_write_permission(model.event))">
+                    <div ng-show="model.mode && !(editmode && has_write_permission(model.mode))">
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('entry')">参加チーム一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('match')">試合一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('tree')">トーナメントツリーを見る</button>
@@ -489,7 +489,7 @@
                 <div ng-show="active_tab=='entry'">
                     <div class="row">
                         <div class="col-md-5" ng-class="selected.entry?'hide-on-narrow':''">
-	                        <button ng-show="has_write_permission(model.event)" type="button" class='btn btn-primary btn-lg btn-block' ng-click="addEntry()">チームを追加</button>
+	                        <button ng-show="has_write_permission(model.mode)" type="button" class='btn btn-primary btn-lg btn-block' ng-click="addEntry()">チームを追加</button>
 							<h4>&nbsp;</h4>
                             <div ng-include="'filter.html'" ng-repeat="type in ['entry']"></div>
                             <ul class="list-group">
