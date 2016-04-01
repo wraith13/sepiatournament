@@ -157,8 +157,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 
 	$scope.loadings = [];
 	$scope.loadingAnimation = function(data) {
-		var maxParticleCount = 30;
-		var moveSpan = 3000;
+		var maxParticleCount = 15;
+		var minMoveSpan = 2000;
 		var fadeSpan = 300;
 		var now = new Date().getTime();
 		data = data || { };
@@ -187,24 +187,23 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				particle.opacity = opacity;
 			});
 		} else {
-			var nextParticleSpan = moveSpan / maxParticleCount;
-			var particleCount = Math.min(maxParticleCount, (moveLapse /nextParticleSpan) +1)
-			while(data.particles.length < particleCount) {
+			while(data.particles.length < maxParticleCount) {
 				//	particle 作成
 				data.particles.push({
-					baseLapse: (data.particles.length) *nextParticleSpan,
+					baseLapse: moveLapse,
+					moveSpan: minMoveSpan *(data.particles.length +1),
 					opacity: 1.0,
 					x: Math.random()
 				});
 			}
 			
 			angular.forEach(data.particles, function (particle, index) {
-				while((particle.baseLapse +moveSpan) < moveLapse) {
-					particle.baseLapse += moveSpan;
+				while((particle.baseLapse +particle.moveSpan) < moveLapse) {
+					particle.baseLapse += particle.moveSpan;
 					//	横位置の変更
 					particle.x = Math.random();
 				}
-				particle.y = (moveLapse -particle.baseLapse) /moveSpan;
+				particle.y = (moveLapse -particle.baseLapse) /particle.moveSpan;
 				if (data.isUpload) {
 					particle.y = 1.0 -particle.y;
 				}
