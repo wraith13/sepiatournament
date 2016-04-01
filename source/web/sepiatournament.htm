@@ -275,6 +275,21 @@
             </div>
         </script>
 
+        <script type="text/ng-template" id="events.list.item.html">
+			<span ng-include="'tag.html'"></span>
+			<img class="icon icon-mini" ng-src="{{getObject('user',model.owner).image}}" style="float:right;"/>
+			<h4 class="list-group-item-heading"><span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon user-icon" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h4>
+			<div ng-show="model.entries" ng-include="'match.entries.list.html'" ng-repeat="model in [model]"></div>
+			<p class="list-group-item-text">{{model.description}}</p>
+        </script>
+        
+        <script type="text/ng-template" id="entries.list.item.html">
+			<span ng-include="'tag.html'"></span>
+			<h4 class="list-group-item-heading"><span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon user-icon" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h4>
+			<div ng-show="model.entries" ng-include="'match.entries.list.html'" ng-repeat="model in [model]"></div>
+			<p class="list-group-item-text">{{model.description}}</p>
+        </script>
+		
         <script type="text/ng-template" id="match.entries.list.edit.html">
             <ul class="list-group" ng-click="$event.stopPropagation()">
                 <li class="list-group-item"
@@ -328,13 +343,6 @@
                     ng-click="selectMatch(model)">
                 </li>
             </ul>
-        </script>
-		
-        <script type="text/ng-template" id="entries.list.item.html">
-			<span ng-include="'tag.html'"></span>
-			<h4 class="list-group-item-heading"><span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon user-icon" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h4>
-			<div ng-show="model.entries" ng-include="'match.entries.list.html'" ng-repeat="model in [model]"></div>
-			<p class="list-group-item-text">{{model.description}}</p>
         </script>
 		
         <script type="text/ng-template" id="tag.html">
@@ -474,7 +482,7 @@
 							<h4>&nbsp;</h4>
                             <div ng-include="'filter.html'" ng-repeat="type in ['event']"></div>
                             <ul class="list-group">
-                                <li ng-include="'entries.list.item.html'"
+                                <li ng-include="'events.list.item.html'"
                                     class="list-group-item"
                                     ng-class="{'active': model == selected.event}"
                                     ng-repeat="model in model.events | filter:filterEvent track by $index"
