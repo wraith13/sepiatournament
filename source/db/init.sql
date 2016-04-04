@@ -41,10 +41,12 @@ create table twitter_user_cache
 (
 	id varchar(64) not null,
 	screen_name varchar(64) not null,
+	at datetime not null,
 	json text,
 	primary key(id)
 );
 create index twitter_user_cache_screen_name on twitter_user_cache (screen_name);
+create index twitter_user_cache_at on twitter_user_cache (at);
 
 create table queue
 (
