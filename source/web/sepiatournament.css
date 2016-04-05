@@ -149,6 +149,10 @@ table.list tr:nth-child(2n-1) {
 }
 
 /* custom design */
+.navbar-brand {
+    padding: 15px 5px;
+	font-size: 14px;
+}
 .navbar,
 .navbar-inverse .navbar-toggle,
 .big-header,
