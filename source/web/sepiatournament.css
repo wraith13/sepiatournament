@@ -150,6 +150,7 @@ table.list tr:nth-child(2n-1) {
 
 /* custom design */
 .navbar,
+.navbar-inverse .navbar-toggle,
 .big-header,
 .jumbotron {
     color:#DDFFFF;
