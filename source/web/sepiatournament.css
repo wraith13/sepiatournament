@@ -159,6 +159,11 @@ table.list tr:nth-child(2n-1) {
 .navbar-inverse .navbar-nav > li > a {
     color:#88DDDD;
 }
+.navbar-inverse .navbar-brand.abbreviationable {
+	margin-right: -900vw;
+	overflow:hidden;
+	white-space: nowrap;
+}
 .navbar-inverse .navbar-toggle:focus,
 .navbar-inverse .navbar-toggle:hover,
 .navbar-inverse a.navbar-brand.active,

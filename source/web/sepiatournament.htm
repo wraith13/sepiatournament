@@ -83,7 +83,7 @@
                     </button>
                     <a class="navbar-brand visible-xs" ng-hide="active_base.length && model.mode" href="#" ng-click="selectTab('..')"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span>{{app.name}}</a>
                     <a class="navbar-brand visible-xs" ng-show="active_base.length && model.mode" href="#" ng-click="selectTab('..')"><span class="glyphicon" ng-class="'glyphicon-'+tabIcon[app.type]"></span></a>
-                    <a class="navbar-brand visible-xs" ng-show="active_base.length && model.mode" ng-class="!active_tab ? 'active': ''" href="{{active_base}}" ng-click="selectTab()">
+                    <a class="navbar-brand visible-xs abbreviationable" ng-show="active_base.length && model.mode" ng-class="!active_tab ? 'active': ''" href="{{active_base}}" ng-click="selectTab()">
                     	<span ng-if="!model.mode.image" class="glyphicon glyphicon-tower"></span>
                         <img ng-if="model.mode.image" class="user-icon" ng-src="{{model.mode.image}}" alt="{{model.mode.name}}" />
                         {{model.mode.name}}
