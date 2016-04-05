@@ -260,7 +260,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.addObject("user", $scope.logonUser);
 			$scope.requireLoginRequestPath = $cookies.get('requireLoginRequestPath');
 			$cookies.put('requireLoginRequestPath', null);
-			if ($scope.logonUser && $scope.requireLoginRequestPath) {
+			if ($scope.logonUser && $scope.requireLoginRequestPath && "null" != $scope.requireLoginRequestPath) {
 				var path = $scope.requireLoginRequestPath.substr(1);
 				if (0 < path.length) {
 					$scope.selectTab(path);
@@ -361,6 +361,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 	$scope.old_path = "dummy";
 	$scope.loop_centinel = 0;
     $scope.selectTab = function (path, force_reload) {
+		console.log("$scope.selectTab(\"" +path +"\"," +force_reload +")");
 		if (path) {
 			while("/" == path.substr(0,1)) {
 				path = path.substr(1);
@@ -471,6 +472,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 				$scope.active_base +"/" +path:
 				"/" +path;
         } else {
+			if (tab && ".." != tab) {
+	            console.log("【🐛バグ】未知の tab: " +tab);
+			}
             $scope.active_tab = null;
 			new_path = $scope.active_base ?
 				$scope.active_base:
