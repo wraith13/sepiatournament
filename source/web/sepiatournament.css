@@ -42,6 +42,9 @@ body {
 }
 
 /* icon */
+.navbar-brand > img.user-icon {
+	display: inline;
+}
 .user-icon {
 	margin-top: -9px;
 	margin-bottom: -9px;
