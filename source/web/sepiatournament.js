@@ -613,27 +613,6 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			$scope.temp.event = $scope.regulateEvent();
 		}
     };
-    setTimeout(function () {
-		var hash = $location.hash();
-		console.log("hash: " +hash);
-		console.log("path: " +$location.path());
-		if (hash) {
-			console.log("goto: " +hash);
-			$scope.selectTab($location.hash());
-		} else {
-			var init_path = $location.search()["path"];
-			if (init_path && 0 < init_path.length) {
-				console.log("goto: " +init_path);
-				$scope.selectTab(init_path);
-			} else {
-				var first_path = $location.path().substr(1);
-				if (0 < first_path.length) {
-					console.log("goto: " +first_path);
-					$scope.selectTab(first_path);
-				}
-			}
-		}
-    }, 0);
 
 	$rootScope.$on('$locationChangeSuccess', function() {
 		$scope.selectTab($location.path().substr(1));
