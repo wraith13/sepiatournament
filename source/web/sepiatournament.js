@@ -336,6 +336,68 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     //$scope.change = function () {
     //};
 
+	$scope.loadEntries = function() {
+		var loading = { }
+		$scope.loadingAnimation(loading);
+		$http({
+			method: 'GET',
+			url: "/api/object.php?type=entry&parent=" +$scope.model.mode.id
+		}).success(function (data, status, headers, config) {
+			loading.isEnd = true;
+			if (data) {
+				if (0 < data.length) {
+					$scope.repository.entry = $scope.model.entries = data;
+				}
+				if ("match" == $scope.active_tab) {
+					$scope.update_unmatches();
+				}
+				if ("tree" == $scope.active_tab) {
+					$scope.update_tree();
+				}
+			} else {
+				$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。'});
+			}
+		}).error(function (data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。(' +status +')'});
+			loading.isEnd = true;
+		});
+	};
+	$scope.loadMatches = function() {
+		var loading = { }
+		$scope.loadingAnimation(loading);
+		$http({
+			method: 'GET',
+			url: "/api/object.php?type=match&parent=" +$scope.model.mode.id
+		}).success(function (data, status, headers, config) {
+			loading.isEnd = true;
+			if (data) {
+				if (0 < data.length) {
+					$scope.repository.match = $scope.model.matches = data.sort(function(a, b) {
+						if (a.index == b.index) {
+							return 0;
+						}
+						if (a.index < b.index) {
+							return -1;
+						}
+						return 1;
+					});
+				}
+				if ("match" == $scope.active_tab) {
+					$scope.update_unmatches();
+				}
+				if ("tree" == $scope.active_tab) {
+					loading.isEnd = true;
+					$scope.update_tree();
+				}
+			} else {
+				$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。'});
+			}
+		}).error(function (data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。(' +status +')'});
+			loading.isEnd = true;
+		});
+	};
+	
     $scope.tabIcon = {
         "app": "sepiatournament",
         "event": "tower",
@@ -360,8 +422,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 	$scope.active_base = "";
 	$scope.old_path = "dummy";
 	$scope.loop_centinel = 0;
-    $scope.selectTab = function (path, force_reload) {
-		console.log("$scope.selectTab(\"" +path +"\"," +force_reload +")");
+	
+	$scope.regulatePath = function (path, force_reload) {
 		if (path) {
 			while("/" == path.substr(0,1)) {
 				path = path.substr(1);
@@ -386,85 +448,54 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			}
 		}
 		if ($scope.old_path == new_path && !force_reload) {
-			return;
+			return null;
 		}
-		window.scrollTo(0,0);
 		$scope.old_path = new_path;
-		var parts = path ? path.split("/"): [null];
-		var tab = parts[0];
+		return new_path;
+	}
+	$scope.clearMode = function() {
+		$rootScope.title = $scope.app.name;
+		$scope.active_base = "";
+		$scope.old_path = "";
+		$scope.tabs = $scope.defaultTabs;
+		$scope.model.mode = null;
+		$scope.repository.entry = $scope.model.entries = [];
+		$scope.repository.match = $scope.model.matches = [];
+		$scope.clear_tree();
+	}
+	$scope.clearScreen = function() {
+		window.scrollTo(0,0);
 		$scope.editmode = false;
         $scope.selected = {};
         $scope.isCollapsed = false;
-		$scope.loadEntries = function() {
-			var loading = { }
-			$scope.loadingAnimation(loading);
-			$http({
-				method: 'GET',
-				url: "/api/object.php?type=entry&parent=" +$scope.model.mode.id
-			}).success(function (data, status, headers, config) {
-				loading.isEnd = true;
-				if (data) {
-					if (0 < data.length) {
-						$scope.repository.entry = $scope.model.entries = data;
-					}
-					if ("match" == $scope.active_tab) {
-						$scope.update_unmatches();
-					}
-					if ("tree" == $scope.active_tab) {
-						$scope.update_tree();
-					}
-				} else {
-					$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。'});
-				}
-			}).error(function (data, status, headers, config) {
-				$scope.addAlert({ type: 'danger', msg: 'エントリー情報読み込み中にエラーが発生しました。(' +status +')'});
-				loading.isEnd = true;
-			});
-		};
-		$scope.loadMatches = function() {
-			var loading = { }
-			$scope.loadingAnimation(loading);
-			$http({
-				method: 'GET',
-				url: "/api/object.php?type=match&parent=" +$scope.model.mode.id
-			}).success(function (data, status, headers, config) {
-				loading.isEnd = true;
-				if (data) {
-					if (0 < data.length) {
-						$scope.repository.match = $scope.model.matches = data.sort(function(a, b) {
-							if (a.index == b.index) {
-								return 0;
-							}
-							if (a.index < b.index) {
-								return -1;
-							}
-							return 1;
-						});
-					}
-					if ("match" == $scope.active_tab) {
-						$scope.update_unmatches();
-					}
-					if ("tree" == $scope.active_tab) {
-						loading.isEnd = true;
-						$scope.update_tree();
-					}
-				} else {
-					$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。'});
-				}
-			}).error(function (data, status, headers, config) {
-				$scope.addAlert({ type: 'danger', msg: '試合情報読み込み中にエラーが発生しました。(' +status +')'});
-				loading.isEnd = true;
-			});
-		};
+	}
+    $scope.selectPath = function (path) {
+		var parts = path ? path.split("/"): [null];
+		var tab = parts[0];
+		var active_object = 2 <= parts.length ? parts[1]: null;
+		if ($scope.model.mode && $scope.model.mode.id != active_object) {
+			$scope.clearMode();
+		}
+        if (0 <= $scope.mastertabs.indexOf(tab)) {
+            $scope.active_tab = tab;
+        } else {
+			if (tab) {
+	            console.log("【🐛バグ】未知の tab: " +tab);
+			}
+            $scope.active_tab = null;
+        }
+		$scope.changeTab(path);
+	};
+    $scope.selectTab = function (path, force_reload) {
+		var new_path = $scope.regulatePath(path, force_reload);
+		if (!new_path) {
+			return;
+		}
+		$scope.clearScreen();
+		var parts = path ? path.split("/"): [null];
+		var tab = parts[0];
 		if (".." == tab) {
-			$rootScope.title = $scope.app.name;
-			$scope.active_base = "";
-			$scope.old_path = "";
-		    $scope.tabs = $scope.defaultTabs;
-			$scope.model.mode = null;
-	        $scope.repository.entry = $scope.model.entries = [];
-	        $scope.repository.match = $scope.model.matches = [];
-			$scope.clear_tree();
+			$scope.clearMode();
 		}
         if (0 <= $scope.mastertabs.indexOf(tab)) {
             $scope.active_tab = tab;
@@ -483,34 +514,53 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		if (new_path != $location.path()) {
 			$location.path(new_path);
 		}
-		$scope.active_object = 2 <= parts.length ? parts[1]: null;
+		//$scope.changeTab(path);
+	};
+	$scope.changeSubTab = function(path) {
+		var parts = path ? path.split("/"): [null];
+		if (3 <= parts.length) {
+			var sub_tab = parts[2];
+			if (0 <= $scope.tabs.indexOf(sub_tab)) {
+				$scope.active_tab = sub_tab;
+				$scope.changeTab(sub_tab);
+				return;
+			}
+		}
+		$scope.active_tab = null;
+	};
+    $scope.changeTab = function (path) {
+		var parts = path ? path.split("/"): [null];
+		var tab = parts[0];
+		var active_object = 2 <= parts.length ? parts[1]: null;
         if ("event" == $scope.active_tab) {
-			if ($scope.active_object) {
-				$scope.active_base = "/event/" +$scope.active_object;
-				var loading = { }
-				$scope.loadingAnimation(loading);
-				$http({
-					method: 'GET',
-					url: "/api/object.php?id=" +$scope.active_object
-				}).success(function (data, status, headers, config) {
-					if (data && 0 < data.length && "event" == data[0].type) {
-			            $scope.tabs = ["entry", "match", "tree"];
-						$scope.model.mode = data[0];
-			            $rootScope.title = $scope.model.mode.name +" - " +$scope.app.name;
-			            $scope.active_tab = null;
-				        $scope.repository.entry = $scope.model.entries = [];
-				        $scope.repository.match = $scope.model.matches = [];
-						if (3 <= parts.length) {
-							$scope.selectTab(parts[2], true);
+			if (active_object) {
+				if (!$scope.model.mode || $scope.model.mode.id != active_object) {
+					$scope.active_base = "/event/" +active_object;
+					var loading = { }
+					$scope.loadingAnimation(loading);
+					$http({
+						method: 'GET',
+						url: "/api/object.php?id=" +active_object
+					}).success(function (data, status, headers, config) {
+						if (data && 0 < data.length && "event" == data[0].type) {
+							$scope.tabs = ["entry", "match", "tree"];
+							$scope.model.mode = data[0];
+							$rootScope.title = $scope.model.mode.name +" - " +$scope.app.name;
+							$scope.active_tab = null;
+							$scope.repository.entry = $scope.model.entries = [];
+							$scope.repository.match = $scope.model.matches = [];
+							$scope.changeSubTab(path);
+						} else {
+							$scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。'});
 						}
-					} else {
-			            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。'});
-					}
-					loading.isEnd = true;
-				}).error(function (data, status, headers, config) {
-		            $scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。(' +status +')'});
-					loading.isEnd = true;
-				});
+						loading.isEnd = true;
+					}).error(function (data, status, headers, config) {
+						$scope.addAlert({ type: 'danger', msg: 'イベント情報読み込み中にエラーが発生しました。(' +status +')'});
+						loading.isEnd = true;
+					});
+				} else {
+					$scope.changeSubTab(path);
+				}
 			} else {
 				var loading = { }
 				$scope.loadingAnimation(loading);
@@ -533,32 +583,34 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			}
         }
         if ("member" == $scope.active_tab) {
-			if ($scope.active_object) {
-				$scope.active_base = "/member/" +$scope.active_object;
-				var loading = { }
-				$scope.loadingAnimation(loading);
-				$http({
-					method: 'GET',
-					url: "/api/object.php?id=" +$scope.active_object
-				}).success(function (data, status, headers, config) {
-					if (data && 0 < data.length && "user" == data[0].type) {
-			            $scope.tabs = []; // ["entry", "match", "tree"];
-						$scope.model.mode = data[0];
-			            $rootScope.title = $scope.model.mode.name +" - " +$scope.app.name;
-			            $scope.active_tab = null;
-				        $scope.repository.entry = $scope.model.entries = [];
-				        $scope.repository.match = $scope.model.matches = [];
-						if (3 <= parts.length) {
-							$scope.selectTab(parts[2], true);
+			if (active_object) {
+				if (!$scope.model.mode || $scope.model.mode.id != active_object) {
+					$scope.active_base = "/member/" +active_object;
+					var loading = { }
+					$scope.loadingAnimation(loading);
+					$http({
+						method: 'GET',
+						url: "/api/object.php?id=" +active_object
+					}).success(function (data, status, headers, config) {
+						if (data && 0 < data.length && "user" == data[0].type) {
+							$scope.tabs = []; // ["entry", "match", "tree"];
+							$scope.model.mode = data[0];
+							$rootScope.title = $scope.model.mode.name +" - " +$scope.app.name;
+							$scope.active_tab = null;
+							$scope.repository.entry = $scope.model.entries = [];
+							$scope.repository.match = $scope.model.matches = [];
+					$scope.changeSubTab(path);
+						} else {
+							$scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。'});
 						}
-					} else {
-			            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。'});
-					}
-					loading.isEnd = true;
-				}).error(function (data, status, headers, config) {
-		            $scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。(' +status +')'});
-					loading.isEnd = true;
-				});
+						loading.isEnd = true;
+					}).error(function (data, status, headers, config) {
+						$scope.addAlert({ type: 'danger', msg: 'メンバー情報読み込み中にエラーが発生しました。(' +status +')'});
+						loading.isEnd = true;
+					});
+				} else {
+					$scope.changeSubTab(path);
+				}
 			} else {
 				var loading = { }
 				$scope.loadingAnimation(loading);
@@ -615,7 +667,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
     };
 
 	$rootScope.$on('$locationChangeSuccess', function() {
-		$scope.selectTab($location.path().substr(1));
+		console.log("$location.path(): " +$location.path());
+		$scope.selectPath($location.path().substr(1));
 	});
 
     //  cache
