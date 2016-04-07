@@ -6,9 +6,14 @@ session_start();
 function decode($json_list)
 {
 	$result = [];
+	$now = time();
+	$last_hour = $now -(60 *60);
 	foreach($json_list as $i)
 	{
-		$result[] = json_decode($i["json"], true);
+		if ($last_hour < strtotime($i["at"]))
+		{
+			$result[] = json_decode($i["json"], true);
+		}
 	}
 	return $result;
 }
