@@ -8,16 +8,12 @@ function decode($json_list)
 	$result = [];
 	foreach($json_list as $i)
 	{
-		$current = json_decode($i["json"], true);
-		$current["owner"] = $i["owner"];
-		$current["is_private"] = $i["private"] ? true: false;
-		$current["parent"] = $i["parent"];
-		$result[] = $current;
+		$result[] = json_decode($i["json"], true);
 	}
 	return $result;
 }
 
-function get_object($db)
+function get_twitter_user_cache($db)
 {
 	$user_id = $_SESSION['user_id'];
 	$condition = [];
@@ -37,10 +33,9 @@ function get_object($db)
 	return db_select
 	(
 		$db,
-		"object",
-		array("parent", "owner", "private", "json"),
-		$condition,
-		"created_at desc"
+		"twitter_user_cache",
+		array("json", "at"),
+		$condition
 	);
 }
 
@@ -50,7 +45,7 @@ print
 	(
 		decode
 		(
-			get_object($db)
+			get_twitter_user_cache($db)
 		)
 	)
 );
