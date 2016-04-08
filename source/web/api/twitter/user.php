@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '../common/db.php';
+require_once __DIR__ . '../twitteroauth.autoload.php';
 
 session_start();
 
