@@ -149,6 +149,32 @@ function db_update($db, $table, $array, $primary_keys)
 	
 	return db_query($db, "update $table set $set_string where $where_string;");
 }
+function db_insert_or_update($db, $table, $array, $primary_keys)
+{
+	$keys = [];
+	$values = [];
+	foreach(db_real_escape_array($db, $array) as $key => $value)
+	{
+		$keys[] = $key;
+		if ("created_at" == $key)
+		{
+			$escaped_value = 'UTC_TIMESTAMP()';
+		}
+		else
+		{
+			$escaped_value = "'" . $value . "'";
+		}
+		$values[] = $escaped_value;
+		if (!in_array($key, $primary_keys))
+		{
+			$sets[] = "$key=$escaped_value";
+		}
+	}
+	$kes_string = implode("," ,$keys);
+	$values_string = implode(",", $values);
+	$set_string = implode("," ,$sets);
+	return db_query($db, "insert into $table($kes_string) values($values_string) on duplicate key update $set_string;");
+}
 function db_has_write_permission($db, $user_id, $target_id)
 {
 	if ($user_id && $target_id)
