@@ -53,6 +53,7 @@ try
 		$access_token['oauth_token_secret']
 	);
 	$twitter_user = $twitter->get("account/verify_credentials");
+	save_twitter_user_cache($db, $twitter_user);
 	$auth_id = $db->real_escape_string($twitter_user->id_str);
 	$user_id = null;
 	

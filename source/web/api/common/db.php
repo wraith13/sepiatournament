@@ -156,7 +156,7 @@ function db_insert_or_update($db, $table, $array, $primary_keys)
 	foreach(db_real_escape_array($db, $array) as $key => $value)
 	{
 		$keys[] = $key;
-		if ("created_at" == $key)
+		if ("created_at" == $key || "at" == $key)
 		{
 			$escaped_value = 'UTC_TIMESTAMP()';
 		}
@@ -215,4 +215,21 @@ function make_search($object)
 		$result = $result . " " . $object["twitter"];
 	}
 	return $result;
+}
+
+function save_twitter_user_cache($db, $twitter_user)
+{
+	db_insert_or_update
+	(
+		$db,
+		"twitter_user_cache",
+		array
+		(
+			"id" => $twitter_user->id_str,
+			"screen_name" => $twitter_user->screen_name,
+			"at" => "dummy",
+			"json" => json_encode($twitter_user),
+		),
+		array("id")
+	);
 }
