@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '../common/db.php';
-require_once __DIR__ . '../twitteroauth.autoload.php';
+require_once __DIR__ . '/../common/db.php';
+require_once __DIR__ . '/../twitteroauth.autoload.php';
 
 session_start();
 
@@ -21,7 +21,6 @@ function decode($json_list)
 
 function get_twitter_user_cache($db)
 {
-	$user_id = $_SESSION['user_id'];
 	$condition = [];
 	foreach(array("id", "screen_name") as $i)
 	{
@@ -35,7 +34,6 @@ function get_twitter_user_cache($db)
 	{
 		$condition["id"] = $user_id;
 	}
-	$condition["remove"] = 0;
 	return db_select
 	(
 		$db,
