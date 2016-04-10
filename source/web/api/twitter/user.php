@@ -11,7 +11,8 @@ function decode($json_list)
 	$last_hour = $now -(60 *60);
 	foreach($json_list as $i)
 	{
-		if ($last_hour < strtotime($i["at"]))
+		$at = new DateTime($i["at"], new DateTimeZone('UTC'));
+		if ($last_hour < $at->getTimestamp())
 		{
 			$result[] = json_decode($i["json"], true);
 		}
