@@ -2,9 +2,9 @@
 require_once __DIR__ . '/../common/db.php';
 require_once __DIR__ . '/../twitteroauth.autoload.php';
 
-session_start();
+use Abraham\TwitterOAuth\TwitterOAuth;
 
-function decode($json_list)
+function decode($db, $json_list)
 {
 	$result = [];
 	$now = time();
@@ -16,6 +16,12 @@ function decode($json_list)
 		{
 			$result[] = json_decode($i["json"], true);
 		}
+	}
+	if (0 == count($result))
+	{
+		$twitter_user = get_twitter_user($db);
+		save_twitter_user_cache($db, $twitter_user);
+		$result[] = $twitter_user;
 	}
 	return $result;
 }
@@ -72,6 +78,7 @@ print
 	(
 		decode
 		(
+			$db,
 			get_twitter_user_cache($db)
 		)
 	)
