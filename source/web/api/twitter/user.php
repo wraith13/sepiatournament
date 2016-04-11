@@ -20,6 +20,28 @@ function decode($json_list)
 	return $result;
 }
 
+function get_twitter_user($db)
+{
+	$twitter_config = db_select_config($db);
+	$twitter = new TwitterOAuth
+	(
+		$twitter_config["twitter.consumer.key"],
+		$twitter_config["twitter.consumer.secret"],
+		$twitter_config['twitter.access.token'],
+		$twitter_config['twitter.access.secret']
+	);
+	
+	foreach(array("id", "screen_name") as $i)
+	{
+		if ($_REQUEST[$i])
+		{
+			return $twitter->get("users/show", [$i => $_REQUEST[$i],]);
+		}
+	}
+	
+	return null;
+}
+
 function get_twitter_user_cache($db)
 {
 	$condition = [];
