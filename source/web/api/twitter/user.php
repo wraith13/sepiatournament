@@ -4,7 +4,9 @@ require_once __DIR__ . '/../twitteroauth.autoload.php';
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-function decode($db, $json_list)
+$config = db_select_config($db);
+	
+function decode($config, $db, $json_list)
 {
 	$result = [];
 	$now = time();
@@ -19,22 +21,21 @@ function decode($db, $json_list)
 	}
 	if (0 == count($result))
 	{
-		$twitter_user = get_twitter_user($db);
+		$twitter_user = get_twitter_user($config, $db);
 		save_twitter_user_cache($db, $twitter_user);
 		$result[] = $twitter_user;
 	}
 	return $result;
 }
 
-function get_twitter_user($db)
+function get_twitter_user($config, $db)
 {
-	$twitter_config = db_select_config($db);
 	$twitter = new TwitterOAuth
 	(
-		$twitter_config["twitter.consumer.key"],
-		$twitter_config["twitter.consumer.secret"],
-		$twitter_config['twitter.access.token'],
-		$twitter_config['twitter.access.secret']
+		$config["twitter.consumer.key"],
+		$config["twitter.consumer.secret"],
+		$config['twitter.access.token'],
+		$config['twitter.access.secret']
 	);
 	
 	foreach(array("id", "screen_name") as $i)
@@ -78,6 +79,7 @@ print
 	(
 		decode
 		(
+			$config,
 			$db,
 			get_twitter_user_cache($db)
 		)
