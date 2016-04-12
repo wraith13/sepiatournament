@@ -10,7 +10,7 @@ function decode($config, $db, $json_list)
 {
 	$result = [];
 	$now = time();
-	$last_hour = $now -(60 *60);
+	$last_hour = $now -intval($config['twitter.user.cache.expire']);
 	foreach($json_list as $i)
 	{
 		$at = new DateTime($i["at"], new DateTimeZone('UTC'));
