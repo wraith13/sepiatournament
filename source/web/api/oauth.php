@@ -6,18 +6,18 @@ use Abraham\TwitterOAuth\TwitterOAuth;
 
 session_start();
 
-$sns = $_GET["sns"];
+$sns = $_GET['sns'];
 
 $twitter_config = db_select_config($db);
 	
 $twitter = new TwitterOAuth
 (
-	$twitter_config["twitter.consumer.key"],
-	$twitter_config["twitter.consumer.secret"]
+	$twitter_config['twitter.consumer.key'],
+	$twitter_config['twitter.consumer.secret']
 );
 
-//$callbackurl = preg_replace("oauth\.php", "oauth\.callback\.php", $_SERVER["PHP_SELF"]);
-//$callbackurl = "https:/sepiatournament.net/api/oauth.callback.php?sns=$sns";
+//$callbackurl = preg_replace('oauth.php', 'oauth.callback\.php', $_SERVER['PHP_SELF']);
+//$callbackurl = 'https:/sepiatournament.net/api/oauth.callback.php?sns=$sns';
 $request_token = $twitter->oauth
 (
 	'oauth/request_token',

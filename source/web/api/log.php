@@ -9,10 +9,10 @@ print
 		db_select
 		(
 			$db,
-			"log",
-			array("target", "at", "category", "operator", "message"),
+			'log',
+			array('target', 'at', 'category', 'operator', 'message'),
 			null,
-			"at desc"
+			'at desc'
 		)
 	)
 );

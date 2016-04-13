@@ -13,10 +13,10 @@ function decode($config, $db, $json_list)
 	$last_hour = $now -intval($config['twitter.user.cache.expire']);
 	foreach($json_list as $i)
 	{
-		$at = new DateTime($i["at"], new DateTimeZone('UTC'));
+		$at = new DateTime($i['at'], new DateTimeZone('UTC'));
 		if ($last_hour < $at->getTimestamp())
 		{
-			$result[] = json_decode($i["json"], true);
+			$result[] = json_decode($i['json'], true);
 		}
 	}
 	if (0 == count($result))
@@ -32,17 +32,17 @@ function get_twitter_user($config, $db)
 {
 	$twitter = new TwitterOAuth
 	(
-		$config["twitter.consumer.key"],
-		$config["twitter.consumer.secret"],
+		$config['twitter.consumer.key'],
+		$config['twitter.consumer.secret'],
 		$config['twitter.access.token'],
 		$config['twitter.access.secret']
 	);
 	
-	foreach(array("id", "screen_name") as $i)
+	foreach(array('id', 'screen_name') as $i)
 	{
 		if ($_REQUEST[$i])
 		{
-			return $twitter->get("users/show", [$i => $_REQUEST[$i],]);
+			return $twitter->get('users/show', [$i => $_REQUEST[$i],]);
 		}
 	}
 	
@@ -52,7 +52,7 @@ function get_twitter_user($config, $db)
 function get_twitter_user_cache($db)
 {
 	$condition = [];
-	foreach(array("id", "screen_name") as $i)
+	foreach(array('id', 'screen_name') as $i)
 	{
 		if ($_REQUEST[$i])
 		{
@@ -62,13 +62,13 @@ function get_twitter_user_cache($db)
 	}
 	if (0 == count($condition))
 	{
-		$condition["id"] = $user_id;
+		$condition['id'] = $user_id;
 	}
 	return db_select
 	(
 		$db,
-		"twitter_user_cache",
-		array("json", "at"),
+		'twitter_user_cache',
+		array('json', 'at'),
 		$condition
 	);
 }

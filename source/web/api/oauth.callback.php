@@ -13,7 +13,7 @@ function get_twitter_image_url($twitter_user)
 
 try
 {
-	$sns = $_GET["sns"];
+	$sns = $_GET['sns'];
 	
 	$twitter_config = db_select_config($db);
 	
@@ -30,29 +30,29 @@ try
 	
 	$twitter = new TwitterOAuth
 	(
-		$twitter_config["twitter.consumer.key"],
-		$twitter_config["twitter.consumer.secret"],
+		$twitter_config['twitter.consumer.key'],
+		$twitter_config['twitter.consumer.secret'],
 		$request_token['oauth_token'],
 		$request_token['oauth_token_secret']
 	);
 	
-	$target = "unknown";
+	$target = 'unknown';
 	
 	//	通常であれば投稿や情報取得の為にこの access_token を保存するところだが、このシステムではユーザー情報を取得した後は利用しない為、保存しない。
 	$access_token = $twitter->oauth
 	(
-		"oauth/access_token",
-		array("oauth_verifier" => $_REQUEST['oauth_verifier'])
+		'oauth/access_token',
+		array('oauth_verifier' => $_REQUEST['oauth_verifier'])
 	);
 	
 	$twitter = new TwitterOAuth
 	(
-		$twitter_config["twitter.consumer.key"],
-		$twitter_config["twitter.consumer.secret"],
+		$twitter_config['twitter.consumer.key'],
+		$twitter_config['twitter.consumer.secret'],
 		$access_token['oauth_token'],
 		$access_token['oauth_token_secret']
 	);
-	$twitter_user = $twitter->get("account/verify_credentials");
+	$twitter_user = $twitter->get('account/verify_credentials');
 	save_twitter_user_cache($db, $twitter_user);
 	$auth_id = $db->real_escape_string($twitter_user->id_str);
 	$user_id = null;
@@ -60,31 +60,31 @@ try
 	$auth_target = db_select
 	(
 		$db,
-		"auth",
-		array("target"),
+		'auth',
+		array('target'),
 		array
 		(
-			"type" => "twitter",
-			"id" => $auth_id
+			'type' => 'twitter',
+			'id' => $auth_id
 		)
 	);
 	
 	if (0 < count($auth_target))
 	{
-		$target = $user_id = $auth_target[0]["target"];
+		$target = $user_id = $auth_target[0]['target'];
 		
 		//	update auth
 		db_update
 		(
 			$db,
-			"auth",
+			'auth',
 			array
 			(
-				"type" => "twitter",
-				"id" => $auth_id,
-				"json" => json_encode($twitter_user)
+				'type' => 'twitter',
+				'id' => $auth_id,
+				'json' => json_encode($twitter_user)
 			),
-			array("type", "id")
+			array('type', 'id')
 		);
 		
 		//	update object(user)
@@ -95,34 +95,34 @@ try
 				db_select
 				(
 					$db,
-					"object",
-					array("json"),
-					array("id"=>$user_id)
+					'object',
+					array('json'),
+					array('id'=>$user_id)
 				)
-				[0]["json"],
+				[0]['json'],
 				true
 			),
 			array
 			(
-				"twitter" => $twitter_user->screen_name,
-				"image" => get_twitter_image_url($twitter_user)
+				'twitter' => $twitter_user->screen_name,
+				'image' => get_twitter_image_url($twitter_user)
 			)
 		);
 		db_update
 		(
 			$db,
-			"object",
+			'object',
 			array
 			(
-				"id" => $user_id,
-				"json" => json_encode($user),
-				"search" => make_search($user)
+				'id' => $user_id,
+				'json' => json_encode($user),
+				'search' => make_search($user)
 			),
-			array("id")
+			array('id')
 		);
 		
 		//	log
-		db_log_insert($db, $user_id, "update", $user_id, "login");
+		db_log_insert($db, $user_id, 'update', $user_id, 'login');
 	}
 	else
 	{
@@ -130,13 +130,13 @@ try
 		$user_id = UUID::v4();
 		$user = array
 		(
-			"type" => "user",
-			"id" => $user_id,
-			"name" => $twitter_user->name,
-			"description" => $twitter_user->description,
-			"twitter" => $twitter_user->screen_name,
-			"image" => get_twitter_image_url($twitter_user),
-			"links" => [],
+			'type' => 'user',
+			'id' => $user_id,
+			'name' => $twitter_user->name,
+			'description' => $twitter_user->description,
+			'twitter' => $twitter_user->screen_name,
+			'image' => get_twitter_image_url($twitter_user),
+			'links' => [],
 		);
 		if ($twitter_user->url)
 		{
@@ -153,24 +153,24 @@ try
 				$url = $twitter_user->entities->url->urls[0]->expanded_url;
 			}
 			
-			$user["links"][] = array
+			$user['links'][] = array
 			(
-				"type" => "link",
-				"url" => $url
+				'type' => 'link',
+				'url' => $url
 			);
 		}
 		db_insert
 		(
 			$db,
-			"object",
+			'object',
 			array
 			(
-				"id" => $user_id,
-				"owner" => $user_id,
-				"type" => "user",
-				"json" => json_encode($user),
-				"search" => make_search($user),
-				"created_at" => "dummy",
+				'id' => $user_id,
+				'owner' => $user_id,
+				'type' => 'user',
+				'json' => json_encode($user),
+				'search' => make_search($user),
+				'created_at' => 'dummy',
 			)
 		);
 		$target = $user_id;
@@ -179,18 +179,18 @@ try
 		db_insert
 		(
 			$db,
-			"auth",
+			'auth',
 			array
 			(
-				"type" => "twitter",
-				"id" => $auth_id,
-				"target" => $user_id,
-				"json" => json_encode($twitter_user)
+				'type' => 'twitter',
+				'id' => $auth_id,
+				'target' => $user_id,
+				'json' => json_encode($twitter_user)
 			)
 		);
 		
 		//	log
-		db_log_insert($db, $user_id, "insert", $user_id, "login");
+		db_log_insert($db, $user_id, 'insert', $user_id, 'login');
 	}
 	
 	session_regenerate_id(true);

@@ -10,14 +10,14 @@ function main($db)
 		$user_id = $_SESSION['user_id'];
 
 		$request_data = json_decode(file_get_contents('php://input'), true);
-		$target = $request_data["id"];
+		$target = $request_data['id'];
 		
-		if ($_SESSION['request_token'] != $request_data["request_token"])
+		if ($_SESSION['request_token'] != $request_data['request_token'])
 		{
 			return array
 			(
-				"type" => "error",
-				"message" => "invalid request token"
+				'type' => 'error',
+				'message' => 'invalid request token'
 			);
 		}
 
@@ -25,37 +25,37 @@ function main($db)
 		{
 			return array
 			(
-				"type" => "error",
-				"message" => "not authenticated"
+				'type' => 'error',
+				'message' => 'not authenticated'
 			);
 		}
 		
 		db_update
 		(
 			$db,
-			"object",
+			'object',
 			array
 			(
-				"id" => $target,
-				"remove" => 1
+				'id' => $target,
+				'remove' => 1
 			),
-			array("id")
+			array('id')
 		);
 		
-		db_log_insert($db, $target, "remove", $user_id, "sucess");
+		db_log_insert($db, $target, 'remove', $user_id, 'sucess');
 		return array
 		(
-			"type" => "success",
-			"json" => null
+			'type' => 'success',
+			'json' => null
 		);
 	}
 	catch(Exception $e)
 	{
 		return array
 		(
-			"type" => "error",
-			"message" => "error",
-			"error" => $e->getMessage(),
+			'type' => 'error',
+			'message' => 'error',
+			'error' => $e->getMessage(),
 		);
 	}
 }
