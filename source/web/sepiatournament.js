@@ -282,6 +282,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		return event;
 	};
     $scope.regulateModel = function () {
+        $scope.popup = {};
         $scope.temp = {};
         $scope.repository = {};
         $scope.selected = {};

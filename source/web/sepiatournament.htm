@@ -206,6 +206,32 @@
 			<div ng-show="'event'==model.type || 'entry'==model.type">
 			<h4 ng-show="'event'==model.type">共同管理者</h4>
 			<h4 ng-show="'entry'==model.type">メンバー</h4>
+			
+			<div class="btn-group" uib-dropdown is-open="popup.isopen" ng-repeat="model in model.users">
+			  <button id="single-button" type="button" class="btn" uib-dropdown-toggle ng-disabled="disabled">
+				<span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon user-icon" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span>
+				<span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+				<li role="menuitem"><a href="#">Action</a></li>
+				<li role="menuitem"><a href="#">Another action</a></li>
+				<li role="menuitem"><a href="#">Something else here</a></li>
+				<li class="divider"></li>
+				<li role="menuitem"><a href="#">Separated link</a></li>
+			  </ul>
+			</div>
+			
+            <div class="input-group">
+                <span class="input-group-addon" id="member-label">@</span>
+                <input type="text"
+                       class="form-control"
+                       placeholder="twitterのスクリーン名"
+                       ng-model="temp.twitter" />
+                <span class="input-group-btn">
+                    <button class="btn btn-success" type="button" ng-click="addMember(model)"><span class="glyphicon glyphicon-plus"></span>追加</button>
+                </span>
+            </div>
+			
 			</div>
         </script>
 
@@ -221,6 +247,8 @@
 				<input type="text" class="form-control" ng-model="model.name" placeholder="名前" />
 				<h4>description</h4>
 				<textarea class="form-control" rows="10" ng-model="model.description" placeholder="説明" ></textarea>
+				
+				<div ng-include="'member.edit.html'"></div>
 				
 				<div ng-show="model.type=='event' || model.type=='match'">
 					<h4 ng-show="model.type=='event'">開催期間</h4>
@@ -246,8 +274,6 @@
 						<div ng-include="'time.edit.html'" ng-repeat="model in [model.entryTerm]"></div>
 					</div>
 				</div>
-				
-				<div ng-include="'member.edit.html'"></div>
 				
 				<!--
 				<div ng-include="'tag.edit.html'" ng-show="tags[model.type]"></div>
