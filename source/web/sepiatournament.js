@@ -872,8 +872,16 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             }
         }
     }
-    $scope.addMember = function () {
-        $scope.addObject("member");
+    $scope.addMember = function (model) {
+		model.users = model.users || [];
+		var twitter = $scope.temp.twitter
+		$scope.temp.twitter = "";
+		var user = {
+			type: "user",
+			name: twitter,
+			twitter: twitter
+		};
+		model.users.push(user);
     };
     $scope.removeMember = function (member) {
         $scope.removeObject("member", member);
