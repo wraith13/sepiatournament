@@ -882,6 +882,17 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			twitter: twitter
 		};
 		model.users.push(user);
+        
+        $http({
+            method: 'GET',
+            url: "/api/twitter/user.php?screen_name=" +twitter
+        }).success(function (data, status, headers, config) {
+            if (data && 0 < data.length && data[0].profile_image_url_https) {
+                user.name = data[0].name;
+                user.image = data[0].profile_image_url_https.replace(/_normal\.([^\.]*)$/, ".$1");
+            }
+        }).error(function (data, status, headers, config) {
+        });
     };
     $scope.removeMember = function (member) {
         $scope.removeObject("member", member);
