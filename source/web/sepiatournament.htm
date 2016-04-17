@@ -210,6 +210,7 @@
 			<div class="btn-group" uib-dropdown is-open="popup['isopen_'+model.twitter]" ng-repeat="model in model.users">
 			  <button id="single-button" type="button" class="btn" uib-dropdown-toggle ng-disabled="disabled">
 				<span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon user-icon" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span>
+                <span ng-include="'tag.mini.html'"></span>
 				<span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
@@ -395,6 +396,9 @@
 		
         <script type="text/ng-template" id="tag.html">
             <span class="label label-pill pull-xs-right" ng-class="model.type=='match'?'label-success':'label-primary'" ng-repeat="tag in model.tags"><span class="glyphicon glyphicon-tag tag-default"></span>{{tag}}</span>
+        </script>
+        <script type="text/ng-template" id="tag.mini.html">
+            <span class="label label-pill" ng-class="model.type=='match'?'label-success':'label-primary'" ng-repeat="tag in model.tags"><span class="glyphicon glyphicon-tag tag-default"></span>{{tag}}</span>
         </script>
 
         <script type="text/ng-template" id="filter.html">
