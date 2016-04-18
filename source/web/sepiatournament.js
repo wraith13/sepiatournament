@@ -895,8 +895,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         }).error(function (data, status, headers, config) {
         });
     };
-    $scope.removeMember = function (member) {
-        $scope.removeObject("member", member);
+    $scope.removeMember = function (model, user) {
+        var index = model.users.indexOf(user);
+        model.users.splice(index, 1);
     };
     $scope.filterMember = function (value, index, array) {
         var search = $scope.selected.memberSearch;

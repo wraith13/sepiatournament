@@ -207,16 +207,16 @@
 			<h4 ng-show="'event'==model.type">共同管理者</h4>
 			<h4 ng-show="'entry'==model.type">メンバー</h4>
 			
-			<div class="btn-group" uib-dropdown is-open="popup['isopen_'+model.twitter]" ng-repeat="model in model.users">
+			<div class="btn-group" uib-dropdown is-open="popup['isopen_'+user.twitter]" ng-repeat="user in model.users">
 			  <button id="single-button" type="button" class="btn" uib-dropdown-toggle ng-disabled="disabled">
-				<span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon user-icon" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span>
+				<span ng-hide="user.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[user.type]"></span><img ng-show="user.image" class="icon user-icon" ng-src="{{user.image}}"/>{{user.name}}<span ng-hide="user.name"><i>名称未設定</i></span>
                 <span ng-include="'tag.mini.html'"></span>
 				<span class="caret"></span>
 			  </button>
 			  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
 				<li role="menuitem"><a href="#"><i class="glyphicon glyphicon-user"></i>ユーザープロフィールの表示</a></li>
 				<li class="divider"></li>
-				<li role="menuitem"><a href="#"><i class="glyphicon glyphicon-trash"></i>招待のキャンセル</a></li>
+				<li role="menuitem"><a href="#" ng-click="removeMember(model,user)"><i class="glyphicon glyphicon-trash"></i>招待のキャンセル</a></li>
 			  </ul>
 			</div>
 			
