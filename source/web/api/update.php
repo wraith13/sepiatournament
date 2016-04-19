@@ -85,6 +85,14 @@ function regulate_id_array($id_array, $replace_id_array)
 	return $result;
 }
 
+function regulate_users($db, $current_json, $request_json)
+{
+	$result = [];
+	
+	return $result;
+}
+
+
 function main($db)
 {
 	try
@@ -242,9 +250,11 @@ function main($db)
 			case 'event':
 				$object['term'] = regulate_term($request_json, 'term');
 				$object['entryTerm'] = regulate_term($request_json, 'entryTerm');
+				$object['users'] = regulate_users($db, $object, $request_json);
 				break;
 				
 			case 'entry':
+				$object['users'] = regulate_users($db, $object, $request_json);
 				break;
 			
 			default:
@@ -334,6 +344,7 @@ function main($db)
 			case 'event':
 				$object_json['term'] = regulate_term($request_json, 'term');
 				$object_json['entryTerm'] = regulate_term($request_json, 'entryTerm');
+				$object_json['users'] = regulate_users($db, $object_json, $request_json);
 				break;
 				
 			case 'match':
@@ -345,6 +356,7 @@ function main($db)
 				break;
 				
 			case 'entry':
+				$object_json['users'] = regulate_users($db, $object_json, $request_json);
 				break;
 				
 			default:
