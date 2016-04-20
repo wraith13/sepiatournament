@@ -89,6 +89,35 @@ function regulate_users($db, $current_json, $request_json)
 {
 	$result = [];
 	
+	$request_users = $request_json['users'];
+	$exist_users = $current_json['users'];
+	
+	$new_users = [];
+	foreach ($request_users as $user)
+	{
+		if (!$user.id)
+		{
+			$new_users[] = user;
+		}
+	}
+	$remove_users = [];
+	foreach ($exist_users as $user)
+	{
+		$hit = false;
+		foreach ($request_users as $request_user)
+		{
+			if ($request_user.id == $user.id)
+			{
+				$hit = true;
+				break;
+			}
+		}
+		if ($hit)
+		{
+			$remove_users[] = user;
+		}
+	}
+	
 	return $result;
 }
 
