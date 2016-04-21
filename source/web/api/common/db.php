@@ -114,7 +114,7 @@ function db_insert($db, $table, $array)
 	foreach(db_real_escape_array($db, $array) as $key => $value)
 	{
 		$keys[] = $key;
-		if ('created_at' == $key)
+		if ('created_at' == $key || 'at' == $key)
 		{
 			$values[] = 'UTC_TIMESTAMP()';
 		}
