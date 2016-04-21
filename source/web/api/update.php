@@ -93,11 +93,28 @@ function regulate_users($db, $current_json, $request_json)
 	$exist_users = $current_json['users'];
 	
 	$new_users = [];
-	foreach ($request_users as $user)
+	foreach ($request_users as $request_user)
 	{
-		if (!$user.id)
+		if (!$request_user.id)
 		{
-			$new_users[] = user;
+			$hit = false;
+			foreach ($exist_users as $user)
+			{
+				if ($request_user.screen_name == $user.screen_name)
+				{
+					$hit = true;
+					break;
+				}
+			}
+			if ($hit)
+			{
+				$new_users[] = array
+				(
+					'type' => 'twitter',
+					'screen_name' = $request_user.screen_name,
+					'tags' => 'invite',
+				);
+			}
 		}
 	}
 	$remove_users = [];
@@ -106,13 +123,13 @@ function regulate_users($db, $current_json, $request_json)
 		$hit = false;
 		foreach ($request_users as $request_user)
 		{
-			if ($request_user.id == $user.id)
+			if ($request_user.id == $user.id || $request_user.screen_name == $user.screen_name)
 			{
 				$hit = true;
 				break;
 			}
 		}
-		if ($hit)
+		if (!$hit)
 		{
 			$remove_users[] = user;
 		}

@@ -877,9 +877,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		var twitter = $scope.temp.twitter
 		$scope.temp.twitter = "";
 		var user = {
-			type: "user",
+			type: "twitter",
 			name: twitter,
-			twitter: twitter,
+			screen_name: twitter,
             tags: ["invite"]
 		};
 		model.users.push(user);
