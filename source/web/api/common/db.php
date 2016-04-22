@@ -51,13 +51,20 @@ function db_select($db, $table, $columns, $wheres = null, $orderby = null)
 	$from = $table;
 	if ($wheres)
 	{
-		$where_string_array = [];
-		foreach(db_real_escape_array($db, $wheres) as $key => $value)
+		if (is_string($where))
 		{
-			$where_string_array[] = "$key='$value'";
+			$from = "$from where $where";
 		}
-		$where_string = implode(' and ', $where_string_array);
-		$from = "$from where $where_string";
+		else
+		{
+			$where_string_array = [];
+			foreach(db_real_escape_array($db, $wheres) as $key => $value)
+			{
+				$where_string_array[] = "$key='$value'";
+			}
+			$where_string = implode(' and ', $where_string_array);
+			$from = "$from where $where_string";
+		}
 	}
 	if ($orderby)
 	{
