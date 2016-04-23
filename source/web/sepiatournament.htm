@@ -125,6 +125,8 @@
 					開催者: <a href="https://twitter.com/{{getObject('user',model.owner).twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" ng-src="{{getObject('user',model.owner).image}}"/>{{getObject('user',model.owner).name}}</a>
 				</div>
 				
+				<!-- div ng-show="has_write_permission(model)" ng-include="'member.edit.html'"></div-->
+				
                 <h1><span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h1>
                 <p>{{model.description}}</p>
 				
@@ -246,8 +248,6 @@
 				<input type="text" class="form-control" ng-model="model.name" placeholder="名前" />
 				<h4>description</h4>
 				<textarea class="form-control" rows="10" ng-model="model.description" placeholder="説明" ></textarea>
-				
-				<div ng-include="'member.edit.html'"></div>
 				
 				<div ng-show="model.type=='event' || model.type=='match'">
 					<h4 ng-show="model.type=='event'">開催期間</h4>
