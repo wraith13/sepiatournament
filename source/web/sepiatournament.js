@@ -417,6 +417,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 	$scope.editmode = false;
     $scope.mastertabs = ["event", "event.new", "event.list", "entry", "member", "match", "import", "export", "tree", "login", "logout", "log", "profile"];
     $scope.defaultTabs = ["event", "member"];
+    $scope.rootTabs = ["login", "logout", "log", "profile"];
     $scope.tabs = $scope.defaultTabs;
     $scope.userTabs = ["profile"];
     $scope.requireLoginTabs = ["event.new", "profile"];
@@ -495,7 +496,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		$scope.clearScreen();
 		var parts = path ? path.split("/"): [null];
 		var tab = parts[0];
-		if (".." == tab) {
+		if (".." == tab || 0 <= $scope.rootTabs.indexOf(tab)) {
 			$scope.clearMode();
 		}
         if (0 <= $scope.mastertabs.indexOf(tab)) {
