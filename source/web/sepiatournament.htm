@@ -130,8 +130,6 @@
 					開催者: <a href="https://twitter.com/{{getObject('user',model.owner).twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" ng-src="{{getObject('user',model.owner).image}}"/>{{getObject('user',model.owner).name}}</a>
 				</div>
 				
-				<!-- div ng-show="has_write_permission(model)" ng-include="'member.edit.html'"></div-->
-				
                 <h1><span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h1>
                 <p>{{model.description}}</p>
 				
@@ -164,6 +162,7 @@
 				<h4 ng-show="model.entries">entries * result</h4>
                 <div ng-show="model.entries" ng-include="'match.entries.list.html'"></div>
             </div>
+            <div ng-show="'member'==editmode && has_write_permission(model)" ng-include="'member.edit.html'"></div>
         </script>
 
         <script type="text/ng-template" id="startAt.time.edit.html">
@@ -447,7 +446,7 @@
             </div>
         </div>
         <div ng-show="!(is_loading||active_tab)" ng-cloak>
-            <div class="big-header" ng-hide="editmode && has_write_permission(model.mode)">
+            <div class="big-header" ng-hide="'model'==editmode && has_write_permission(model.mode)">
                 <div class="container">
                     <div class="jumbotron">
                         <div ng-include="'jumbotron.html'" ng-repeat="model in [model.mode||app]"></div>
@@ -456,7 +455,7 @@
                     </div>
                 </div>
             </div>
-            <div ng-show="editmode && has_write_permission(model.mode)" class="container">
+            <div ng-show="'model'==editmode && has_write_permission(model.mode)" class="container">
                 <button type="button" class='btn btn-warning' ng-click="editmode=null;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
                 <button type="button" class='btn btn-danger' ng-click="removeEvent(model.mode)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
                 <h4>&nbsp;</h4>
@@ -513,7 +512,7 @@
                         -->
                                             
                     </div>
-                    <div ng-show="model.mode && 'event' == model.mode.type && !(editmode && has_write_permission(model.mode))">
+                    <div ng-show="model.mode && 'event' == model.mode.type && !('model'==editmode && has_write_permission(model.mode))">
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('entry')">参加チーム一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('match')">試合一覧を見る</button>
                         <button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('tree')">トーナメントツリーを見る</button>
@@ -553,7 +552,7 @@
                             <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-warning' ng-click="editCancel(selected.event)"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
                             <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-danger' ng-click="removeEvent(selected.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
 							<h4>&nbsp;</h4>
-		                    <div ng-include="editmode && has_write_permission(selected.event) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
+		                    <div ng-include="'model'==editmode && has_write_permission(selected.event) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.event]"></div>
 							<h4>&nbsp;</h4>
                         	<button type="button" class='btn btn-primary btn-lg btn-block' ng-click="selectTab('event/'+selected.event.id)">このイベントのページに移動</button>
                         </div>
