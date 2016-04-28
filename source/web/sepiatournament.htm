@@ -451,13 +451,13 @@
                 <div class="container">
                     <div class="jumbotron">
                         <div ng-include="'jumbotron.html'" ng-repeat="model in [model.mode||app]"></div>
-                        <button ng-show="!editmode && has_write_permission(model.mode)" type="button" class='btn btn-default' ng-click="editmode=true;" style="float:right"><i class="glyphicon glyphicon-pencil"></i>編集</button>
-                        <button ng-show="!editmode && has_write_permission(model.mode) && 'event'==model.mode.type" type="button" class='btn btn-default' ng-click="managemembermode=true;" style="float:right"><i class="glyphicon glyphicon-user"></i>共同管理者の管理</button>
+                        <button ng-show="!editmode && has_write_permission(model.mode)" type="button" class='btn btn-default' ng-click="editmode='model';" style="float:right"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                        <button ng-show="!editmode && has_write_permission(model.mode) && 'event'==model.mode.type" type="button" class='btn btn-default' ng-click="editmode='member';" style="float:right"><i class="glyphicon glyphicon-user"></i>共同管理者の管理</button>
                     </div>
                 </div>
             </div>
             <div ng-show="editmode && has_write_permission(model.mode)" class="container">
-                <button type="button" class='btn btn-warning' ng-click="editmode=false;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
+                <button type="button" class='btn btn-warning' ng-click="editmode=null;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
                 <button type="button" class='btn btn-danger' ng-click="removeEvent(model.mode)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
                 <h4>&nbsp;</h4>
                 <div ng-include="'edit.html'" ng-repeat="model in [model.mode||app]"></div>
@@ -548,8 +548,8 @@
                         </div>
                         <div class="col-md-7" ng-show="selected.event">
                             <button ng-hide="editmode && has_write_permission(selected.event)" type="button" class='btn show-on-narrow btn-default' ng-click="selectEvent(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
-                            <button ng-show="!editmode && has_write_permission(selected.event)" type="button" class='btn btn-default' ng-click="managemembermode=true;"><i class="glyphicon glyphicon-user"></i>共同管理者の管理</button>
-                            <button ng-show="!editmode && has_write_permission(selected.event)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                            <button ng-show="!editmode && has_write_permission(selected.event)" type="button" class='btn btn-default' ng-click="editmode='member';"><i class="glyphicon glyphicon-user"></i>共同管理者の管理</button>
+                            <button ng-show="!editmode && has_write_permission(selected.event)" type="button" class='btn btn-default' ng-click="editmode='model';"><i class="glyphicon glyphicon-pencil"></i>編集</button>
                             <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-warning' ng-click="editCancel(selected.event)"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
                             <button ng-show="editmode && has_write_permission(selected.event)" type="button" class='btn btn-danger' ng-click="removeEvent(selected.event)" style="float:right"><i class="glyphicon glyphicon-trash"></i>イベントの削除</button>
 							<h4>&nbsp;</h4>
@@ -580,7 +580,7 @@
                         </div>
                         <div class="col-md-7" ng-show="selected.entry">
                             <button ng-hide="editmode && has_write_permission(selected.entry)" type="button" class='btn show-on-narrow btn-default' ng-click="selectEntry(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
-                            <button ng-show="!editmode && has_write_permission(selected.entry)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                            <button ng-show="!editmode && has_write_permission(selected.entry)" type="button" class='btn btn-default' ng-click="editmode='model';"><i class="glyphicon glyphicon-pencil"></i>編集</button>
                             <button ng-show="editmode && has_write_permission(selected.entry)" type="button" class='btn btn-warning' ng-click="editCancel(selected.entry)"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
                             <button ng-show="editmode && has_write_permission(selected.entry)" type="button" class='btn btn-danger' ng-click="removeEntry(selected.entry)" style="float:right"><i class="glyphicon glyphicon-trash"></i>エントリーの削除</button>
 							<h4>&nbsp;</h4>
@@ -607,8 +607,8 @@
                         </div>
                         <div class="col-md-7" ng-show="selected.member">
                             <button ng-hide="editmode && has_write_permission(selected.member)" type="button" class='btn show-on-narrow btn-default' ng-click="selectMember(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
-                            <button ng-show="!editmode && has_write_permission(selected.member)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
-                            <button ng-show="editmode && has_write_permission(selected.member)" type="button" class='btn btn-warning' ng-click="editmode=false;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
+                            <button ng-show="!editmode && has_write_permission(selected.member)" type="button" class='btn btn-default' ng-click="editmode='model';"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                            <button ng-show="editmode && has_write_permission(selected.member)" type="button" class='btn btn-warning' ng-click="editmode=null;"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
 							<h4>&nbsp;</h4>
 		                    <div ng-include="editmode && has_write_permission(selected.member) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.member]"></div>
 							<h4>&nbsp;</h4>
@@ -682,7 +682,7 @@
                                 </div>
                                 <div class="col-md-7" ng-show="selected.match">
                                     <button ng-hide="editmode && has_write_permission(selected.match)" type="button" class='btn show-on-narrow btn-default' ng-click="selectMatch(null)"><i class="glyphicon glyphicon-chevron-left"></i>戻る</button>
-                                    <button ng-show="!editmode && has_write_permission(selected.match)" type="button" class='btn btn-default' ng-click="editmode=true;"><i class="glyphicon glyphicon-pencil"></i>編集</button>
+                                    <button ng-show="!editmode && has_write_permission(selected.match)" type="button" class='btn btn-default' ng-click="editmode='model';"><i class="glyphicon glyphicon-pencil"></i>編集</button>
                                     <button ng-show="editmode && has_write_permission(selected.match)" type="button" class='btn btn-warning' ng-click="editCancel(selected.match)"><i class="glyphicon glyphicon-stop"></i>編集のキャンセル</button>
                                     <h4>&nbsp;</h4>
                                     <div ng-include="editmode && has_write_permission(selected.match) ? 'edit.html': 'jumbotron.html'" ng-repeat="model in [selected.match]"></div>
