@@ -213,7 +213,7 @@
 			<h4 ng-show="'entry'==model.type">メンバー</h4>
 			
 			<div class="btn-group" uib-dropdown is-open="popup['isopen_'+user.twitter]" ng-repeat="user in model.users">
-			  <button id="single-button" type="button" class="btn" uib-dropdown-toggle ng-disabled="disabled">
+			  <button id="single-button" type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabled">
 				<span ng-hide="user.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[user.type]"></span><img ng-show="user.image" class="icon user-icon" ng-src="{{user.image}}"/>{{user.name}}<span ng-hide="user.name"><i>名称未設定</i></span>
                 <span ng-include="'tag.mini.html'"></span>
 				<span class="caret"></span>
