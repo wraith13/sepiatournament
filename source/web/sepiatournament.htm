@@ -230,7 +230,8 @@
                 <input type="text"
                        class="form-control"
                        placeholder="twitterのスクリーン名"
-                       ng-model="temp.twitter" />
+                       ng-model="temp.twitter"
+                       ng-keydown="enterToClick($event,addMember,model)" />
                 <span class="input-group-btn">
                     <button class="btn btn-success" type="button" ng-click="addMember(model)"><span class="glyphicon glyphicon-plus"></span>追加</button>
                 </span>

@@ -1743,6 +1743,12 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			(object.parent && $scope.has_write_permission(getObject("event",object.parent)))
 		);
 	};
+    
+    $scope.enterToClick = function(event,func,arg) {
+        if (13 == event.which) {
+            func(arg);
+        }
+    };
 	
     $scope.$watchCollection('checkModel', function () {
         $scope.checkResults = [];
