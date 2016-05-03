@@ -881,7 +881,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 			type: "twitter",
 			name: twitter,
 			screen_name: twitter,
-            tags: ["invite"]
+            tags: ["invite","loading"]
 		};
 		model.users.push(user);
         
@@ -892,6 +892,8 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             if (data && 0 < data.length && data[0].profile_image_url_https) {
                 user.name = data[0].name;
                 user.image = data[0].profile_image_url_https.replace(/_normal\.([^\.]*)$/, ".$1");
+				var index = user.tags.indexOf("loading");
+				user.tags.splice(index, 1);
             }
         }).error(function (data, status, headers, config) {
         });
