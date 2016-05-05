@@ -22,8 +22,11 @@ function decode($config, $db, $json_list)
 	if (0 == count($result))
 	{
 		$twitter_user = get_twitter_user($config, $db);
-		save_twitter_user_cache($db, $twitter_user);
-		$result[] = $twitter_user;
+		foreach($twitter_user as $i)
+		{
+			save_twitter_user_cache($db, $i);
+			$result[] = $i;
+		}
 	}
 	return $result;
 }
@@ -38,11 +41,11 @@ function get_twitter_user($config, $db)
 		$config['twitter.access.secret']
 	);
 	
-	foreach(array('id', 'screen_name') as $i)
+	foreach(array('ids', 'screen_name') as $i)
 	{
 		if ($_REQUEST[$i])
 		{
-			return $twitter->get('users/show', [$i => $_REQUEST[$i],]);
+			return $twitter->get('users/lookup', [$i => $_REQUEST[$i],]);
 		}
 	}
 	
@@ -51,17 +54,25 @@ function get_twitter_user($config, $db)
 
 function get_twitter_user_cache($db)
 {
-	$condition = [];
-	foreach(array('id', 'screen_name') as $i)
+	$condition = null;
+	if ($_REQUEST['ids'])
 	{
-		if ($_REQUEST[$i])
-		{
-			$condition[$i] = $_REQUEST[$i];
-			break;
-		}
+		$condition =
+			'id in \'' .
+			implode('\',\'',db_real_escape_array($db, explode(',', $_REQUEST['ids']))) .
+			'\')';
 	}
-	if (0 == count($condition))
+	else
+	if ($_REQUEST['screen_name'])
 	{
+		$condition =
+			'screen_name in \'' .
+			implode('\',\'',db_real_escape_array($db, explode(',', $_REQUEST['screen_name']))) .
+			'\')';
+	}
+	else
+	{
+		$condition = [];
 		$condition['id'] = $user_id;
 	}
 	return db_select
