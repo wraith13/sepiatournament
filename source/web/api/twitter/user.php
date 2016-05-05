@@ -8,6 +8,16 @@ $config = db_select_config($db);
 	
 function decode($config, $db, $json_list)
 {
+	$condition = [];
+	if ($_REQUEST['ids'])
+	{
+		$condition['ids'] = explode(',', $_REQUEST['ids']);
+	}
+	else
+	if ($_REQUEST['screen_name'])
+	{
+		$condition['screen_name'] = explode(',', $_REQUEST['screen_name']);
+	}
 	$result = [];
 	$now = time();
 	$last_hour = $now -intval($config['twitter.user.cache.expire']);
@@ -17,11 +27,42 @@ function decode($config, $db, $json_list)
 		if ($last_hour < $at->getTimestamp())
 		{
 			$result[] = json_decode($i['json'], true);
+			if ($_REQUEST['ids'])
+			{
+				foreach ($condition['ids'] as $key => $value)
+				{
+					if ($i['id'] === $value)
+					{
+						unset($condition['ids'][$key]);
+						break;
+					}
+				}
+			}
+			else
+			if ($_REQUEST['screen_name'])
+			{
+				foreach ($condition['screen_name'] as $key => $value)
+				{
+					if (mb_strtolower($i['screen_name']) === mb_strtolower($value))
+					{
+						unset($condition['screen_name'][$key]);
+						break;
+					}
+				}
+			}
 		}
 	}
-	if (0 == count($result))
+	if
+	(	
+		0 < count($condition['ids']) ||
+		0 < count($condition['screen_name'])
+	)
 	{
-		$twitter_user = get_twitter_user($config, $db);
+		foreach ($condition as $key => $value)
+		{
+			$condition[$key] = implode(',', $value);
+		}
+		$twitter_user = get_twitter_user($config, $db, $condition);
 		foreach($twitter_user as $i)
 		{
 			save_twitter_user_cache($db, $i);
@@ -31,7 +72,7 @@ function decode($config, $db, $json_list)
 	return $result;
 }
 
-function get_twitter_user($config, $db)
+function get_twitter_user($config, $db, $condition)
 {
 	$twitter = new TwitterOAuth
 	(
@@ -41,15 +82,7 @@ function get_twitter_user($config, $db)
 		$config['twitter.access.secret']
 	);
 	
-	foreach(array('ids', 'screen_name') as $i)
-	{
-		if ($_REQUEST[$i])
-		{
-			return $twitter->get('users/lookup', [$i => $_REQUEST[$i],]);
-		}
-	}
-	
-	return null;
+	return $twitter->get('users/lookup', $condition);
 }
 
 function get_twitter_user_cache($db)
@@ -58,7 +91,7 @@ function get_twitter_user_cache($db)
 	if ($_REQUEST['ids'])
 	{
 		$condition =
-			'id in \'' .
+			'id in (\'' .
 			implode('\',\'',db_real_escape_array($db, explode(',', $_REQUEST['ids']))) .
 			'\')';
 	}
@@ -66,20 +99,19 @@ function get_twitter_user_cache($db)
 	if ($_REQUEST['screen_name'])
 	{
 		$condition =
-			'screen_name in \'' .
-			implode('\',\'',db_real_escape_array($db, explode(',', $_REQUEST['screen_name']))) .
+			'LOWER(screen_name) in (\'' .
+			implode('\',\'',db_real_escape_array($db, explode(',',  mb_strtolower($_REQUEST['screen_name'])))) .
 			'\')';
 	}
 	else
 	{
-		$condition = [];
-		$condition['id'] = $user_id;
+		return [];
 	}
 	return db_select
 	(
 		$db,
 		'twitter_user_cache',
-		array('json', 'at'),
+		array('id', 'screen_name', 'json', 'at'),
 		$condition
 	);
 }

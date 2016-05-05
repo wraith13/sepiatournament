@@ -51,9 +51,9 @@ function db_select($db, $table, $columns, $wheres = null, $orderby = null)
 	$from = $table;
 	if ($wheres)
 	{
-		if (is_string($where))
+		if (is_string($wheres))
 		{
-			$from = "$from where $where";
+			$from = "$from where $wheres";
 		}
 		else
 		{
