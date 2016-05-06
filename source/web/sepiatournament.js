@@ -750,7 +750,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         });
         return null;
     };
-    $scope.loadTwitterUserByIdList = function(idList) {
+    $scope.loadTwitterUserByIdList = function(idList, callback) {
         $scope.repository["twitter"] = $scope.repository["twitter"] || [];
         var notExistIdList = [];
         angular.forEach(idList, function (id, i) {
@@ -758,6 +758,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             angular.forEach($scope.repository["twitter"], function (value, j) {
                 if (id == value.id_str) {
                     hit = true;
+                    if (callback) {
+                        callback(value);
+                    }
                 }
             });
             if (!hit) {
@@ -771,11 +774,14 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             if (data) {
                 angular.forEach(data, function (value, i) {
                     $scope.repository["twitter"].push(value);
+                    if (callback) {
+                        callback(value);
+                    }
                 });
             }
         });
-    }
-    $scope.loadTwitterUserByScreenNameList = function(screenNameList) {
+    };
+    $scope.loadTwitterUserByScreenNameList = function(screenNameList, callback) {
         $scope.repository["twitter"] = $scope.repository["twitter"] || [];
         var notExistScreenNameList = [];
         angular.forEach(screenNameList, function (screenName, i) {
@@ -784,6 +790,9 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             angular.forEach($scope.repository["twitter"], function (value, j) {
                 if (lowserScreenName === value.screen_name.toLowerCase()) {
                     hit = true;
+                    if (callback) {
+                        callback(value);
+                    }
                 }
             });
             if (!hit) {
@@ -797,10 +806,13 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             if (data) {
                 angular.forEach(data, function (value, i) {
                     $scope.repository["twitter"].push(value);
+                    if (callback) {
+                        callback(value);
+                    }
                 });
             }
         });
-    }
+    };
     $scope.getImageUrlFromTwitterUser = function(twitter) {
         var result = null;
         if (twitter && twitter.profile_image_url_https)
