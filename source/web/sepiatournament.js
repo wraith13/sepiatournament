@@ -801,6 +801,14 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             }
         });
     }
+    $scope.getImageUrlFromTwitterUser = function(twitter) {
+        var result = null;
+        if (twitter && twitter.profile_image_url_https)
+        {
+            result = twitter.profile_image_url_https.replace(/_normal\.([^\.]*)$/, ".$1");
+        }
+        return result;
+    };
     
     //  id
     $scope.makeSureId = function (object) {
@@ -971,7 +979,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         }).success(function (data, status, headers, config) {
             if (data && 0 < data.length && data[0].profile_image_url_https) {
                 user.name = data[0].name;
-                user.image = data[0].profile_image_url_https.replace(/_normal\.([^\.]*)$/, ".$1");
+                user.image = $scope.getImageUrlFromTwitterUser(data[0]);
                 onLoadComplete();
             } else {
                 onError();
