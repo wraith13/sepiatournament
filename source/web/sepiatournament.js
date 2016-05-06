@@ -728,8 +728,80 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
             $scope.$apply();
             return match;
         }
-    }
+    };
 
+    //  twitter
+    $scope.getTwitterUserById = function(id) {
+        $scope.repository["twitter"] = $scope.repository["twitter"] || [];
+        angular.forEach($scope.repository["twitter"], function (value, i) {
+            if (id == value.id_str) {
+                return value;
+            }
+        });
+        return null;
+    };
+    $scope.getTwitterUserByScreenName = function(screenName) {
+        $scope.repository["twitter"] = $scope.repository["twitter"] || [];
+        var lowserScreenName = screenName.toLowerCase();
+        angular.forEach($scope.repository["twitter"], function (value, i) {
+            if (lowserScreenName === value.screen_name.toLowerCase()) {
+                return value;
+            }
+        });
+        return null;
+    };
+    $scope.loadTwitterUserByIdList = function(idList) {
+        $scope.repository["twitter"] = $scope.repository["twitter"] || [];
+        var notExistIdList = [];
+        angular.forEach(idList, function (id, i) {
+            var hit = false;
+            angular.forEach($scope.repository["twitter"], function (value, j) {
+                if (id == value.id_str) {
+                    hit = true;
+                }
+            });
+            if (!hit) {
+                notExistIdList.push(id);
+            }
+        });
+        $http({
+            method: 'GET',
+            url: "/api/twitter/user.php?ids=" +notExistIdList.join(",")
+        }).success(function (data, status, headers, config) {
+            if (data) {
+                angular.forEach(data, function (value, i) {
+                    $scope.repository["twitter"].push(value);
+                });
+            }
+        });
+    }
+    $scope.loadTwitterUserByScreenNameList = function(screenNameList) {
+        $scope.repository["twitter"] = $scope.repository["twitter"] || [];
+        var notExistScreenNameList = [];
+        angular.forEach(screenNameList, function (screenName, i) {
+            var hit = false;
+            var lowserScreenName = screenName.toLowerCase();
+            angular.forEach($scope.repository["twitter"], function (value, j) {
+                if (lowserScreenName === value.screen_name.toLowerCase()) {
+                    hit = true;
+                }
+            });
+            if (!hit) {
+                notExistScreenNameList.push(lowserScreenName);
+            }
+        });
+        $http({
+            method: 'GET',
+            url: "/api/twitter/user.php?screen_name=" +notExistScreenNameList.join(",")
+        }).success(function (data, status, headers, config) {
+            if (data) {
+                angular.forEach(data, function (value, i) {
+                    $scope.repository["twitter"].push(value);
+                });
+            }
+        });
+    }
+    
     //  id
     $scope.makeSureId = function (object) {
         if (null != object && "object" == typeof (object)) {
