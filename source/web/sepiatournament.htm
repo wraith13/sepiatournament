@@ -126,10 +126,6 @@
             <div class="jumbotron">
                 <span ng-include="'tag.html'"></span>
 				
-				<div ng-show="model.type=='event'" style="float:right;">
-					開催者: <a href="https://twitter.com/{{getObject('user',model.owner).twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" ng-src="{{getObject('user',model.owner).image}}"/>{{getObject('user',model.owner).name}}</a>
-				</div>
-				
                 <h1><span ng-hide="model.image" class="glyphicon" ng-class="'glyphicon-'+tabIcon[model.type]"></span><img ng-show="model.image" class="icon icon-big" ng-src="{{model.image}}"/>{{model.name}}<span ng-hide="model.name"><i>名称未設定</i></span></h1>
                 <p>{{model.description}}</p>
 				
@@ -150,6 +146,20 @@
 				<i class="glyphicon glyphicon-calendar"></i>{{model.entryTerm.startAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }} ～ {{model.entryTerm.endAt | date: 'yyyy-MM-dd HH:mm:ss': '+900' }}
 				</div>
 				
+				<div ng-show="model.type=='event'" style="float:right;">
+					開催者:
+                    <div>
+                        <a href="https://twitter.com/{{getObject('user',model.owner).twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" ng-src="{{getObject('user',model.owner).image}}"/>{{getObject('user',model.owner).name}}</a>
+                    </div>
+                    <div ng-show="'member'!=editmode && model.users && 0 < model.users.length">
+                        共同管理者:
+                        <div ng-repeat="user in model.users"> 
+                            <a href="https://twitter.com/{{user.twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" ng-show="user.image" ng-src="{{user.image}}"/>{{user.name}}</a>
+                        </div>
+                    </div>
+				</div>
+                <br clear="all"/>
+                
 				<h4 ng-show="model.twitter">twitter</h4>
 				<a ng-show="model.twitter" href="https://twitter.com/{{model.twitter}}" rel="noopener" target="_blank"><img class="icon icon-mini" src="{{model.image}}"/>@{{model.twitter}}</a>
 				
