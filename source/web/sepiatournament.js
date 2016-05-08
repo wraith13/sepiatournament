@@ -1148,7 +1148,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		}).success(function (data, status, headers, config) {
 			$scope.request_token = data;
 			$http({
-				method: 'PUT',
+				method: 'POST',
 				url: "/api/update.php",
 				data: {
 					parent: $scope.model.mode.id,
@@ -1738,7 +1738,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		}).success(function (data, status, headers, config) {
 			$scope.request_token = data;
 			$http({
-				method: 'PUT',
+				method: 'POST',
 				url: "/api/update.php",
 				data: {
 					json:model,
@@ -1791,7 +1791,7 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
 		}).success(function (data, status, headers, config) {
 			$scope.request_token = data;
 			$http({
-				method: 'PUT',
+				method: 'POST',
 				url: "/api/remove.php",
 				data: {
 					id:model.id,
