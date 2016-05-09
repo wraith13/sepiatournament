@@ -980,6 +980,19 @@ app.controller("sepiatournament", function ($rootScope, $window, $scope, $http, 
         var onLoadComplete = function() {
             var index = user.tags.indexOf("loading");
             user.tags.splice(index, 1);
+            
+            $http({
+                method: 'POST',
+                url: "/api/invite.php?target=" +model.id +"&item=" +twitter 
+            }).success(function (data, status, headers, config) {
+                if (data && "success" == data.type) {
+                    //  success
+                } else {
+                    onError();
+                }
+            }).error(function (data, status, headers, config) {
+                onError();
+            });
         };
         var onError = function() {
             user.tags.push("error");
