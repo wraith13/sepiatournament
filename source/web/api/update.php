@@ -113,8 +113,8 @@ function main($db)
 			);
 		}
 		
-		$request_buik = $request_data['bulk'];
-		if ($request_buik)
+		$request_bulk = $request_data['bulk'];
+		if ($request_bulk)
 		{
 			$parent = $request_data['parent'];
 			if ($parent && !db_has_write_permission($db, $user_id, $parent))
@@ -145,7 +145,7 @@ function main($db)
 			}
 			$index = 0;
 			$replace_id_array = [];
-			foreach($request_buik as $json)
+			foreach($request_bulk as $json)
 			{
 				$id = UUID::v4();
 				$replace_id_array[$json['id']] = $id;
@@ -199,7 +199,7 @@ function main($db)
 				++$index;
 			}
 			
-			db_log_insert($db, $parent, $request_buik, $user_id, $request_type);
+			db_log_insert($db, $parent, $request_bulk, $user_id, $request_type);
 			return array
 			(
 				'type' => 'success',
