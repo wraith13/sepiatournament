@@ -240,3 +240,36 @@ function save_twitter_user_cache($db, $twitter_user)
 		array('id')
 	);
 }
+
+function db_add_member($db, $target, $item)
+{
+	$json = db_select
+	(
+		$db,
+		'object',
+		array('id', 'json'),
+		array('id' => $target)
+	)[0]['json'];
+	
+	$object = json_decode
+	(
+		$json,
+		true
+	);
+	
+	$object['users'] = $object['users'] ?:[];
+	$object['users'][] = $item;
+	
+	db_update
+	(
+		$db,
+		'object',
+		array
+		(
+			'id' => $target,
+			'json' => json_encode($object),
+			'search' => make_search($object)
+		),
+		array('id')
+	);
+}
