@@ -50,6 +50,8 @@ function main($db)
 				'message' => 'disallow'
 			);
 		}
+		
+		db_add_member($db, $target, array( ... ));
 	
 		db_insert_or_update
 		(
