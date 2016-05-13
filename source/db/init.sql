@@ -16,6 +16,15 @@ create table object
 create index object_parent on object (parent, type, created_at desc);
 create index object_type on object (type, created_at desc);
 
+drop table relation;
+create table relation
+(
+	target varchar(64) not null,
+	item varchar(64) not null,
+	primary key(target,item)
+);
+create index relation_item on relation (item, target);
+
 create table log
 (
 	target varchar(64) not null,
