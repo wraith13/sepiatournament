@@ -56,7 +56,7 @@ function main($db)
 		db_insert_or_update
 		(
 			$db,
-			'queue',
+			'relation',
 			array
 			(
 				'target' => $target,

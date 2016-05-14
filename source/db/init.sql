@@ -16,14 +16,18 @@ create table object
 create index object_parent on object (parent, type, created_at desc);
 create index object_type on object (type, created_at desc);
 
-drop table relation;
 create table relation
 (
 	target varchar(64) not null,
 	item varchar(64) not null,
-	primary key(target,item)
+	type varchar(32) not null,
+	at datetime not null,
+	primary key(target, item, type)
 );
-create index relation_item on relation (item, target);
+create index relation_item on relation (item, type, target);
+create index relation_item_at on relation (item, at);
+create index relation_item_type_at on relation (item, type, at);
+create index relation_at on queue (target, type, at);
 
 create table log
 (
@@ -56,16 +60,6 @@ create table twitter_user_cache
 );
 create index twitter_user_cache_screen_name on twitter_user_cache (screen_name);
 create index twitter_user_cache_at on twitter_user_cache (at);
-
-create table queue
-(
-	target varchar(64) not null,
-	type varchar(32) not null,
-	item varchar(64) not null,
-	at datetime not null,
-	primary key(target, type, item)
-);
-create index queue_at on queue (target, type, at);
 
 create table tag
 (
