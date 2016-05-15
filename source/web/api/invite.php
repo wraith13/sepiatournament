@@ -16,7 +16,7 @@ function main($db)
 			return array
 			(
 				'type' => 'error',
-				'message' => 'not authenticated'
+				'message' => 'not authenticated',
 			);
 		}
 		
@@ -27,7 +27,7 @@ function main($db)
 			return array
 			(
 				'type' => 'error',
-				'message' => 'invalid request token'
+				'message' => 'invalid request token',
 			);
 		}
 		
@@ -38,7 +38,7 @@ function main($db)
 			return array
 			(
 				'type' => 'error',
-				'message' => 'invalid argument'
+				'message' => 'invalid argument',
 			);
 		}
 		
@@ -47,11 +47,20 @@ function main($db)
 			return array
 			(
 				'type' => 'error',
-				'message' => 'disallow'
+				'message' => 'disallow',
 			);
 		}
 		
-		db_add_member($db, $target, array( ... ));
+		db_add_member
+		(
+			$db,
+			$target,
+			array
+			(
+				'type' => 'twitter',
+				'twitter' => $item,
+			)
+		);
 	
 		db_insert_or_update
 		(
