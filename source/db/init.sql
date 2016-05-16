@@ -24,10 +24,10 @@ create table relation
 	at datetime not null,
 	primary key(target, item, type)
 );
-create index relation_item on relation (item, type, target);
+create index relation_item on relation (item, type, target, at);
 create index relation_item_at on relation (item, at);
 create index relation_item_type_at on relation (item, type, at);
-create index relation_at on queue (target, type, at);
+create index relation_at on relation (target, type, at);
 
 create table log
 (
